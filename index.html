@@ -2,17 +2,998 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#A8238B">
-  <meta name="description" content="H4 Enterprise ERP">
-  <title>H4 ERP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>H4 ERP - Construction & Chemical Solutions</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #f8fafc;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col pb-16">
 
-<body>
+  <!-- ================= TOP APP BAR (EXACT MODEL FROM SCREENSHOT) ================= -->
+  <header class="bg-gradient-to-r from-[#17053e] via-[#200b52] to-[#260e61] text-white px-4 py-3 sticky top-0 z-40 shadow-md">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <!-- Left: Fleur-de-lis Logo & Title -->
+      <div class="flex items-center gap-2 cursor-pointer select-none" onclick="navigateTo('dashboard')">
+        <div id="app-header-logo-container">
+          <svg class="w-6 h-6 text-amber-400 fill-current" viewBox="0 0 24 24">
+            <path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/>
+          </svg>
+        </div>
+        <span class="font-extrabold text-lg tracking-wide text-white">H4 ERP</span>
+      </div>
 
-  <h1>H4 Enterprise ERP</h1>
+      <!-- Right Action Badges -->
+      <div class="flex items-center gap-2">
+        <button onclick="showToast('History module will be linked in Phase 2')" class="flex items-center gap-1 text-xs bg-[#341b77] hover:bg-[#43239a] text-purple-200 px-2.5 py-1.5 rounded-md font-medium transition border border-purple-500/20 active:scale-95">
+          <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-amber-300"></i>
+          History
+        </button>
+        <button onclick="showToast('Quotation generator is in Phase 2')" class="flex items-center gap-1 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-3 py-1.5 rounded-md shadow-sm transition active:scale-95">
+          <span>+</span> New Quotation
+        </button>
+      </div>
+    </div>
+  </header>
 
-  <p>H4 ERP system is starting...</p>
+  <!-- ================= NOTIFICATION TOAST ================= -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 backdrop-blur text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold hidden transition-all duration-300 flex items-center gap-2 border border-slate-700">
+    <i data-lucide="info" class="w-4 h-4 text-amber-400"></i>
+    <span id="toast-message">Action successful</span>
+  </div>
 
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="max-w-md mx-auto w-full flex-1 px-4 pt-3">
+
+    <!-- ================= 1. DASHBOARD VIEW ================= -->
+    <div id="view-dashboard" class="space-y-4">
+
+      <!-- Search Input + Clickable Suggestion Pills -->
+      <div class="space-y-2">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input 
+            type="text" 
+            id="global-search"
+            placeholder="Search Customers, Products, Quotations, Invoices..." 
+            class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent shadow-sm"
+            oninput="handleGlobalSearch(this.value)"
+          >
+        </div>
+
+        <!-- Suggestion Pills -->
+        <div class="flex items-center gap-1.5 text-[11px] text-slate-500 overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-slate-400 font-medium whitespace-nowrap">Try:</span>
+          <button onclick="applySearchPill('ABC')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap transition">ABC Builders</button>
+          <button onclick="applySearchPill('Adhesive')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap transition">Tile Adhesive</button>
+          <button onclick="applySearchPill('9876543210')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap transition">Mobile</button>
+          <button onclick="applySearchPill('Waterproofing')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap transition">Waterproofing</button>
+        </div>
+      </div>
+
+      <!-- Dashboard Title -->
+      <div class="pt-1">
+        <div class="flex items-center gap-1.5 text-slate-900 font-bold text-base">
+          <span class="text-lg">📊</span>
+          <h2>Dashboard</h2>
+        </div>
+        <p class="text-xs text-slate-500 font-normal">Manage your business from one place</p>
+      </div>
+
+      <!-- 10 GRADIENT CARDS GRID (EXACT SCREENSHOT MODEL) -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+
+        <!-- 1. Company -->
+        <div onclick="navigateTo('company')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#4f46e5] to-[#3b82f6] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Profile</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Company</h3>
+          <p class="text-[11px] text-blue-100/90 font-normal">Profile & Settings</p>
+        </div>
+
+        <!-- 2. Quotation -->
+        <div onclick="showToast('Quotation generator is in Phase 2')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#0284c7] to-[#38bdf8] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">New</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="file-text" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Quotation</h3>
+          <p class="text-[11px] text-sky-100 font-normal">Create & Manage</p>
+        </div>
+
+        <!-- 3. Products (Phase 1 Ready) -->
+        <div onclick="navigateTo('products')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#ea580c] to-[#fb923c] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Master</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="package" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Products</h3>
+          <p class="text-[11px] text-orange-100 font-normal">Product Master</p>
+        </div>
+
+        <!-- 4. Invoice -->
+        <div onclick="showToast('Invoice Engine is in Phase 2')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">New</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="receipt" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Invoice</h3>
+          <p class="text-[11px] text-cyan-100 font-normal">Create & Manage</p>
+        </div>
+
+        <!-- 5. Templates -->
+        <div onclick="showToast('Template Designer is in Phase 3')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#c026d3] to-[#e879f9] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Design</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="palette" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Templates</h3>
+          <p class="text-[11px] text-fuchsia-100 font-normal">Invoice & Quotation</p>
+        </div>
+
+        <!-- 6. Payments -->
+        <div onclick="showToast('Payments & Settlement is in Phase 3')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#059669] to-[#34d399] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Track</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="badge-dollar-sign" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Payments</h3>
+          <p class="text-[11px] text-emerald-100 font-normal">Track Payments</p>
+        </div>
+
+        <!-- 7. Customers (Phase 1 Ready) -->
+        <div onclick="navigateTo('customers')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#2563eb] to-[#60a5fa] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Master</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="users" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Customers</h3>
+          <p class="text-[11px] text-blue-100 font-normal">Customer Master</p>
+        </div>
+
+        <!-- 8. Theme -->
+        <div onclick="showToast('Theme Manager is in Phase 3')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#0284c7] to-[#38bdf8] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Style</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="paint-brush" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Theme</h3>
+          <p class="text-[11px] text-sky-100 font-normal">Theme Manager</p>
+        </div>
+
+        <!-- 9. Backup -->
+        <div onclick="showToast('Backup & Restore is in Phase 3')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#ea580c] to-[#f97316] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Data</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="save" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Backup</h3>
+          <p class="text-[11px] text-orange-100 font-normal">Backup & Restore</p>
+        </div>
+
+        <!-- 10. Settings -->
+        <div onclick="showToast('System Settings is in Phase 3')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#1e1b4b] to-[#312e81] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+          <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">System</span>
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <i data-lucide="settings" class="w-5 h-5 text-white"></i>
+          </div>
+          <h3 class="font-bold text-sm tracking-tight">Settings</h3>
+          <p class="text-[11px] text-indigo-200 font-normal">System Settings</p>
+        </div>
+
+      </div>
+
+      <!-- Real Dynamic KPI Strip -->
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Total Products</div>
+          <div id="kpi-product-count" class="text-base font-bold text-slate-900 mono">0</div>
+        </div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Total Customers</div>
+          <div id="kpi-customer-count" class="text-base font-bold text-blue-600 mono">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 2. COMPANY PROFILE SCREEN (PHASE 1) ================= -->
+    <div id="view-company" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+        </button>
+        <span class="text-sm font-bold text-slate-800">Company Profile</span>
+        <button onclick="saveCompanyProfile()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-semibold hover:bg-indigo-700 shadow-sm">Save</button>
+      </div>
+
+      <form id="company-form" onsubmit="event.preventDefault(); saveCompanyProfile();" class="space-y-4 text-xs">
+        
+        <!-- Logo & Branding Uploader -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center space-y-3">
+          <div id="company-logo-preview" class="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden bg-slate-50 relative group">
+            <span class="text-slate-400 text-[10px] text-center px-1">No Logo Uploaded</span>
+          </div>
+          <div>
+            <label class="cursor-pointer bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-flex items-center gap-1.5 border border-indigo-200">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload Company Logo
+              <input type="file" id="company-logo-input" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'logo')">
+            </label>
+            <p class="text-[10px] text-slate-400 mt-1">PNG, JPG, or SVG for Invoices & Quotations</p>
+          </div>
+        </div>
+
+        <!-- General Info -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Legal & Brand Names</span>
+          <div>
+            <label class="block text-slate-500 mb-1">Legal Entity Name</label>
+            <input type="text" id="cmp-legal-name" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-900" required>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Brand / Trade Name</label>
+            <input type="text" id="cmp-brand-name" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-900" required>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Phone</label>
+              <input type="text" id="cmp-phone" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">WhatsApp</label>
+              <input type="text" id="cmp-whatsapp" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Email</label>
+            <input type="email" id="cmp-email" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+          </div>
+        </div>
+
+        <!-- Address & GST -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Address & Tax Compliance</span>
+          <div>
+            <label class="block text-slate-500 mb-1">Office / Factory Address</label>
+            <textarea id="cmp-address" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Place / City</label>
+              <input type="text" id="cmp-place" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">District</label>
+              <input type="text" id="cmp-district" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">GSTIN</label>
+              <input type="text" id="cmp-gstin" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono uppercase">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">Seller State Code</label>
+              <input type="text" id="cmp-state-code" value="32" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Details -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Bank Accounts & Payments</span>
+          <div>
+            <label class="block text-slate-500 mb-1">Bank Name</label>
+            <input type="text" id="cmp-bank-name" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Account Number</label>
+              <input type="text" id="cmp-bank-acc" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">IFSC Code</label>
+              <input type="text" id="cmp-bank-ifsc" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono uppercase">
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">UPI ID (For Invoice QR / Direct Pay)</label>
+            <input type="text" id="cmp-bank-upi" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium mono">
+          </div>
+        </div>
+
+        <!-- Signature & Stamp Uploader -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Digital Signature & Stamp</span>
+          <div>
+            <label class="block text-slate-500 mb-1">Authorized Person Name</label>
+            <input type="text" id="cmp-auth-person" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+          </div>
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <!-- Signature Preview -->
+            <div class="border border-slate-200 p-2.5 rounded-lg text-center bg-slate-50 space-y-2">
+              <div id="company-sign-preview" class="h-16 flex items-center justify-center text-[10px] text-slate-400 bg-white border rounded">
+                No Signature
+              </div>
+              <label class="cursor-pointer block bg-white hover:bg-slate-100 text-slate-700 font-semibold py-1 rounded text-[11px] border border-slate-300">
+                Upload Signature
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'sign')">
+              </label>
+            </div>
+            <!-- Stamp Preview -->
+            <div class="border border-slate-200 p-2.5 rounded-lg text-center bg-slate-50 space-y-2">
+              <div id="company-stamp-preview" class="h-16 flex items-center justify-center text-[10px] text-slate-400 bg-white border rounded">
+                No Stamp
+              </div>
+              <label class="cursor-pointer block bg-white hover:bg-slate-100 text-slate-700 font-semibold py-1 rounded text-[11px] border border-slate-300">
+                Upload Stamp
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'stamp')">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-98">
+          Save Company Settings
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= 3. CUSTOMER MASTER SCREEN (PHASE 1) ================= -->
+    <div id="view-customers" class="hidden space-y-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+        </button>
+        <span class="text-sm font-bold text-slate-800">Customers</span>
+        <button onclick="openCustomerModal()" class="text-xs bg-blue-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-blue-700">+ New</button>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-medium">
+        <button onclick="filterCustomers('All')" id="btn-cust-filter-all" class="bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap">All</button>
+        <button onclick="filterCustomers('Dealer')" id="btn-cust-filter-dealer" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Dealers</button>
+        <button onclick="filterCustomers('Contractor')" id="btn-cust-filter-contractor" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Contractors</button>
+      </div>
+
+      <!-- Real Customers Dynamic List -->
+      <div id="customer-list-container" class="space-y-3">
+        <!-- Rendered via renderCustomerList() -->
+      </div>
+    </div>
+
+    <!-- ================= 4. PRODUCT MASTER SCREEN (PHASE 1) ================= -->
+    <div id="view-products" class="hidden space-y-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+        </button>
+        <span class="text-sm font-bold text-slate-800">Product Master</span>
+        <button onclick="openProductModal()" class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-orange-700">+ Add</button>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-medium">
+        <button onclick="filterProducts('All')" id="btn-prod-filter-all" class="bg-orange-600 text-white px-3 py-1 rounded-full whitespace-nowrap">All</button>
+        <button onclick="filterProducts('Tile Adhesive')" id="btn-prod-filter-adhesive" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Tile Adhesive</button>
+        <button onclick="filterProducts('Waterproofing')" id="btn-prod-filter-waterproof" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Waterproofing</button>
+        <button onclick="filterProducts('Epoxy')" id="btn-prod-filter-epoxy" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Epoxy</button>
+      </div>
+
+      <!-- Real Products Dynamic List -->
+      <div id="product-list-container" class="space-y-3">
+        <!-- Rendered via renderProductList() -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= MODAL: ADD / EDIT CUSTOMER ================= -->
+  <div id="modal-customer" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
+      <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center">
+        <h3 class="font-bold text-xs uppercase tracking-wider text-blue-400">New Customer Profile</h3>
+        <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <form id="customer-form" onsubmit="event.preventDefault(); saveNewCustomer();" class="p-4 space-y-3 text-xs overflow-y-auto">
+        <div>
+          <label class="block text-slate-500 mb-1">Customer / Contact Person Name</label>
+          <input type="text" id="cust-name" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" placeholder="E.g., Muhammed Ali" required>
+        </div>
+        <div>
+          <label class="block text-slate-500 mb-1">Company / Firm Name</label>
+          <input type="text" id="cust-company" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-900" placeholder="E.g., ABC Builders" required>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-500 mb-1">Mobile</label>
+            <input type="tel" id="cust-phone" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium mono" placeholder="9876543210" required>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Customer Category</label>
+            <select id="cust-type" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+              <option value="Contractor">Contractor</option>
+              <option value="Dealer">Dealer</option>
+              <option value="Direct Project">Direct Project</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-500 mb-1">Email</label>
+          <input type="email" id="cust-email" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" placeholder="client@example.com">
+        </div>
+        <div>
+          <label class="block text-slate-500 mb-1">Billing Address</label>
+          <textarea id="cust-billing-address" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" placeholder="Office address..." required></textarea>
+        </div>
+        <div>
+          <label class="block text-slate-500 mb-1">Shipping / Site Address</label>
+          <textarea id="cust-shipping-address" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" placeholder="Construction project site address..."></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-500 mb-1">GSTIN (Optional)</label>
+            <input type="text" id="cust-gstin" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono uppercase" placeholder="32AAAAA0000A1Z5">
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">State Code</label>
+            <input type="text" id="cust-state-code" value="32" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono">
+          </div>
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow transition">
+            Save Customer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ADD / EDIT PRODUCT (NO HSN/SAC) ================= -->
+  <div id="modal-product" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
+      <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center">
+        <h3 class="font-bold text-xs uppercase tracking-wider text-orange-400">Add New Product</h3>
+        <button onclick="closeProductModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <form id="product-form" onsubmit="event.preventDefault(); saveNewProduct();" class="p-4 space-y-3 text-xs overflow-y-auto">
+        <div>
+          <label class="block text-slate-500 mb-1">Product Name & Grade</label>
+          <input type="text" id="prod-name" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-900" placeholder="E.g., H4 Premium Tile Adhesive (C1)" required>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-500 mb-1">Category</label>
+            <select id="prod-category" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+              <option value="Tile Adhesive">Tile Adhesive</option>
+              <option value="Waterproofing">Waterproofing</option>
+              <option value="Epoxy">Epoxy</option>
+              <option value="Repair Mortar">Repair Mortar</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Unit of Measurement</label>
+            <select id="prod-unit" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+              <option value="Bag">Bag (20 KG / 40 KG)</option>
+              <option value="Bucket">Bucket (10 L / 20 L)</option>
+              <option value="Kit">Kit (2-Part / 3-Part)</option>
+              <option value="Kg">Kg</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Multi-tier Pricing -->
+        <div class="bg-orange-50/60 p-3 rounded-xl border border-orange-200 space-y-2">
+          <span class="font-bold text-orange-950 text-[10px] uppercase tracking-wider">Multi-Tier Pricing Matrix (₹)</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 text-[10px]">Purchase / Cost</label>
+              <input type="number" id="prod-price-cost" class="w-full bg-white border border-slate-200 rounded p-1.5 font-bold mono" placeholder="280">
+            </div>
+            <div>
+              <label class="block text-slate-500 text-[10px]">Standard Retail</label>
+              <input type="number" id="prod-price-retail" class="w-full bg-white border border-slate-200 rounded p-1.5 font-bold mono text-orange-700" placeholder="450" required>
+            </div>
+            <div>
+              <label class="block text-slate-500 text-[10px]">Dealer Price</label>
+              <input type="number" id="prod-price-dealer" class="w-full bg-white border border-slate-200 rounded p-1.5 font-bold mono" placeholder="360" required>
+            </div>
+            <div>
+              <label class="block text-slate-500 text-[10px]">Contractor Price</label>
+              <input type="number" id="prod-price-contractor" class="w-full bg-white border border-slate-200 rounded p-1.5 font-bold mono" placeholder="390" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-500 mb-1">GST Slab Rate (%)</label>
+            <select id="prod-gst" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono">
+              <option value="18">18%</option>
+              <option value="28">28%</option>
+              <option value="12">12%</option>
+              <option value="5">5%</option>
+              <option value="0">0% (Nil)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Opening Stock</label>
+            <input type="number" id="prod-stock" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" value="100">
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-xl shadow transition">
+            Save Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT STATE ENGINE ================= -->
+  <script>
+    // Global Storage Key
+    const DB_KEY = 'H4_ERP_DB_V2';
+
+    // Seed Data if fresh
+    const defaultData = {
+      company: {
+        legalName: 'AV CHEM Chemical & Manufacturing',
+        brandName: 'H4 Construction Solutions',
+        phone: '+91 9876543210',
+        whatsapp: '+91 9876543210',
+        email: 'avchemkerala@gmail.com',
+        address: 'Building 12/48, Industrial Area, Tirur',
+        place: 'Tirur',
+        district: 'Malappuram',
+        state: 'Kerala',
+        stateCode: '32',
+        gstin: '32AABCA9876K1Z9',
+        bankName: 'State Bank of India',
+        accNo: '123456789012',
+        ifsc: 'SBIN0001234',
+        upi: '9876543210@upi',
+        authPerson: 'Authorized Signatory',
+        logoUrl: '',
+        signatureUrl: '',
+        stampUrl: ''
+      },
+      customers: [
+        {
+          id: 'cust_1',
+          name: 'Muhammed Kutty',
+          company: 'ABC BUILDERS',
+          phone: '9876543210',
+          email: 'abcbuilders@gmail.com',
+          billingAddress: 'Building 4, City Centre, Tirur, Malappuram - 676101',
+          shippingAddress: 'Green Valley Villa Project, Bypass Road, Tirur',
+          gstin: '32AABCA1234F1Z8',
+          stateCode: '32',
+          type: 'Contractor',
+          due: 35000,
+          invoicesCount: 12
+        },
+        {
+          id: 'cust_2',
+          name: 'Rajesh Kumar',
+          company: 'MALABAR TRADERS',
+          phone: '9447123456',
+          email: 'malabartraders@gmail.com',
+          billingAddress: 'Main Bazaar, Kozhikode, Kerala - 673001',
+          shippingAddress: 'Main Bazaar, Kozhikode',
+          gstin: '32XYZPA9999M1Z2',
+          stateCode: '32',
+          type: 'Dealer',
+          due: 0,
+          invoicesCount: 8
+        }
+      ],
+      products: [
+        {
+          id: 'prod_1',
+          name: 'H4 Premium Tile Adhesive (C1 Grade)',
+          category: 'Tile Adhesive',
+          unit: 'Bag',
+          costPrice: 280,
+          retailPrice: 450,
+          dealerPrice: 360,
+          contractorPrice: 390,
+          gst: 18,
+          stock: 350
+        },
+        {
+          id: 'prod_2',
+          name: 'H4 2K Polymer Waterproofing Coat',
+          category: 'Waterproofing',
+          unit: 'Bucket',
+          costPrice: 340,
+          retailPrice: 550,
+          dealerPrice: 440,
+          contractorPrice: 480,
+          gst: 18,
+          stock: 120
+        },
+        {
+          id: 'prod_3',
+          name: 'H4 Epoxy Tile Grout (2-Part System)',
+          category: 'Epoxy',
+          unit: 'Kit',
+          costPrice: 750,
+          retailPrice: 1200,
+          dealerPrice: 980,
+          contractorPrice: 1050,
+          gst: 18,
+          stock: 60
+        }
+      ]
+    };
+
+    // Load Database
+    function getDB() {
+      const stored = localStorage.getItem(DB_KEY);
+      if (!stored) {
+        localStorage.setItem(DB_KEY, JSON.stringify(defaultData));
+        return defaultData;
+      }
+      return JSON.parse(stored);
+    }
+
+    function saveDB(data) {
+      localStorage.setItem(DB_KEY, JSON.stringify(data));
+      updateDashboardKPI();
+    }
+
+    // App Navigation
+    function navigateTo(viewId) {
+      const views = ['dashboard', 'company', 'customers', 'products'];
+      views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById('view-' + viewId);
+      if (target) {
+        target.classList.remove('hidden');
+        if (viewId === 'company') loadCompanyProfile();
+        if (viewId === 'customers') renderCustomerList();
+        if (viewId === 'products') renderProductList();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // Toast Alert
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      msg.innerText = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2500);
+    }
+
+    // Dynamic Image Uploader (Base64)
+    function handleImageUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const db = getDB();
+        const base64 = e.target.result;
+        if (type === 'logo') {
+          db.company.logoUrl = base64;
+          document.getElementById('company-logo-preview').innerHTML = `<img src="${base64}" class="w-full h-full object-contain p-1">`;
+        } else if (type === 'sign') {
+          db.company.signatureUrl = base64;
+          document.getElementById('company-sign-preview').innerHTML = `<img src="${base64}" class="max-h-full max-w-full object-contain">`;
+        } else if (type === 'stamp') {
+          db.company.stampUrl = base64;
+          document.getElementById('company-stamp-preview').innerHTML = `<img src="${base64}" class="max-h-full max-w-full object-contain">`;
+        }
+        saveDB(db);
+        showToast('Image uploaded successfully');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Company Load & Save
+    function loadCompanyProfile() {
+      const db = getDB();
+      const c = db.company;
+      document.getElementById('cmp-legal-name').value = c.legalName || '';
+      document.getElementById('cmp-brand-name').value = c.brandName || '';
+      document.getElementById('cmp-phone').value = c.phone || '';
+      document.getElementById('cmp-whatsapp').value = c.whatsapp || '';
+      document.getElementById('cmp-email').value = c.email || '';
+      document.getElementById('cmp-address').value = c.address || '';
+      document.getElementById('cmp-place').value = c.place || '';
+      document.getElementById('cmp-district').value = c.district || '';
+      document.getElementById('cmp-gstin').value = c.gstin || '';
+      document.getElementById('cmp-bank-name').value = c.bankName || '';
+      document.getElementById('cmp-bank-acc').value = c.accNo || '';
+      document.getElementById('cmp-bank-ifsc').value = c.ifsc || '';
+      document.getElementById('cmp-bank-upi').value = c.upi || '';
+      document.getElementById('cmp-auth-person').value = c.authPerson || '';
+
+      if (c.logoUrl) {
+        document.getElementById('company-logo-preview').innerHTML = `<img src="${c.logoUrl}" class="w-full h-full object-contain p-1">`;
+      }
+      if (c.signatureUrl) {
+        document.getElementById('company-sign-preview').innerHTML = `<img src="${c.signatureUrl}" class="max-h-full max-w-full object-contain">`;
+      }
+      if (c.stampUrl) {
+        document.getElementById('company-stamp-preview').innerHTML = `<img src="${c.stampUrl}" class="max-h-full max-w-full object-contain">`;
+      }
+    }
+
+    function saveCompanyProfile() {
+      const db = getDB();
+      db.company.legalName = document.getElementById('cmp-legal-name').value;
+      db.company.brandName = document.getElementById('cmp-brand-name').value;
+      db.company.phone = document.getElementById('cmp-phone').value;
+      db.company.whatsapp = document.getElementById('cmp-whatsapp').value;
+      db.company.email = document.getElementById('cmp-email').value;
+      db.company.address = document.getElementById('cmp-address').value;
+      db.company.place = document.getElementById('cmp-place').value;
+      db.company.district = document.getElementById('cmp-district').value;
+      db.company.gstin = document.getElementById('cmp-gstin').value;
+      db.company.bankName = document.getElementById('cmp-bank-name').value;
+      db.company.accNo = document.getElementById('cmp-bank-acc').value;
+      db.company.ifsc = document.getElementById('cmp-bank-ifsc').value;
+      db.company.upi = document.getElementById('cmp-bank-upi').value;
+      db.company.authPerson = document.getElementById('cmp-auth-person').value;
+
+      saveDB(db);
+      showToast('Company settings saved permanently!');
+      navigateTo('dashboard');
+    }
+
+    // Customer Functions
+    let currentCustomerFilter = 'All';
+    function filterCustomers(type) {
+      currentCustomerFilter = type;
+      ['all', 'dealer', 'contractor'].forEach(t => {
+        const btn = document.getElementById('btn-cust-filter-' + t);
+        if (btn) {
+          if (t === type.toLowerCase()) {
+            btn.className = 'bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap';
+          } else {
+            btn.className = 'bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap';
+          }
+        }
+      });
+      renderCustomerList();
+    }
+
+    function renderCustomerList() {
+      const db = getDB();
+      const container = document.getElementById('customer-list-container');
+      container.innerHTML = '';
+
+      const filtered = db.customers.filter(c => currentCustomerFilter === 'All' || c.type === currentCustomerFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs bg-white rounded-xl">No customers found.</div>`;
+        return;
+      }
+
+      filtered.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm tracking-tight">${c.company}</h4>
+              <p class="text-slate-500 text-xs">👤 ${c.name} | 📞 ${c.phone}</p>
+              <p class="text-slate-500 text-xs truncate max-w-[240px]">📍 ${c.billingAddress}</p>
+              ${c.gstin ? `<p class="font-semibold text-slate-700 text-[10px] mono">GSTIN: ${c.gstin}</p>` : ''}
+            </div>
+            <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${c.type}</span>
+          </div>
+          <div class="bg-slate-50 p-2 rounded-lg flex justify-between text-xs font-medium">
+            <span>Invoices: <strong>${c.invoicesCount || 0}</strong></span>
+            <span class="${c.due > 0 ? 'text-red-600' : 'text-emerald-600'}">
+              Due: <strong class="mono">₹${(c.due || 0).toLocaleString('en-IN')}</strong>
+            </span>
+          </div>
+          <div class="flex gap-2 pt-1 text-xs">
+            <a href="tel:${c.phone}" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 rounded-lg text-center">📞 Call</a>
+            <a href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}" target="_blank" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold py-1.5 rounded-lg text-center">💬 WhatsApp</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function openCustomerModal() {
+      document.getElementById('customer-form').reset();
+      document.getElementById('modal-customer').classList.remove('hidden');
+    }
+
+    function closeCustomerModal() {
+      document.getElementById('modal-customer').classList.add('hidden');
+    }
+
+    function saveNewCustomer() {
+      const db = getDB();
+      const newCust = {
+        id: 'cust_' + Date.now(),
+        name: document.getElementById('cust-name').value,
+        company: document.getElementById('cust-company').value,
+        phone: document.getElementById('cust-phone').value,
+        type: document.getElementById('cust-type').value,
+        email: document.getElementById('cust-email').value,
+        billingAddress: document.getElementById('cust-billing-address').value,
+        shippingAddress: document.getElementById('cust-shipping-address').value || document.getElementById('cust-billing-address').value,
+        gstin: document.getElementById('cust-gstin').value.toUpperCase(),
+        stateCode: document.getElementById('cust-state-code').value || '32',
+        due: 0,
+        invoicesCount: 0
+      };
+
+      db.customers.unshift(newCust);
+      saveDB(db);
+      closeCustomerModal();
+      renderCustomerList();
+      showToast('Customer saved to Master!');
+    }
+
+    // Product Functions (No HSN/SAC)
+    let currentProductFilter = 'All';
+    function filterProducts(cat) {
+      currentProductFilter = cat;
+      ['all', 'adhesive', 'waterproof', 'epoxy'].forEach(t => {
+        const btn = document.getElementById('btn-prod-filter-' + t);
+        if (btn) {
+          if (cat === 'All' && t === 'all' || cat.toLowerCase().includes(t)) {
+            btn.className = 'bg-orange-600 text-white px-3 py-1 rounded-full whitespace-nowrap';
+          } else {
+            btn.className = 'bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap';
+          }
+        }
+      });
+      renderProductList();
+    }
+
+    function renderProductList() {
+      const db = getDB();
+      const container = document.getElementById('product-list-container');
+      container.innerHTML = '';
+
+      const filtered = db.products.filter(p => currentProductFilter === 'All' || p.category === currentProductFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs bg-white rounded-xl">No products registered in this category.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600">${p.category}</span>
+              <h4 class="font-bold text-slate-900 text-sm">${p.name}</h4>
+              <p class="text-slate-500 text-xs">Packing: <strong>${p.unit}</strong> | GST: <strong>${p.gst}%</strong></p>
+            </div>
+            <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">Stock: ${p.stock || 0}</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 bg-slate-50 p-2 rounded-lg text-center text-xs mono">
+            <div class="bg-white p-1 rounded border border-slate-100">
+              <span class="text-[9px] text-slate-400 block font-sans">Retail</span>
+              <span class="font-bold text-slate-800">₹${p.retailPrice}</span>
+            </div>
+            <div class="bg-white p-1 rounded border border-slate-100">
+              <span class="text-[9px] text-slate-400 block font-sans">Dealer</span>
+              <span class="font-bold text-blue-700">₹${p.dealerPrice}</span>
+            </div>
+            <div class="bg-white p-1 rounded border border-slate-100">
+              <span class="text-[9px] text-slate-400 block font-sans">Contractor</span>
+              <span class="font-bold text-emerald-700">₹${p.contractorPrice}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function openProductModal() {
+      document.getElementById('product-form').reset();
+      document.getElementById('modal-product').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('modal-product').classList.add('hidden');
+    }
+
+    function saveNewProduct() {
+      const db = getDB();
+      const newProd = {
+        id: 'prod_' + Date.now(),
+        name: document.getElementById('prod-name').value,
+        category: document.getElementById('prod-category').value,
+        unit: document.getElementById('prod-unit').value,
+        costPrice: parseFloat(document.getElementById('prod-price-cost').value) || 0,
+        retailPrice: parseFloat(document.getElementById('prod-price-retail').value) || 0,
+        dealerPrice: parseFloat(document.getElementById('prod-price-dealer').value) || 0,
+        contractorPrice: parseFloat(document.getElementById('prod-price-contractor').value) || 0,
+        gst: parseFloat(document.getElementById('prod-gst').value) || 18,
+        stock: parseInt(document.getElementById('prod-stock').value) || 0
+      };
+
+      db.products.unshift(newProd);
+      saveDB(db);
+      closeProductModal();
+      renderProductList();
+      showToast('Product added to Master!');
+    }
+
+    // Live KPI Counters
+    function updateDashboardKPI() {
+      const db = getDB();
+      document.getElementById('kpi-product-count').innerText = db.products.length;
+      document.getElementById('kpi-customer-count').innerText = db.customers.length;
+    }
+
+    // Global Search Filter
+    function applySearchPill(term) {
+      document.getElementById('global-search').value = term;
+      handleGlobalSearch(term);
+    }
+
+    function handleGlobalSearch(term) {
+      if (!term.trim()) return;
+      const lower = term.toLowerCase();
+      const db = getDB();
+
+      // Check if match in customers
+      const matchCust = db.customers.some(c => c.company.toLowerCase().includes(lower) || c.phone.includes(lower));
+      if (matchCust) {
+        navigateTo('customers');
+        return;
+      }
+
+      // Check if match in products
+      const matchProd = db.products.some(p => p.name.toLowerCase().includes(lower) || p.category.toLowerCase().includes(lower));
+      if (matchProd) {
+        navigateTo('products');
+        return;
+      }
+    }
+
+    // Init App
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      updateDashboardKPI();
+    });
+  </script>
 </body>
 </html>
