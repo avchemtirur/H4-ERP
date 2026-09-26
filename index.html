@@ -348,12 +348,17 @@
         </div>
       </div>
 
-      <!-- Real P&L Card with Persistent Invoice COGS -->
+      <!-- Real P&L Card with Persistent Invoice COGS & Missing Cost Banner -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
         <h4 class="font-bold text-slate-900 uppercase tracking-wider text-[11px] text-indigo-700">P&L Calculation</h4>
+        
+        <div id="rep-cogs-warning-banner" class="hidden p-2 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-medium">
+          ⚠️ Cost not available for some invoiced items — COGS is calculated only for products with recorded production cost!
+        </div>
+
         <div class="space-y-1.5 mono">
           <div class="flex justify-between"><span>Gross Revenue (Sales):</span> <strong id="rep-gross-sales">₹0.00</strong></div>
-          <div class="flex justify-between text-slate-500"><span>Less: COGS (Mfg Cost of Sales):</span> <span class="text-red-500" id="rep-cogs-total">-₹0.00</span></div>
+          <div class="flex justify-between text-slate-500"><span>Less: COGS (Actual Mfg Cost):</span> <span class="text-red-500" id="rep-cogs-total">-₹0.00</span></div>
           <div class="flex justify-between border-t border-slate-200 pt-1 font-bold text-slate-900"><span>Gross Profit:</span> <span class="text-emerald-700" id="rep-gross-profit">₹0.00</span></div>
           <div class="flex justify-between text-slate-500"><span>Less: Operating Expenses:</span> <span class="text-red-500" id="rep-expenses-total">-₹0.00</span></div>
           <div class="flex justify-between border-t-2 border-slate-900 pt-1 text-sm font-extrabold text-slate-950">
@@ -753,7 +758,8 @@
           <div class="flex justify-between text-slate-600"><span>Direct Labor & Power:</span> <span id="batch-disp-direct-cost">₹0.00</span></div>
           <div class="flex justify-between text-slate-600"><span>Packaging Cost:</span> <span id="batch-disp-pack-cost">₹0.00</span></div>
           <div class="flex justify-between font-bold text-slate-900 border-t border-purple-200 pt-1"><span>Total Batch Cost:</span> <span id="batch-disp-total-cost">₹0.00</span></div>
-          <div class="flex justify-between font-bold text-purple-900 text-xs"><span>Manufacturing Cost / Pack:</span> <span id="batch-disp-unit-cost">₹0.00</span></div>
+          <div class="flex justify-between font-bold text-purple-900 text-xs"><span>Cost / KG:</span> <span id="batch-disp-kg-cost">₹0.00 / KG</span></div>
+          <div class="flex justify-between font-bold text-emerald-800 text-xs"><span>Cost / Pack:</span> <span id="batch-disp-unit-cost">₹0.00</span></div>
         </div>
 
         <button type="submit" id="btn-submit-batch" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition">
@@ -916,6 +922,10 @@
       <form onsubmit="event.preventDefault(); saveNewProduct();" class="space-y-3">
         <input type="text" id="prod-name" placeholder="Product Name & Grade" class="w-full bg-slate-50 border p-2 rounded" required>
         <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="prod-unit" placeholder="Unit (Bag / Bucket)" class="bg-slate-50 border p-2 rounded" value="Bag" required>
+          <input type="number" id="prod-pack-weight" placeholder="Pack Weight (e.g. 20 KG)" class="bg-slate-50 border p-2 rounded" value="20" required>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
           <input type="number" id="prod-price-retail" placeholder="Retail Price" class="bg-slate-50 border p-2 rounded" required>
           <input type="number" id="prod-price-contractor" placeholder="Contractor Price" class="bg-slate-50 border p-2 rounded" required>
         </div>
@@ -933,7 +943,7 @@
     const DB_KEY = 'H4_ERP_DB_V2';
 
     const defaultData = {
-      version: "4.1",
+      version: "4.3",
       counters: { quotation: 0, invoice: 0, payment: 0, purchase: 0, production: 0, expense: 0 },
       settings: {
         invoicePrefix: 'INV-',
@@ -1002,9 +1012,10 @@
           name: 'H4 Premium Tile Adhesive (C1 Grade)',
           category: 'Tile Adhesive',
           unit: 'Bag',
+          packWeight: 20, // 20 KG per Bag
           retailPrice: 450,
           contractorPrice: 390,
-          currentMfgCost: 260,
+          currentMfgCost: 260, // Baseline actual manufacturing cost per bag
           gst: 18,
           stock: 250
         }
@@ -1059,7 +1070,7 @@
           recipeNo: 'RCP-0001',
           productId: 'prod_1',
           productName: 'H4 Premium Tile Adhesive (C1 Grade)',
-          batchSize: 100,
+          batchSize: 100, // 100 KG Batch
           batchUnit: 'KG',
           items: [
             { materialId: 'rm_1', materialName: 'OPC 53 Grade Cement', qty: 38, unit: 'KG' },
@@ -1159,7 +1170,6 @@
       }
     }
 
-    // Ledger Stock Movement Logger (P0 Fix 5: Takes in-memory db directly, avoids stale overwrite)
     function recordStockMovement(db, type, itemId, itemName, qty, unit, direction, refType, refNo, costSnapshot = 0) {
       let balance = 0;
       if (type === 'RM') {
@@ -1228,7 +1238,32 @@
       return (str.trim() + ' Rupees Only');
     }
 
-    // Master Navigation
+    // THEME ENGINE IMPLEMENTATION (Fixed for Startup)
+    function applyAppTheme(themeKey, persist = true) {
+      const root = document.documentElement;
+      const themes = {
+        purple: { start: '#17053e', mid: '#200b52', end: '#260e61', btn: '#4f46e5', btnHover: '#4338ca' },
+        blue: { start: '#1e3a8a', mid: '#1d4ed8', end: '#1e40af', btn: '#2563eb', btnHover: '#1d4ed8' },
+        emerald: { start: '#064e3b', mid: '#047857', end: '#065f46', btn: '#059669', btnHover: '#047857' },
+        dark: { start: '#09090b', mid: '#18181b', end: '#27272a', btn: '#3f3f46', btnHover: '#27272a' }
+      };
+
+      const t = themes[themeKey] || themes.purple;
+      root.style.setProperty('--theme-gradient-start', t.start);
+      root.style.setProperty('--theme-gradient-mid', t.mid);
+      root.style.setProperty('--theme-gradient-end', t.end);
+      root.style.setProperty('--theme-btn', t.btn);
+      root.style.setProperty('--theme-btn-hover', t.btnHover);
+
+      if (persist) {
+        const db = getDB();
+        db.settings.theme = themeKey;
+        saveDB(db);
+        showToast(`Applied ${themeKey.toUpperCase()} system theme`);
+      }
+    }
+
+    // Master Navigation Router
     function navigateTo(viewId) {
       const views = ['dashboard', 'company', 'customers', 'products', 'quotation-list', 'invoice-list', 'document-editor', 'payments', 'backup', 'templates', 'theme', 'settings', 'reports', 'purchases', 'production', 'raw-materials', 'suppliers', 'expenses'];
       views.forEach(v => {
@@ -1268,7 +1303,298 @@
     let activeEditingId = null;
     let currentConvertingQuotationId = null;
 
-    // ================= PURCHASES & LANDED COST (P0 Fix 4, P1 Fix 6 & 8) =================
+    // ================= RESTORED PHASE 1-3 FUNCTIONS (FIX 1) =================
+    function loadCompanyProfile() {
+      const db = getDB();
+      const c = db.company;
+      document.getElementById('cmp-legal-name').value = c.legalName || '';
+      document.getElementById('cmp-brand-name').value = c.brandName || '';
+      document.getElementById('cmp-phone').value = c.phone || '';
+      document.getElementById('cmp-gstin').value = c.gstin || '';
+      if (c.logoUrl) {
+        document.getElementById('company-logo-preview').innerHTML = `<img src="${c.logoUrl}" class="w-full h-full object-contain p-1">`;
+      }
+    }
+
+    function saveCompanyProfile() {
+      const db = getDB();
+      db.company.legalName = document.getElementById('cmp-legal-name').value;
+      db.company.brandName = document.getElementById('cmp-brand-name').value;
+      db.company.phone = document.getElementById('cmp-phone').value;
+      db.company.gstin = document.getElementById('cmp-gstin').value;
+      saveDB(db);
+      showToast('Company profile saved');
+      navigateTo('dashboard');
+    }
+
+    function handleImageUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const db = getDB();
+        db.company.logoUrl = e.target.result;
+        document.getElementById('company-logo-preview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain p-1">`;
+        saveDB(db);
+        showToast('Logo uploaded');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderCustomerList() {
+      const db = getDB();
+      const c = document.getElementById('customer-list-container');
+      c.innerHTML = '';
+      if (db.customers.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No customers yet.</div>';
+        return;
+      }
+      db.customers.forEach(cust => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm">${cust.company}</h4>
+              <p class="text-slate-500 text-[11px]">👤 ${cust.name} | 📞 ${cust.phone}</p>
+              <p class="text-slate-400 text-[10px]">📍 ${cust.billingAddress}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-red-600 mono block">Due: ₹${(cust.due || 0).toLocaleString('en-IN')}</span>
+              <span class="text-[10px] text-slate-400">Inv: ${cust.invoicesCount || 0}</span>
+            </div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function openCustomerModal() { document.getElementById('modal-customer').classList.remove('hidden'); }
+    function closeCustomerModal() { document.getElementById('modal-customer').classList.add('hidden'); }
+    function saveNewCustomer() {
+      const db = getDB();
+      const newCust = {
+        id: 'cust_' + Date.now(),
+        name: document.getElementById('cust-name').value,
+        company: document.getElementById('cust-company').value,
+        phone: document.getElementById('cust-phone').value,
+        billingAddress: document.getElementById('cust-billing-address').value,
+        due: 0,
+        invoicesCount: 0
+      };
+      db.customers.unshift(newCust);
+      saveDB(db);
+      closeCustomerModal();
+      renderCustomerList();
+      showToast('Customer saved');
+    }
+
+    function renderProductList() {
+      const db = getDB();
+      const c = document.getElementById('product-list-container');
+      c.innerHTML = '';
+      if (db.products.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No finished products yet.</div>';
+        return;
+      }
+      db.products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">${p.category} (${p.packWeight || 20} KG / ${p.unit})</span>
+              <h4 class="font-bold text-slate-900">${p.name}</h4>
+              <p class="text-slate-500 text-[11px]">Retail: ₹${p.retailPrice} | Contractor: ₹${p.contractorPrice}</p>
+              <p class="text-purple-700 text-[10px] font-semibold">Actual Mfg Cost: ${p.currentMfgCost ? '₹' + p.currentMfgCost.toFixed(2) + ' / ' + p.unit : 'Not Recorded Yet'}</p>
+            </div>
+            <span class="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded mono text-xs">Stock: ${p.stock || 0}</span>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function openProductModal() { document.getElementById('modal-product').classList.remove('hidden'); }
+    function closeProductModal() { document.getElementById('modal-product').classList.add('hidden'); }
+    function saveNewProduct() {
+      const db = getDB();
+      const newP = {
+        id: 'prod_' + Date.now(),
+        name: document.getElementById('prod-name').value,
+        category: 'Construction Solution',
+        unit: document.getElementById('prod-unit').value || 'Bag',
+        packWeight: parseFloat(document.getElementById('prod-pack-weight').value) || 20,
+        retailPrice: parseFloat(document.getElementById('prod-price-retail').value) || 0,
+        contractorPrice: parseFloat(document.getElementById('prod-price-contractor').value) || 0,
+        currentMfgCost: null, // Initial FG has no batch history yet
+        gst: parseFloat(document.getElementById('prod-gst').value) || 18,
+        stock: parseFloat(document.getElementById('prod-stock').value) || 0
+      };
+      db.products.unshift(newP);
+      saveDB(db);
+      closeProductModal();
+      renderProductList();
+      showToast('Finished product registered');
+    }
+
+    function renderQuotationList() {
+      const db = getDB();
+      const c = document.getElementById('quotation-list-container');
+      c.innerHTML = '';
+      if (db.quotations.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No quotations generated yet.</div>';
+        return;
+      }
+      db.quotations.forEach(q => {
+        const isConverted = q.status === 'CONVERTED';
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-sky-700 mono">${q.docNumber}</span>
+              <h4 class="font-bold text-slate-900">${q.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Valid Until: ${q.expiryDate}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-slate-900 mono">₹${q.grandTotal.toLocaleString('en-IN')}</span>
+              <span class="${isConverted ? 'bg-purple-100 text-purple-800' : 'bg-sky-50 text-sky-700'} text-[10px] font-bold px-2 py-0.5 rounded block mt-0.5">${isConverted ? `CONVERTED → ${q.convertedInvoiceNo}` : 'ACTIVE QUOTE'}</span>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick='renderDocumentPrintModal(${JSON.stringify(q)})' class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 rounded-lg transition">View / Print</button>
+            ${!isConverted ? `<button onclick="convertQuotationToInvoice('${q.id}')" class="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-700 font-semibold py-1.5 rounded-lg transition">Convert to Invoice</button>` : ''}
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function renderInvoiceList() {
+      const db = getDB();
+      const c = document.getElementById('invoice-list-container');
+      c.innerHTML = '';
+      if (db.invoices.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No tax invoices generated yet.</div>';
+        return;
+      }
+      db.invoices.forEach(inv => {
+        const liveStatus = computeInvoiceStatus(inv);
+        const badgeColor = liveStatus === 'PAID' ? 'bg-emerald-100 text-emerald-800' : (liveStatus === 'OVERDUE' ? 'bg-red-600 text-white animate-pulse' : (liveStatus === 'PARTIAL' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-700'));
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-cyan-700 mono">${inv.docNumber}</span>
+              <h4 class="font-bold text-slate-900">${inv.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Due: ${inv.expiryDate} | Bal: <strong class="text-red-600 mono">₹${(inv.balance || 0).toLocaleString('en-IN')}</strong></p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-slate-900 mono">₹${inv.grandTotal.toLocaleString('en-IN')}</span>
+              <span class="${badgeColor} font-bold px-1.5 py-0.5 rounded text-[10px] block mt-0.5">${liveStatus}</span>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick='renderDocumentPrintModal(${JSON.stringify(inv)})' class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 rounded-lg transition">View / Print</button>
+            <button onclick="openRecordPaymentModal('${inv.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold py-1.5 rounded-lg transition">Record Payment</button>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function renderPaymentsScreen() {
+      const db = getDB();
+      const container = document.getElementById('payment-receipts-container');
+      container.innerHTML = '';
+
+      const totalReceived = db.payments.reduce((acc, p) => acc + (p.amount || 0), 0);
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayReceived = db.payments.filter(p => p.date === todayStr).reduce((acc, p) => acc + (p.amount || 0), 0);
+
+      document.getElementById('pay-kpi-total').innerText = '₹' + totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('pay-kpi-today').innerText = '₹' + todayReceived.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      if (db.payments.length === 0) {
+        container.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No payments recorded yet.</div>';
+        return;
+      }
+      db.payments.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-emerald-700 mono">${p.receiptNo}</span>
+              <h4 class="font-bold text-slate-900">${p.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Invoice: ${p.invoiceNo} | Mode: ${p.method}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-emerald-700 mono">₹${p.amount.toLocaleString('en-IN')}</span>
+              <span class="block text-[10px] text-slate-400 mono">${p.date}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function renderBackupScreen() {
+      const db = getDB();
+      document.getElementById('bkp-cust-count').innerText = db.customers.length;
+      document.getElementById('bkp-prod-count').innerText = db.products.length;
+      document.getElementById('bkp-rm-count').innerText = db.rawMaterials.length;
+    }
+
+    function loadTemplateConfig() {
+      const db = getDB();
+      selectTemplate(db.settings.template || 'H4 Pro', false);
+    }
+
+    function selectTemplate(tplName, doSave = true) {
+      ['h4pro', 'classic', 'minimal'].forEach(t => {
+        const btn = document.getElementById('btn-tpl-' + t);
+        if (btn) btn.className = 'p-2.5 rounded-xl border border-slate-200 text-center font-semibold text-slate-700';
+      });
+      const activeId = tplName === 'Classic' ? 'btn-tpl-classic' : (tplName === 'Minimal' ? 'btn-tpl-minimal' : 'btn-tpl-h4pro');
+      const activeBtn = document.getElementById(activeId);
+      if (activeBtn) activeBtn.className = 'p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 text-center font-bold text-indigo-900';
+
+      if (doSave) {
+        const db = getDB();
+        db.settings.template = tplName;
+        saveDB(db);
+        showToast(`Template changed to ${tplName}`);
+      }
+    }
+
+    function loadGlobalSettings() {
+      const db = getDB();
+      document.getElementById('set-inv-prefix').value = db.settings.invoicePrefix || 'INV-';
+      document.getElementById('set-qtn-prefix').value = db.settings.quotationPrefix || 'QTN-';
+      document.getElementById('set-pur-prefix').value = db.settings.purchasePrefix || 'PUR-';
+      document.getElementById('set-bat-prefix').value = db.settings.batchPrefix || 'BAT-';
+    }
+
+    function saveGlobalSettings() {
+      const db = getDB();
+      db.settings.invoicePrefix = document.getElementById('set-inv-prefix').value;
+      db.settings.quotationPrefix = document.getElementById('set-qtn-prefix').value;
+      db.settings.purchasePrefix = document.getElementById('set-pur-prefix').value;
+      db.settings.batchPrefix = document.getElementById('set-bat-prefix').value;
+      saveDB(db);
+      showToast('System configuration saved');
+      navigateTo('dashboard');
+    }
+
+    // ================= PURCHASES & LANDED COST =================
     let isInlineSupplierMode = false;
     let isInlineRawMaterialMode = false;
 
@@ -1314,9 +1640,7 @@
       document.getElementById('modal-purchase').classList.remove('hidden');
     }
 
-    function closePurchaseModal() {
-      document.getElementById('modal-purchase').classList.add('hidden');
-    }
+    function closePurchaseModal() { document.getElementById('modal-purchase').classList.add('hidden'); }
 
     function populateSupplierDropdown(selectedId = null) {
       const db = getDB();
@@ -1554,7 +1878,7 @@
       }
     }
 
-    // ================= PRODUCTION & BOM =================
+    // ================= PRODUCTION & BOM (AUTHENTIC COSTING, NO FAKE FALLBACKS) =================
     function toggleProdTab(tab) {
       if (tab === 'batches') {
         document.getElementById('production-batches-container').classList.remove('hidden');
@@ -1591,7 +1915,7 @@
               </div>
               <div class="text-right">
                 <span class="text-base font-bold text-slate-900 mono">₹${b.totalBatchCost.toLocaleString('en-IN')}</span>
-                <span class="block text-[10px] text-purple-700 font-bold mono">Cost: ₹${b.costPerUnit.toFixed(2)}/unit</span>
+                <span class="block text-[10px] text-purple-700 font-bold mono">Cost/Pack: ₹${b.costPerPack.toFixed(2)}</span>
               </div>
             </div>
             <div class="bg-purple-50/60 p-2 rounded text-[10px] text-slate-600">
@@ -1642,9 +1966,7 @@
     }
     function closeRunBatchModal() { document.getElementById('modal-production-batch').classList.add('hidden'); }
 
-    function onRecipeSelectForBatch(recipeId) {
-      calculateBatchRequirements();
-    }
+    function onRecipeSelectForBatch(recipeId) { calculateBatchRequirements(); }
 
     function calculateBatchRequirements() {
       const db = getDB();
@@ -1659,14 +1981,22 @@
 
       if (!recipe) return;
 
+      const p = db.products.find(prod => prod.id === recipe.productId);
+      const packWeight = (p && p.packWeight) ? p.packWeight : 20;
+
       let isStockShort = false;
+      let isCostMissing = false;
       let totalRmCost = 0;
 
       recipe.items.forEach(it => {
         const rm = db.rawMaterials.find(r => r.id === it.materialId);
         const reqQty = it.qty * mult;
         const available = rm ? rm.stock : 0;
-        const landedCost = rm ? (rm.lastLandedCost || 10) : 10;
+        
+        // Zero fake fallbacks: use actual lastLandedCost or standardRate from RM Master
+        const landedCost = (rm && (rm.lastLandedCost > 0 ? rm.lastLandedCost : rm.standardRate)) || 0;
+        if (landedCost <= 0) isCostMissing = true;
+
         const lineCost = reqQty * landedCost;
         totalRmCost += lineCost;
 
@@ -1675,32 +2005,39 @@
 
         checkList.innerHTML += `
           <div class="flex justify-between items-center ${hasEnough ? 'text-slate-700' : 'text-red-600 font-bold'}">
-            <span>• ${it.materialName} (Req: ${reqQty} ${it.unit})</span>
+            <span>• ${it.materialName} (Req: ${reqQty} ${it.unit}) ${landedCost <= 0 ? '<span class="text-amber-600 font-normal">[No Rate]</span>' : ''}</span>
             <span>Stock: ${available} ${it.unit} ${hasEnough ? '✓' : '✗ SHORT'}</span>
           </div>
         `;
       });
 
       const totalBatchCost = totalRmCost + (recipe.directCost * mult) + (recipe.packagingCost * mult) + (recipe.overheadCost * mult);
-      const yieldQty = recipe.batchSize * mult;
-      const costPerUnit = yieldQty > 0 ? (totalBatchCost / yieldQty) : 0;
+      const yieldQty = recipe.batchSize * mult; // Total KG produced
+      const costPerKg = yieldQty > 0 ? (totalBatchCost / yieldQty) : 0;
+      const costPerPack = costPerKg * packWeight; // Cost per Bag (e.g. 20 KG)
 
       document.getElementById('batch-disp-rm-cost').innerText = '₹' + totalRmCost.toFixed(2);
       document.getElementById('batch-disp-direct-cost').innerText = '₹' + (recipe.directCost * mult).toFixed(2);
       document.getElementById('batch-disp-pack-cost').innerText = '₹' + (recipe.packagingCost * mult).toFixed(2);
       document.getElementById('batch-disp-total-cost').innerText = '₹' + totalBatchCost.toFixed(2);
-      document.getElementById('batch-disp-unit-cost').innerText = '₹' + costPerUnit.toFixed(2) + ' / ' + recipe.batchUnit;
+      document.getElementById('batch-disp-kg-cost').innerText = '₹' + costPerKg.toFixed(2) + ' / ' + recipe.batchUnit;
+      document.getElementById('batch-disp-unit-cost').innerText = '₹' + costPerPack.toFixed(2) + ' / ' + (p ? p.unit : 'Pack');
 
       if (isStockShort) {
         errBox.innerText = 'Cannot produce! Raw material stock is insufficient.';
         errBox.classList.remove('hidden');
         submitBtn.disabled = true;
         submitBtn.className = 'w-full bg-slate-300 text-slate-500 font-bold py-2.5 rounded-xl cursor-not-allowed';
+      } else if (isCostMissing) {
+        errBox.innerText = 'Warning: One or more raw materials have no recorded cost in RM Master/Purchases!';
+        errBox.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.className = 'w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition';
       } else {
         submitBtn.disabled = false;
         submitBtn.className = 'w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition';
       }
-      return { totalRmCost, totalBatchCost, costPerUnit, yieldQty };
+      return { totalRmCost, totalBatchCost, costPerKg, costPerPack, yieldQty };
     }
 
     function executeProductionBatch() {
@@ -1708,8 +2045,25 @@
       const rId = document.getElementById('prod-recipe-select').value;
       const recipe = db.recipes.find(r => r.id === rId);
       const mult = parseFloat(document.getElementById('batch-multiplier').value) || 1;
-      const calc = calculateBatchRequirements();
 
+      if (!recipe || mult <= 0) {
+        showToast('Invalid recipe or multiplier');
+        return;
+      }
+
+      // Strict database-level final recheck (Fix 3)
+      for (const it of recipe.items) {
+        const rm = db.rawMaterials.find(r => r.id === it.materialId);
+        const reqQty = it.qty * mult;
+        const available = rm ? rm.stock : 0;
+        if (available < reqQty) {
+          showToast(`Execution Aborted: Insufficient stock for ${it.materialName}! Required: ${reqQty} ${it.unit}, Available: ${available} ${it.unit}`);
+          calculateBatchRequirements();
+          return;
+        }
+      }
+
+      const calc = calculateBatchRequirements();
       const batchNo = getNextDocNumber('PRODUCTION');
       commitDocNumber('PRODUCTION', batchNo);
 
@@ -1719,9 +2073,12 @@
       });
 
       const p = db.products.find(prod => prod.id === recipe.productId);
+      const packWeight = (p && p.packWeight) ? p.packWeight : 20;
+      const finishedUnitsProduced = calc.yieldQty / packWeight; // Yield in bags
+
       if (p) {
-        p.currentMfgCost = calc.costPerUnit;
-        recordStockMovement(db, 'FG', p.id, p.name, calc.yieldQty, p.unit, 'IN', 'PRODUCTION', batchNo, calc.costPerUnit);
+        p.currentMfgCost = calc.costPerPack; // Cost per finished unit (e.g. 20kg bag)
+        recordStockMovement(db, 'FG', p.id, p.name, finishedUnitsProduced, p.unit, 'IN', 'PRODUCTION', batchNo, calc.costPerPack);
       }
 
       const batchObj = {
@@ -1733,12 +2090,14 @@
         productName: recipe.productName,
         yieldQty: calc.yieldQty,
         yieldUnit: recipe.batchUnit,
+        finishedUnits: finishedUnitsProduced,
         totalRmCost: calc.totalRmCost,
         directCost: recipe.directCost * mult,
         packagingCost: recipe.packagingCost * mult,
         overheadCost: recipe.overheadCost * mult,
         totalBatchCost: calc.totalBatchCost,
-        costPerUnit: calc.costPerUnit,
+        costPerKg: calc.costPerKg,
+        costPerPack: calc.costPerPack,
         timestamp: new Date().toISOString()
       };
 
@@ -1815,7 +2174,7 @@
       showToast('BOM Recipe saved successfully');
     }
 
-    // ================= OPERATING EXPENSES (P1 Fix 7: Dynamic Categories) =================
+    // ================= OPERATING EXPENSES =================
     function populateExpenseCategoriesDropdown() {
       const db = getDB();
       const s = document.getElementById('exp-category');
@@ -1909,7 +2268,206 @@
       showToast('Operating expense recorded');
     }
 
-    // ================= DOCUMENT CREATOR & PERSISTENT COGS SNAPSHOT (P0 Fix 1 & 2) =================
+    // ================= DOCUMENT CREATOR & PERSISTENT COGS SNAPSHOT =================
+    function populateCustomerDropdown(selectedCustId) {
+      const db = getDB();
+      const select = document.getElementById('doc-customer-select');
+      select.innerHTML = '<option value="">-- Choose Customer --</option>';
+      db.customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.company} (${c.name} - ${c.phone})`;
+        if (selectedCustId && c.id === selectedCustId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function onDocumentCustomerChange(custId) {
+      const db = getDB();
+      const customer = db.customers.find(c => c.id === custId);
+      if (!customer) return;
+      document.getElementById('doc-bill-to').value = `${customer.company}\n${customer.billingAddress}\nPhone: ${customer.phone}\nGSTIN: ${customer.gstin || 'Unregistered'}`;
+      document.getElementById('doc-ship-to').value = customer.shippingAddress || customer.billingAddress;
+      document.getElementById('doc-pos-state').value = customer.stateCode || '32';
+      calculateDocumentTotals();
+    }
+
+    function createNewQuotation() {
+      activeDocType = 'QUOTATION';
+      activeEditingId = null;
+      currentConvertingQuotationId = null;
+      document.getElementById('editor-title').innerText = 'New Commercial Quotation';
+      document.getElementById('lbl-doc-number').innerText = 'Quotation No';
+      document.getElementById('lbl-doc-expiry').innerText = 'Valid Until';
+      document.getElementById('quotation-ref-wrapper').classList.add('hidden');
+      document.getElementById('btn-submit-doc').innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Save & Preview';
+
+      document.getElementById('doc-number').value = getNextDocNumber('QUOTATION');
+      const today = new Date().toISOString().split('T')[0];
+      const validDate = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
+      document.getElementById('doc-date').value = today;
+      document.getElementById('doc-expiry').value = validDate;
+      document.getElementById('doc-terms').value = '1. Price valid for 15 days.\n2. 50% advance along with confirmed purchase order.';
+
+      populateCustomerDropdown();
+      document.getElementById('doc-items-container').innerHTML = '';
+      addDocumentItemRow();
+
+      navigateTo('document-editor');
+      calculateDocumentTotals();
+      lucide.createIcons();
+    }
+
+    function createNewInvoice(prefillData = null) {
+      const db = getDB();
+      activeDocType = 'INVOICE';
+      activeEditingId = null;
+      currentConvertingQuotationId = prefillData ? prefillData.sourceQuotationId : null;
+      document.getElementById('editor-title').innerText = 'New GST Tax Invoice';
+      document.getElementById('lbl-doc-number').innerText = 'Invoice No';
+      document.getElementById('lbl-doc-expiry').innerText = 'Payment Due Date';
+      document.getElementById('quotation-ref-wrapper').classList.remove('hidden');
+      document.getElementById('btn-submit-doc').innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Save & Preview';
+
+      document.getElementById('doc-number').value = getNextDocNumber('INVOICE');
+      const today = new Date().toISOString().split('T')[0];
+      const dueDays = db.settings.defaultDueDays || 30;
+      const dueDate = new Date(Date.now() + dueDays * 86400000).toISOString().split('T')[0];
+      document.getElementById('doc-date').value = today;
+      document.getElementById('doc-expiry').value = dueDate;
+      document.getElementById('doc-terms').value = db.settings.defaultTerms || '1. Goods once sold will not be taken back.';
+
+      populateCustomerDropdown(prefillData ? prefillData.customerId : null);
+      document.getElementById('doc-items-container').innerHTML = '';
+
+      if (prefillData) {
+        document.getElementById('doc-ref-qtn').value = prefillData.refQuotation || '';
+        document.getElementById('doc-bill-to').value = prefillData.billTo || '';
+        document.getElementById('doc-ship-to').value = prefillData.shipTo || '';
+        document.getElementById('doc-pos-state').value = prefillData.posState || '32';
+        prefillData.items.forEach(it => addDocumentItemRow(it));
+      } else {
+        document.getElementById('doc-ref-qtn').value = '';
+        addDocumentItemRow();
+      }
+
+      navigateTo('document-editor');
+      calculateDocumentTotals();
+      lucide.createIcons();
+    }
+
+    function addDocumentItemRow(itemData = null) {
+      const db = getDB();
+      const container = document.getElementById('doc-items-container');
+      const row = document.createElement('div');
+      row.className = 'doc-item-row border border-slate-200 p-2.5 rounded-lg bg-slate-50 space-y-2';
+
+      let optionsHtml = '<option value="">-- Select Product Master --</option>';
+      db.products.forEach(p => {
+        optionsHtml += `<option value="${p.id}" data-name="${p.name}" data-rate="${p.retailPrice}" data-gst="${p.gst}" data-unit="${p.unit}">${p.name} - ₹${p.retailPrice} / ${p.unit} (Stock: ${p.stock || 0})</option>`;
+      });
+
+      row.innerHTML = `
+        <div class="flex justify-between items-center gap-2">
+          <select class="item-product-select w-full bg-white border border-slate-200 rounded p-1.5 font-medium text-xs" onchange="onProductSelectInRow(this)">
+            ${optionsHtml}
+          </select>
+          <button type="button" onclick="this.closest('.doc-item-row').remove(); calculateDocumentTotals();" class="text-red-500 hover:text-red-700 p-1">✕</button>
+        </div>
+        <input type="text" class="item-description w-full bg-white border border-slate-200 rounded p-1 text-[11px]" placeholder="Item description / specs..." value="${itemData ? itemData.description : ''}">
+        <div class="grid grid-cols-5 gap-1.5">
+          <div><label class="block text-[10px] text-slate-400">Qty</label><input type="number" class="item-qty w-full bg-white border border-slate-200 rounded p-1 text-center font-bold" value="${itemData ? itemData.qty : 10}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Rate (₹)</label><input type="number" class="item-rate w-full bg-white border border-slate-200 rounded p-1 text-right font-bold mono" value="${itemData ? itemData.rate : 450}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Disc (₹)</label><input type="number" class="item-disc w-full bg-white border border-slate-200 rounded p-1 text-right font-medium mono" value="${itemData ? itemData.discount : 0}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">GST %</label><input type="number" class="item-gst-rate w-full bg-white border border-slate-200 rounded p-1 text-center font-bold mono" value="${itemData ? itemData.gst : 18}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Amount (₹)</label><div class="item-line-total bg-slate-100 rounded p-1 text-right font-bold mono text-slate-800">0.00</div></div>
+        </div>
+        <input type="hidden" class="item-unit-val" value="${itemData ? itemData.unit : 'Bag'}">
+      `;
+
+      container.appendChild(row);
+      if (itemData) {
+        const prodSelect = row.querySelector('.item-product-select');
+        prodSelect.value = itemData.productId || '';
+      }
+      calculateDocumentTotals();
+    }
+
+    function onProductSelectInRow(selectEl) {
+      const selectedOption = selectEl.options[selectEl.selectedIndex];
+      if (!selectedOption.value) return;
+      const row = selectEl.closest('.doc-item-row');
+      row.querySelector('.item-rate').value = selectedOption.getAttribute('data-rate');
+      row.querySelector('.item-gst-rate').value = selectedOption.getAttribute('data-gst');
+      row.querySelector('.item-unit-val').value = selectedOption.getAttribute('data-unit');
+      row.querySelector('.item-description').value = selectedOption.getAttribute('data-name');
+      calculateDocumentTotals();
+    }
+
+    function calculateDocumentTotals() {
+      const db = getDB();
+      const sellerState = db.company.stateCode || '32';
+      const buyerState = document.getElementById('doc-pos-state').value;
+      const isInterState = sellerState !== buyerState;
+
+      let subtotal = 0, totalDiscount = 0, totalTaxable = 0, totalTax = 0;
+      const slabMap = {};
+
+      document.querySelectorAll('.doc-item-row').forEach(r => {
+        const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
+        const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
+        const disc = parseFloat(r.querySelector('.item-disc').value) || 0;
+        const gstRate = parseFloat(r.querySelector('.item-gst-rate').value) || 0;
+
+        const lineGross = qty * rate;
+        const lineTaxable = Math.max(0, lineGross - disc);
+        const lineTax = (lineTaxable * gstRate) / 100;
+
+        r.querySelector('.item-line-total').innerText = (lineTaxable + lineTax).toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+        subtotal += lineGross;
+        totalDiscount += disc;
+        totalTaxable += lineTaxable;
+        totalTax += lineTax;
+
+        if (!slabMap[gstRate]) slabMap[gstRate] = { taxable: 0, tax: 0, cgst: 0, sgst: 0, igst: 0 };
+        slabMap[gstRate].taxable += lineTaxable;
+        slabMap[gstRate].tax += lineTax;
+        if (isInterState) slabMap[gstRate].igst += lineTax;
+        else { slabMap[gstRate].cgst += lineTax / 2; slabMap[gstRate].sgst += lineTax / 2; }
+      });
+
+      const grossWithTax = totalTaxable + totalTax;
+      const grandTotal = Math.round(grossWithTax);
+      const roundOff = (grandTotal - grossWithTax);
+
+      document.getElementById('calc-subtotal').innerText = '₹' + subtotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-discount').innerText = '₹' + totalDiscount.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-taxable').innerText = '₹' + totalTaxable.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-roundoff').innerText = (roundOff >= 0 ? '+₹' : '-₹') + Math.abs(roundOff).toFixed(2);
+      document.getElementById('calc-grandtotal').innerText = '₹' + grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-words').innerText = numberToWordsIndian(grandTotal);
+
+      const gstContainer = document.getElementById('calc-gst-breakup');
+      gstContainer.innerHTML = '';
+      Object.keys(slabMap).forEach(slab => {
+        const item = slabMap[slab];
+        if (item.taxable > 0) {
+          if (isInterState) {
+            gstContainer.innerHTML += `<div class="flex justify-between text-blue-700 font-medium"><span>IGST (${slab}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.igst.toFixed(2)}</span></div>`;
+          } else {
+            const halfRate = (parseFloat(slab) / 2);
+            gstContainer.innerHTML += `
+              <div class="flex justify-between text-slate-500"><span>CGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.cgst.toFixed(2)}</span></div>
+              <div class="flex justify-between text-slate-500"><span>SGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.sgst.toFixed(2)}</span></div>
+            `;
+          }
+        }
+      });
+
+      return { subtotal, totalDiscount, taxableValue: totalTaxable, totalTax, roundOff, grandTotal, isInterState, slabMap };
+    }
+
     function saveCurrentDocument() {
       const db = getDB();
       const custSelect = document.getElementById('doc-customer-select');
@@ -1919,6 +2477,7 @@
 
       const items = [];
       let invoiceTotalCogs = 0;
+      let missingCogsItems = 0;
 
       document.querySelectorAll('.doc-item-row').forEach(r => {
         const prodSelect = r.querySelector('.item-product-select');
@@ -1927,9 +2486,16 @@
         const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
         const discount = parseFloat(r.querySelector('.item-disc').value) || 0;
 
-        const cogsUnit = (p && p.currentMfgCost) ? p.currentMfgCost : 260;
-        const cogsTotal = qty * cogsUnit;
-        if (activeDocType === 'INVOICE') invoiceTotalCogs += cogsTotal;
+        // No fake fallbacks: derive from authentic currentMfgCost or set null
+        const hasActualCost = (p && typeof p.currentMfgCost === 'number' && p.currentMfgCost > 0);
+        const cogsUnit = hasActualCost ? p.currentMfgCost : null;
+        const cogsTotal = hasActualCost ? (qty * cogsUnit) : null;
+
+        if (!hasActualCost && activeDocType === 'INVOICE') {
+          missingCogsItems++;
+        } else if (hasActualCost && activeDocType === 'INVOICE') {
+          invoiceTotalCogs += cogsTotal;
+        }
 
         items.push({
           productId: prodSelect.value,
@@ -1940,7 +2506,8 @@
           unit: r.querySelector('.item-unit-val').value || 'Bag',
           gst: parseFloat(r.querySelector('.item-gst-rate').value) || 18,
           cogsUnit: cogsUnit,
-          cogsTotal: cogsTotal
+          cogsTotal: cogsTotal,
+          hasCost: hasActualCost
         });
       });
 
@@ -1969,6 +2536,7 @@
         roundOff: calc.roundOff,
         grandTotal: calc.grandTotal,
         cogsTotal: invoiceTotalCogs,
+        hasMissingCogs: missingCogsItems > 0,
         paid: 0,
         balance: calc.grandTotal,
         isInterState: calc.isInterState,
@@ -2007,7 +2575,7 @@
           db.invoices.unshift(docObj);
 
           docObj.items.forEach(line => {
-            recordStockMovement(db, 'FG', line.productId, line.description, line.qty, line.unit, 'OUT', 'INVOICE', docObj.docNumber, line.cogsUnit);
+            recordStockMovement(db, 'FG', line.productId, line.description, line.qty, line.unit, 'OUT', 'INVOICE', docObj.docNumber, line.cogsUnit || 0);
           });
 
           if (currentConvertingQuotationId) {
@@ -2031,7 +2599,257 @@
       renderDocumentPrintModal(docObj);
     }
 
-    // ================= P&L REPORTS ENGINE (P0 Fix 3, P1 Fix 10, 11, 12) =================
+    function previewCurrentDocument() {
+      const db = getDB();
+      const custId = document.getElementById('doc-customer-select').value;
+      const customer = db.customers.find(c => c.id === custId);
+      const calc = calculateDocumentTotals();
+
+      const mockDoc = {
+        type: activeDocType,
+        docNumber: document.getElementById('doc-number').value,
+        date: document.getElementById('doc-date').value,
+        expiryDate: document.getElementById('doc-expiry').value,
+        refQuotation: document.getElementById('doc-ref-qtn').value,
+        customerName: customer ? customer.company : 'Direct Client',
+        customerPhone: customer ? customer.phone : '',
+        customerGstin: customer ? customer.gstin : '',
+        billTo: document.getElementById('doc-bill-to').value,
+        shipTo: document.getElementById('doc-ship-to').value,
+        posState: document.getElementById('doc-pos-state').value,
+        items: [],
+        subtotal: calc.subtotal,
+        discount: calc.totalDiscount,
+        taxable: calc.taxableValue,
+        tax: calc.totalTax,
+        slabMap: calc.slabMap,
+        roundOff: calc.roundOff,
+        grandTotal: calc.grandTotal,
+        isInterState: calc.isInterState,
+        terms: document.getElementById('doc-terms').value,
+        status: 'PREVIEW'
+      };
+
+      document.querySelectorAll('.doc-item-row').forEach(r => {
+        mockDoc.items.push({
+          description: r.querySelector('.item-description').value || 'Construction Chemical',
+          qty: parseFloat(r.querySelector('.item-qty').value) || 0,
+          rate: parseFloat(r.querySelector('.item-rate').value) || 0,
+          discount: parseFloat(r.querySelector('.item-disc').value) || 0,
+          unit: r.querySelector('.item-unit-val').value || 'Bag',
+          gst: parseFloat(r.querySelector('.item-gst-rate').value) || 18
+        });
+      });
+
+      renderDocumentPrintModal(mockDoc);
+    }
+
+    function renderDocumentPrintModal(doc) {
+      viewingDocObject = doc;
+      const db = getDB();
+      const comp = db.company;
+      const set = db.settings;
+
+      const printDoc = document.getElementById('printable-document');
+      printDoc.classList.remove('tpl-classic', 'tpl-minimal');
+      if (set.template === 'Classic') printDoc.classList.add('tpl-classic');
+      if (set.template === 'Minimal') printDoc.classList.add('tpl-minimal');
+
+      const logoHolder = document.getElementById('pdf-logo-holder');
+      if (comp.logoUrl) logoHolder.innerHTML = `<img src="${comp.logoUrl}" class="max-h-full max-w-full object-contain">`;
+      else logoHolder.innerHTML = `<svg class="w-12 h-12 text-amber-500 fill-current" viewBox="0 0 24 24"><path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/></svg>`;
+
+      document.getElementById('pdf-cmp-legal').innerText = comp.legalName;
+      document.getElementById('pdf-cmp-brand').innerText = comp.brandName;
+      document.getElementById('pdf-cmp-addr').innerText = comp.address + ', ' + comp.place;
+      document.getElementById('pdf-cmp-gstin').innerText = `GSTIN: ${comp.gstin}`;
+
+      const isInvoice = doc.type === 'INVOICE';
+      document.getElementById('pdf-doc-type').innerText = isInvoice ? 'TAX INVOICE' : 'QUOTATION';
+      document.getElementById('pdf-lbl-num').innerText = isInvoice ? 'Invoice No:' : 'Quotation No:';
+      document.getElementById('pdf-doc-num').innerText = doc.docNumber;
+      document.getElementById('pdf-doc-date').innerText = doc.date;
+
+      document.getElementById('pdf-cust-name').innerText = doc.customerName;
+      document.getElementById('pdf-cust-bill-addr').innerText = doc.billTo;
+      document.getElementById('pdf-pos').innerText = doc.posState === '32' ? 'Kerala (32)' : `State Code: ${doc.posState}`;
+
+      const convertContainer = document.getElementById('convert-to-invoice-box');
+      if (!isInvoice && doc.status !== 'CONVERTED') {
+        convertContainer.innerHTML = `
+          <button onclick="convertQuotationToInvoice('${doc.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 shadow">
+            <i data-lucide="file-check-2" class="w-3.5 h-3.5"></i> Convert to Invoice
+          </button>
+        `;
+      } else convertContainer.innerHTML = '';
+
+      const tableBody = document.getElementById('pdf-items-body');
+      tableBody.innerHTML = '';
+      doc.items.forEach((it, idx) => {
+        const lineTotal = (it.qty * it.rate) - it.discount;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-1.5 px-2">${idx + 1}</td>
+          <td class="py-1.5 px-2 font-medium">${it.description}</td>
+          <td class="py-1.5 px-2 text-center font-bold">${it.qty}</td>
+          <td class="py-1.5 px-2 text-center">${it.unit}</td>
+          <td class="py-1.5 px-2 text-right mono">₹${it.rate.toFixed(2)}</td>
+          <td class="py-1.5 px-2 text-right font-bold mono">₹${lineTotal.toFixed(2)}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      document.getElementById('pdf-subtotal').innerText = '₹' + doc.subtotal.toFixed(2);
+      document.getElementById('pdf-grandtotal').innerText = '₹' + doc.grandTotal.toFixed(2);
+      document.getElementById('pdf-words').innerText = numberToWordsIndian(doc.grandTotal);
+
+      document.getElementById('document-preview-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeDocumentPreviewModal() {
+      document.getElementById('document-preview-modal').classList.add('hidden');
+      if (activeDocType === 'QUOTATION') navigateTo('quotation-list');
+      else navigateTo('invoice-list');
+    }
+
+    function convertQuotationToInvoice(quotationId) {
+      const db = getDB();
+      const qtn = db.quotations.find(q => q.id === quotationId);
+      if (!qtn) return;
+      if (qtn.status === 'CONVERTED') { showToast(`Already converted: ${qtn.convertedInvoiceNo}`); return; }
+
+      closeDocumentPreviewModal();
+      createNewInvoice({
+        sourceQuotationId: qtn.id,
+        customerId: qtn.customerId,
+        billTo: qtn.billTo,
+        shipTo: qtn.shipTo,
+        posState: qtn.posState,
+        refQuotation: qtn.docNumber,
+        items: qtn.items
+      });
+      showToast(`Converting Quotation ${qtn.docNumber}...`);
+    }
+
+    function shareActiveDocumentOnWhatsApp() {
+      if (!viewingDocObject) return;
+      const doc = viewingDocObject;
+      const db = getDB();
+      const text = `*${db.company.brandName}*\nDear Customer,\nPlease find your *${doc.type === 'INVOICE' ? 'Tax Invoice' : 'Quotation'}*:\nNumber: *${doc.docNumber}*\nDate: ${doc.date}\nAmount: *₹${doc.grandTotal.toLocaleString('en-IN')}*\nThank you!`;
+      const url = `https://wa.me/${doc.customerPhone ? doc.customerPhone.replace(/[^0-9]/g, '') : ''}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    // ================= PAYMENTS ENGINE =================
+    function openRecordPaymentModal(prefillInvId = null) {
+      const db = getDB();
+      const custSelect = document.getElementById('pay-customer-select');
+      custSelect.innerHTML = '<option value="">-- Select Customer --</option>';
+      db.customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.company} (Due: ₹${c.due.toLocaleString('en-IN')})`;
+        custSelect.appendChild(opt);
+      });
+
+      document.getElementById('pay-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-payment').classList.remove('hidden');
+
+      if (prefillInvId) {
+        const inv = db.invoices.find(i => i.id === prefillInvId);
+        if (inv) {
+          custSelect.value = inv.customerId;
+          onPaymentCustomerChange(inv.customerId, inv.id);
+        }
+      } else {
+        document.getElementById('pay-invoice-select').innerHTML = '<option value="">-- Choose Customer First --</option>';
+        resetPaymentDisplay();
+      }
+    }
+
+    function closeRecordPaymentModal() { document.getElementById('modal-payment').classList.add('hidden'); }
+
+    function onPaymentCustomerChange(custId, preselectedInvId = null) {
+      const db = getDB();
+      const invSelect = document.getElementById('pay-invoice-select');
+      invSelect.innerHTML = '<option value="">-- Select Unpaid Invoice --</option>';
+      
+      const unpaid = db.invoices.filter(i => i.customerId === custId && i.balance > 0);
+      unpaid.forEach(inv => {
+        const opt = document.createElement('option');
+        opt.value = inv.id;
+        opt.textContent = `${inv.docNumber} (Balance: ₹${inv.balance.toLocaleString('en-IN')})`;
+        if (preselectedInvId && inv.id === preselectedInvId) opt.selected = true;
+        invSelect.appendChild(opt);
+      });
+
+      if (preselectedInvId) onPaymentInvoiceChange(preselectedInvId);
+      else resetPaymentDisplay();
+    }
+
+    function onPaymentInvoiceChange(invId) {
+      const db = getDB();
+      const inv = db.invoices.find(i => i.id === invId);
+      if (!inv) { resetPaymentDisplay(); return; }
+
+      document.getElementById('pay-disp-total').innerText = '₹' + inv.grandTotal.toLocaleString('en-IN');
+      document.getElementById('pay-disp-paid').innerText = '₹' + (inv.paid || 0).toLocaleString('en-IN');
+      document.getElementById('pay-disp-balance').innerText = '₹' + inv.balance.toLocaleString('en-IN');
+      document.getElementById('pay-amount').value = inv.balance;
+    }
+
+    function resetPaymentDisplay() {
+      document.getElementById('pay-disp-total').innerText = '₹0';
+      document.getElementById('pay-disp-paid').innerText = '₹0';
+      document.getElementById('pay-disp-balance').innerText = '₹0';
+      document.getElementById('pay-amount').value = '';
+    }
+
+    function savePaymentRecord() {
+      const db = getDB();
+      const invId = document.getElementById('pay-invoice-select').value;
+      const inv = db.invoices.find(i => i.id === invId);
+      const cust = db.customers.find(c => c.id === inv?.customerId);
+      const payAmount = parseFloat(document.getElementById('pay-amount').value) || 0;
+
+      if (!inv) { showToast('Select a valid invoice'); return; }
+      if (payAmount <= 0) { showToast('Payment amount must be greater than zero'); return; }
+      if (payAmount > inv.balance) {
+        showToast(`Payment (₹${payAmount}) cannot exceed invoice balance (₹${inv.balance})!`);
+        return;
+      }
+
+      const receiptNum = getNextDocNumber('PAYMENT');
+      commitDocNumber('PAYMENT', receiptNum);
+
+      const paymentObj = {
+        id: 'pay_' + Date.now(),
+        receiptNo: receiptNum,
+        date: document.getElementById('pay-date').value,
+        invoiceId: inv.id,
+        invoiceNo: inv.docNumber,
+        customerId: inv.customerId,
+        customerName: inv.customerName,
+        amount: payAmount,
+        method: document.getElementById('pay-method').value,
+        ref: document.getElementById('pay-ref').value
+      };
+
+      db.payments.unshift(paymentObj);
+      inv.paid = (inv.paid || 0) + payAmount;
+      inv.balance = Math.max(0, inv.grandTotal - inv.paid);
+      inv.status = computeInvoiceStatus(inv);
+
+      if (cust) cust.due = Math.max(0, (cust.due || 0) - payAmount);
+
+      saveDB(db);
+      closeRecordPaymentModal();
+      renderPaymentsScreen();
+      showToast(`Payment ${receiptNum} recorded. Invoice updated!`);
+    }
+
+    // ================= P&L REPORTS ENGINE =================
     function toggleCustomDateInputs(filterVal) {
       const box = document.getElementById('report-custom-date-container');
       if (filterVal === 'custom') {
@@ -2039,9 +2857,7 @@
         const today = new Date().toISOString().split('T')[0];
         if (!document.getElementById('rep-from-date').value) document.getElementById('rep-from-date').value = today;
         if (!document.getElementById('rep-to-date').value) document.getElementById('rep-to-date').value = today;
-      } else {
-        box.classList.add('hidden');
-      }
+      } else box.classList.add('hidden');
     }
 
     function isDateInFilter(dateStr, filter) {
@@ -2084,17 +2900,21 @@
       const filteredPurchases = db.purchases.filter(p => isDateInFilter(p.date, filter));
 
       let grossSales = 0, totalCogs = 0, cgst = 0, sgst = 0, igst = 0;
+      let hasMissingCost = false;
 
       filteredInvoices.forEach(inv => {
         grossSales += inv.taxable || 0;
-        if (inv.cogsTotal !== undefined && inv.cogsTotal !== null) {
-          totalCogs += inv.cogsTotal;
-        } else if (inv.items) {
+        if (inv.items) {
           inv.items.forEach(it => {
-            totalCogs += (it.cogsTotal || (it.qty * (it.cogsUnit || 260)));
+            if (it.cogsTotal !== null && it.cogsTotal !== undefined && it.cogsTotal > 0) {
+              totalCogs += it.cogsTotal;
+            } else if (it.cogsUnit !== null && it.cogsUnit !== undefined && it.cogsUnit > 0) {
+              totalCogs += (it.qty * it.cogsUnit);
+            } else {
+              hasMissingCost = true;
+            }
           });
         }
-
         if (inv.slabMap) {
           Object.values(inv.slabMap).forEach(s => {
             cgst += s.cgst || 0;
@@ -2109,8 +2929,12 @@
       const netProfit = grossProfit - totalExpenses;
       const inputGst = filteredPurchases.reduce((acc, p) => acc + (p.gstTotal || 0), 0);
 
+      const banner = document.getElementById('rep-cogs-warning-banner');
+      if (hasMissingCost) banner.classList.remove('hidden');
+      else banner.classList.add('hidden');
+
       document.getElementById('rep-gross-sales').innerText = '₹' + grossSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('rep-cogs-total').innerText = '-₹' + totalCogs.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('rep-cogs-total').innerText = (totalCogs > 0 ? '-₹' : '₹') + totalCogs.toLocaleString('en-IN', {minimumFractionDigits: 2});
       document.getElementById('rep-gross-profit').innerText = '₹' + grossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2});
       document.getElementById('rep-expenses-total').innerText = '-₹' + totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2});
       document.getElementById('rep-net-profit').innerText = (netProfit >= 0 ? '₹' : '-₹') + Math.abs(netProfit).toLocaleString('en-IN', {minimumFractionDigits: 2});
@@ -2134,77 +2958,13 @@
       });
     }
 
-    // ================= RAW MATERIALS & SUPPLIERS SCREENS =================
-    function renderRawMaterialsScreen() {
-      const db = getDB();
-      const c = document.getElementById('raw-materials-list-container');
-      c.innerHTML = '';
-      db.rawMaterials.forEach(rm => {
-        const card = document.createElement('div');
-        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs';
-        card.innerHTML = `
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600">${rm.category} (${rm.packSize || 'Bulk'})</span>
-              <h4 class="font-bold text-slate-900">${rm.name}</h4>
-              <p class="text-slate-500 text-[11px]">Last Landed Cost: <strong>₹${(rm.lastLandedCost || 0).toFixed(2)} / ${rm.unit}</strong></p>
-            </div>
-            <span class="${rm.stock <= rm.minStock ? 'bg-red-100 text-red-700' : 'bg-emerald-50 text-emerald-700'} font-bold px-2 py-0.5 rounded text-[11px] mono">
-              Stock: ${rm.stock} ${rm.unit}
-            </span>
-          </div>
-        `;
-        c.appendChild(card);
-      });
-      lucide.createIcons();
-    }
-
-    function renderSuppliersScreen() {
-      const db = getDB();
-      const c = document.getElementById('suppliers-list-container');
-      c.innerHTML = '';
-      db.suppliers.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs';
-        card.innerHTML = `
-          <h4 class="font-bold text-slate-900">${s.name}</h4>
-          <p class="text-slate-500 text-[11px]">📞 ${s.phone} | GST: ${s.gstin || 'Unregistered'}</p>
-          <p class="text-slate-400 text-[10px]">${s.address || 'Address on file'}</p>
-        `;
-        c.appendChild(card);
-      });
-      lucide.createIcons();
-    }
-
-    function updateDashboardKPI() {
-      const db = getDB();
-      const totalSales = db.invoices.reduce((acc, inv) => acc + (inv.grandTotal || 0), 0);
-      document.getElementById('kpi-sales-total').innerText = '₹' + totalSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-      const curMonth = new Date().toISOString().substring(0, 7);
-      let grossSales = 0, cogs = 0;
-      db.invoices.filter(i => (i.date || '').startsWith(curMonth)).forEach(inv => {
-        grossSales += (inv.taxable || 0);
-        if (inv.cogsTotal !== undefined) {
-          cogs += inv.cogsTotal;
-        } else if (inv.items) {
-          inv.items.forEach(it => {
-            cogs += (it.cogsTotal || (it.qty * (it.cogsUnit || 260)));
-          });
-        }
-      });
-      const exp = db.expenses.filter(e => (e.date || '').startsWith(curMonth)).reduce((acc, e) => acc + e.amount, 0);
-      const net = (grossSales - cogs) - exp;
-      document.getElementById('kpi-net-profit').innerText = (net >= 0 ? '₹' : '-₹') + Math.abs(net).toLocaleString('en-IN');
-    }
-
-    // ================= FULL BACKUP VALIDATION (P1 Fix 13) =================
+    // ================= FULL BACKUP SCHEMA & TYPE VALIDATION (FIX 4) =================
     function exportBackupJSON() {
       const db = getDB();
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
       const dl = document.createElement('a');
       dl.setAttribute("href", dataStr);
-      dl.setAttribute("download", `H4_ERP_Phase4_Complete_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+      dl.setAttribute("download", `H4_ERP_Complete_Backup_${new Date().toISOString().slice(0, 10)}.json`);
       document.body.appendChild(dl);
       dl.click();
       dl.remove();
@@ -2218,16 +2978,23 @@
       reader.onload = function(e) {
         try {
           const imp = JSON.parse(e.target.result);
-          const reqKeys = [
-            'company', 'customers', 'products', 'rawMaterials', 'suppliers',
-            'purchases', 'productions', 'invoices', 'payments', 'recipes',
-            'stockMovements', 'expenses', 'settings', 'counters', 'quotations'
-          ];
-          const missing = reqKeys.filter(k => !imp[k]);
-          if (missing.length > 0) {
-            showToast('Backup missing required collections: ' + missing.join(', '));
-            return;
+          // Strict Schema & Type Validation: Prevents corrupted restore
+          const arrayKeys = ['customers', 'products', 'rawMaterials', 'suppliers', 'purchases', 'productions', 'invoices', 'payments', 'recipes', 'stockMovements', 'expenses', 'quotations', 'expenseCategories'];
+          const objectKeys = ['company', 'settings', 'counters'];
+
+          for (const k of arrayKeys) {
+            if (!Array.isArray(imp[k])) {
+              showToast(`Restore Failed: "${k}" must be a valid array!`);
+              return;
+            }
           }
+          for (const k of objectKeys) {
+            if (!imp[k] || typeof imp[k] !== 'object' || Array.isArray(imp[k])) {
+              showToast(`Restore Failed: "${k}" must be a valid configuration object!`);
+              return;
+            }
+          }
+
           saveDB(imp);
           showToast('Database verified & fully restored!');
           navigateTo('dashboard');
@@ -2238,12 +3005,52 @@
       reader.readAsText(file);
     }
 
-    // Initialize App
+    // Dashboard Live KPI Update
+    function updateDashboardKPI() {
+      const db = getDB();
+      const totalSales = db.invoices.reduce((acc, inv) => acc + (inv.grandTotal || 0), 0);
+      document.getElementById('kpi-sales-total').innerText = '₹' + totalSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      const curMonth = new Date().toISOString().substring(0, 7);
+      let grossSales = 0, cogs = 0;
+      db.invoices.filter(i => (i.date || '').startsWith(curMonth)).forEach(inv => {
+        grossSales += (inv.taxable || 0);
+        if (inv.items) {
+          inv.items.forEach(it => {
+            if (it.cogsTotal) cogs += it.cogsTotal;
+            else if (it.cogsUnit) cogs += (it.qty * it.cogsUnit);
+          });
+        }
+      });
+      const exp = db.expenses.filter(e => (e.date || '').startsWith(curMonth)).reduce((acc, e) => acc + e.amount, 0);
+      const net = (grossSales - cogs) - exp;
+      document.getElementById('kpi-net-profit').innerText = (net >= 0 ? '₹' : '-₹') + Math.abs(net).toLocaleString('en-IN');
+    }
+
+    function applySearchPill(term) {
+      document.getElementById('global-search').value = term;
+      handleGlobalSearch(term);
+    }
+
+    function handleGlobalSearch(term) {
+      if (!term.trim()) return;
+      const lower = term.toLowerCase();
+      const db = getDB();
+      if (lower.startsWith('qtn')) { navigateTo('quotation-list'); return; }
+      if (lower.startsWith('inv')) { navigateTo('invoice-list'); return; }
+      if (db.customers.some(c => c.company.toLowerCase().includes(lower))) { navigateTo('customers'); return; }
+      if (db.products.some(p => p.name.toLowerCase().includes(lower))) { navigateTo('products'); return; }
+      if (db.rawMaterials.some(r => r.name.toLowerCase().includes(lower))) { navigateTo('raw-materials'); return; }
+    }
+
+    // App Initialization
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       updateDashboardKPI();
       const db = getDB();
-      if (db.settings && db.settings.theme) applyAppTheme(db.settings.theme);
+      if (db.settings && db.settings.theme) {
+        applyAppTheme(db.settings.theme, false);
+      }
     });
   </script>
 </body>
