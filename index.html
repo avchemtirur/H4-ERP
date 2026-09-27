@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- PURE PINCH-TO-ZOOM ENABLED VIEWPORT -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes">
   <title>H4 ERP - Chemical & Construction Manufacturing Platform</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- DYNAMIC INJECTED CUSTOM FONT STYLES -->
+  <style id="custom-font-style"></style>
 
   <style>
     :root {
@@ -21,14 +25,19 @@
       --theme-gradient-end: #260e61;
       --theme-btn: #4f46e5;
       --theme-btn-hover: #4338ca;
+      --theme-text-color: #1e293b;
     }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: var(--custom-font-body, 'Inter'), sans-serif;
+      color: var(--theme-text-color);
       -webkit-tap-highlight-color: transparent;
       background-color: #f8fafc;
     }
+    h1, h2, h3, h4, .font-heading {
+      font-family: var(--custom-font-heading, 'Inter'), sans-serif;
+    }
     .mono {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--custom-font-mono, 'JetBrains Mono'), monospace;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -48,27 +57,48 @@
       background-color: var(--theme-btn-hover) !important;
     }
 
+    /* TEMPLATE 1: H4 ULTRA PRO (MODERN CORPORATE) */
+    .tpl-h4pro {
+      font-family: var(--custom-font-body, 'Inter'), sans-serif !important;
+      border: 1px solid #e2e8f0;
+    }
+    .tpl-h4pro thead tr {
+      background-color: #1e1b4b !important;
+      color: #ffffff !important;
+    }
+
+    /* TEMPLATE 2: CLASSIC INDUSTRIAL */
     .tpl-classic {
       font-family: 'Times New Roman', serif !important;
-      border: 2px solid #000 !important;
+      border: 3px double #0f172a !important;
+      padding: 1.5rem !important;
     }
+    .tpl-classic thead tr {
+      background-color: #f1f5f9 !important;
+      color: #000000 !important;
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+    }
+
+    /* TEMPLATE 3: MINIMAL SCANDINAVIAN */
     .tpl-minimal {
-      font-family: 'Inter', sans-serif !important;
+      font-family: var(--custom-font-body, 'Inter'), sans-serif !important;
       border: none !important;
     }
-    .tpl-minimal table th {
+    .tpl-minimal thead tr {
       background-color: transparent !important;
-      border-bottom: 2px solid #cbd5e1 !important;
+      border-bottom: 2px solid #94a3b8 !important;
+      color: #475569 !important;
     }
 
     @media print {
       body * {
         visibility: hidden;
       }
-      #printable-document, #printable-document * {
+      #printable-document, #printable-document *, #printable-proposal-area, #printable-proposal-area * {
         visibility: visible;
       }
-      #printable-document {
+      #printable-document, #printable-proposal-area {
         position: absolute;
         left: 0;
         top: 0;
@@ -82,7 +112,7 @@
     }
   </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col pb-16">
+<body class="antialiased min-h-screen flex flex-col pb-20">
 
   <!-- ================= TOP APP BAR ================= -->
   <header id="app-header" class="app-theme-bg text-white px-4 py-3 sticky top-0 z-40 shadow-md">
@@ -91,7 +121,7 @@
         <svg class="w-6 h-6 text-amber-400 fill-current" viewBox="0 0 24 24">
           <path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/>
         </svg>
-        <span class="font-extrabold text-lg tracking-wide text-white">H4 ERP</span>
+        <span class="font-extrabold text-lg tracking-wide text-white font-heading">H4 ERP</span>
       </div>
 
       <div class="flex items-center gap-2">
@@ -135,8 +165,8 @@
           <span class="text-slate-400 font-medium whitespace-nowrap">Try:</span>
           <button onclick="applySearchPill('ABC')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap">ABC Builders</button>
           <button onclick="applySearchPill('INV-')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap">Invoices</button>
-          <button onclick="applySearchPill('Epoxy')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap">Epoxy</button>
           <button onclick="applySearchPill('Waterproofing')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap">Waterproofing</button>
+          <button onclick="applySearchPill('Epoxy')" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full whitespace-nowrap">Epoxy</button>
         </div>
       </div>
 
@@ -154,102 +184,102 @@
 
       <!-- SECTION 1: PROPOSALS & SALES -->
       <div class="pt-2">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Proposals & Billing</span>
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Proposals & Billing</span>
         <div class="grid grid-cols-2 gap-3">
           <div onclick="navigateTo('quotation-list')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#0284c7] to-[#38bdf8] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
-            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Proposal</span>
+            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Proposals</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="file-spreadsheet" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Quotations</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Quotations</h3>
             <p class="text-[11px] text-sky-100 font-normal">Waterproofing & Epoxy</p>
           </div>
 
           <div onclick="navigateTo('invoice-list')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">GST</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="receipt" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Invoice</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Invoice</h3>
             <p class="text-[11px] text-cyan-100 font-normal">Tax Invoices</p>
           </div>
 
           <div onclick="navigateTo('payments')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#059669] to-[#34d399] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Collections</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="badge-dollar-sign" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Payments</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Payments</h3>
             <p class="text-[11px] text-emerald-100 font-normal">Track Customer Pay</p>
           </div>
 
           <div onclick="navigateTo('customers')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#2563eb] to-[#60a5fa] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Clients</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="users" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Customers</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Customers</h3>
             <p class="text-[11px] text-blue-100 font-normal">Ledgers & Contacts</p>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 2: PRODUCTION & MATERIALS -->
+      <!-- SECTION 2: PRODUCTION & PROCUREMENT -->
       <div class="pt-2">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Manufacturing & Inventory</span>
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Manufacturing & Inventory</span>
         <div class="grid grid-cols-2 gap-3">
           <div onclick="navigateTo('purchases')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Inward</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="truck" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Purchases</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Purchases</h3>
             <p class="text-[11px] text-teal-100 font-normal">Landed Costing</p>
           </div>
 
           <div onclick="navigateTo('production')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#7c3aed] to-[#a78bfa] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">BOM</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="factory" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Production</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Production</h3>
             <p class="text-[11px] text-purple-100 font-normal">Recipes & Batches</p>
           </div>
 
           <div onclick="navigateTo('raw-materials')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#d97706] to-[#f59e0b] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Stock</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="boxes" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Raw Materials</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Raw Materials</h3>
             <p class="text-[11px] text-amber-100 font-normal">Chemicals & Aggregates</p>
           </div>
 
           <div onclick="navigateTo('products')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#ea580c] to-[#fb923c] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">FG</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="package" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Products</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Products</h3>
             <p class="text-[11px] text-orange-100 font-normal">Finished Goods Master</p>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 3: EXPENSES, REPORTS & ADMINISTRATION -->
+      <!-- SECTION 3: FINANCE & ADMINISTRATION -->
       <div class="pt-2">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Finance & Administration</span>
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Finance & Administration</span>
         <div class="grid grid-cols-2 gap-3">
           <div onclick="navigateTo('expenses')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#e11d48] to-[#fb7185] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Opex</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="wallet" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Expenses</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Expenses</h3>
             <p class="text-[11px] text-rose-100 font-normal">Operating Costs</p>
           </div>
 
           <div onclick="navigateTo('reports')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#4338ca] to-[#6366f1] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Analytics</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="pie-chart" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Reports</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Reports</h3>
             <p class="text-[11px] text-indigo-100 font-normal">P&L & COGS Audits</p>
           </div>
 
           <div onclick="navigateTo('suppliers')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#334155] to-[#64748b] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Vendors</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="store" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Suppliers</h3>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Suppliers</h3>
             <p class="text-[11px] text-slate-100 font-normal">Supplier Directory</p>
           </div>
 
           <div onclick="navigateTo('company')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#4f46e5] to-[#3b82f6] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Profile</span>
             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="building-2" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight">Company</h3>
-            <p class="text-[11px] text-blue-100 font-normal">Bank, Logo & Seal</p>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Company</h3>
+            <p class="text-[11px] text-blue-100 font-normal">Website, Logo & Bank</p>
           </div>
         </div>
       </div>
@@ -259,7 +289,7 @@
     <div id="view-quotation-list" class="hidden space-y-3">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Commercial Proposals</span>
+        <span class="text-sm font-bold text-slate-800 font-heading">Commercial Proposals</span>
         <button onclick="createNewQuotation()" class="text-xs bg-sky-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-sky-700">+ New Proposal</button>
       </div>
       <div id="quotation-list-container" class="space-y-3"></div>
@@ -268,8 +298,8 @@
     <!-- MODAL: PROPOSAL TYPE SELECTOR (WATERPROOFING VS EPOXY) -->
     <div id="modal-quotation-type-select" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
       <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden p-4 space-y-3 text-center">
-        <h3 class="font-extrabold text-sm text-slate-900 uppercase">Select Proposal Type</h3>
-        <p class="text-slate-500 text-xs">Choose the engineering specification to build a proposal:</p>
+        <h3 class="font-extrabold text-sm text-slate-900 uppercase font-heading">Select Proposal Type</h3>
+        <p class="text-slate-500 text-xs">Choose the engineering proposal template to prepare:</p>
         <div class="space-y-2 pt-2">
           <button onclick="openWaterproofingProposalModal()" class="w-full p-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow active:scale-98 transition">
             <i data-lucide="droplet" class="w-4 h-4"></i> 💧 WATERPROOFING PROPOSAL
@@ -286,14 +316,24 @@
     <div id="modal-waterproofing-editor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
       <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
         <div class="bg-blue-800 text-white px-4 py-3 flex justify-between items-center">
-          <h3 class="font-bold text-xs uppercase tracking-wider text-cyan-300">PREMIUM WATERPROOFING PROPOSAL</h3>
+          <h3 class="font-bold text-xs uppercase tracking-wider text-cyan-300 font-heading">PREMIUM WATERPROOFING PROPOSAL</h3>
           <button onclick="closeWaterproofingEditor()" class="text-slate-300 hover:text-white">✕</button>
         </div>
         <form id="waterproofing-form" onsubmit="event.preventDefault(); saveWaterproofingProposal();" class="p-4 space-y-3 text-xs overflow-y-auto">
-          <!-- Client Details -->
+          <!-- Client Details: Allows Select OR Direct Typing -->
           <div>
             <label class="block text-slate-500 mb-1">Select Customer</label>
-            <select id="wp-cust-select" class="w-full bg-slate-50 border p-2 rounded-lg font-medium" required></select>
+            <select id="wp-cust-select" onchange="onProposalCustomerSelect(this.value, 'wp')" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Customer / Company Name</label>
+              <input type="text" id="wp-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Type customer name" required>
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">Phone Number</label>
+              <input type="tel" id="wp-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile / WhatsApp" required>
+            </div>
           </div>
           <div>
             <label class="block text-slate-500 mb-1">Project Site Location</label>
@@ -306,7 +346,7 @@
 
           <!-- Dynamic Rate Specification (₹/sq.ft) -->
           <div class="border border-blue-200 bg-blue-50/50 p-3 rounded-xl space-y-2">
-            <span class="font-bold text-blue-950 uppercase tracking-wider text-[10px] block">Engineering Specification & Rate Engine</span>
+            <span class="font-bold text-blue-950 uppercase tracking-wider text-[10px] block font-heading">Engineering Specification & Rate Engine</span>
             <div>
               <label class="block text-slate-500 text-[10px]">Area in Sq.Ft</label>
               <input type="number" id="wp-area" value="1000" min="1" oninput="calculateWaterproofingRate()" class="w-full bg-white border p-1.5 rounded font-bold mono text-sm" required>
@@ -354,7 +394,7 @@
 
           <!-- Proposal Warranty & Execution Details -->
           <div class="border border-slate-200 p-2.5 rounded-xl space-y-2 text-xs">
-            <span class="font-bold text-slate-800 uppercase text-[10px] block">Proposal Specifications</span>
+            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Proposal Specifications</span>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-slate-500 text-[10px]">Execution Timeline</label><input type="text" id="wp-timeline" value="5 to 7 Working Days" class="w-full bg-slate-50 border p-1 rounded"></div>
               <div>
@@ -384,14 +424,24 @@
     <div id="modal-epoxy-editor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
       <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
         <div class="bg-purple-900 text-white px-4 py-3 flex justify-between items-center">
-          <h3 class="font-bold text-xs uppercase tracking-wider text-purple-300">PREMIUM EPOXY FLOORING PROPOSAL</h3>
+          <h3 class="font-bold text-xs uppercase tracking-wider text-purple-300 font-heading">PREMIUM EPOXY FLOORING PROPOSAL</h3>
           <button onclick="closeEpoxyEditor()" class="text-slate-300 hover:text-white">✕</button>
         </div>
         <form id="epoxy-form" onsubmit="event.preventDefault(); saveEpoxyProposal();" class="p-4 space-y-3 text-xs overflow-y-auto">
-          <!-- Client & Site -->
+          <!-- Client & Site: Allows Select OR Direct Typing -->
           <div>
             <label class="block text-slate-500 mb-1">Select Customer</label>
-            <select id="epx-cust-select" class="w-full bg-slate-50 border p-2 rounded-lg font-medium" required></select>
+            <select id="epx-cust-select" onchange="onProposalCustomerSelect(this.value, 'epx')" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Customer / Company Name</label>
+              <input type="text" id="epx-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Type customer name" required>
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">Phone Number</label>
+              <input type="tel" id="epx-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile / WhatsApp" required>
+            </div>
           </div>
           <div>
             <label class="block text-slate-500 mb-1">Project Site / Facility Location</label>
@@ -404,7 +454,7 @@
 
           <!-- Dynamic Rate Specification (₹/sq.ft) -->
           <div class="border border-purple-200 bg-purple-50/50 p-3 rounded-xl space-y-2">
-            <span class="font-bold text-purple-950 uppercase tracking-wider text-[10px] block">Flooring Specification & Rate Engine</span>
+            <span class="font-bold text-purple-950 uppercase tracking-wider text-[10px] block font-heading">Flooring Specification & Rate Engine</span>
             <div>
               <label class="block text-slate-500 text-[10px]">Total Area in Sq.Ft</label>
               <input type="number" id="epx-area" value="1200" min="1" oninput="calculateEpoxyRate()" class="w-full bg-white border p-1.5 rounded font-bold mono text-sm" required>
@@ -446,7 +496,7 @@
               </div>
             </div>
 
-            <!-- Optional Premium Features -->
+            <!-- Optional Features -->
             <div class="space-y-1 pt-1 text-[11px] text-slate-700">
               <label class="flex items-center gap-2"><input type="checkbox" id="epx-opt-pu" checked onchange="calculateEpoxyRate()" class="accent-purple-700"> Aliphatic PU Anti-Scratch Top Coat (+₹20/sq.ft)</label>
               <label class="flex items-center gap-2"><input type="checkbox" id="epx-opt-grind" checked class="accent-purple-700"> Diamond Grinding & Dustless Vacuum Prep Included</label>
@@ -467,7 +517,7 @@
 
           <!-- Proposal Warranty & Execution Details -->
           <div class="border border-slate-200 p-2.5 rounded-xl space-y-2 text-xs">
-            <span class="font-bold text-slate-800 uppercase text-[10px] block">Project Execution & Warranty</span>
+            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Project Execution & Warranty</span>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-slate-500 text-[10px]">Execution Timeline</label><input type="text" id="epx-timeline" value="4 to 6 Working Days" class="w-full bg-slate-50 border p-1 rounded"></div>
               <div>
@@ -497,7 +547,7 @@
     <div id="proposal-preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
       <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[94vh]">
         <div class="bg-slate-900 text-white px-4 py-2.5 flex justify-between items-center no-print">
-          <span id="proposal-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400">ENGINEERING PROPOSAL PREVIEW</span>
+          <span id="proposal-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400 font-heading">ENGINEERING PROPOSAL PREVIEW</span>
           <div class="flex items-center gap-2">
             <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
             <button onclick="shareActiveProposalOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> WhatsApp</button>
@@ -506,19 +556,21 @@
         </div>
 
         <div id="printable-proposal-area" class="p-6 text-slate-800 text-[11px] leading-relaxed overflow-y-auto font-sans bg-white space-y-4">
-          <!-- Proposal Header -->
+          <!-- Proposal Header with Full Details -->
           <div class="flex justify-between items-start border-b-2 border-slate-900 pb-3">
             <div class="flex gap-3">
               <div id="prop-logo-holder" class="w-16 h-16 flex items-center justify-center"></div>
               <div>
-                <h1 id="prop-cmp-legal" class="font-extrabold text-base text-slate-950 uppercase tracking-tight">AV CHEM Chemical & Manufacturing</h1>
-                <div id="prop-cmp-brand" class="text-xs font-semibold text-indigo-900">H4 Construction Solutions</div>
+                <h1 id="prop-cmp-legal" class="font-extrabold text-base text-slate-950 uppercase tracking-tight font-heading">AV CHEM Chemical & Manufacturing</h1>
+                <div id="prop-cmp-brand" class="text-xs font-semibold text-indigo-900 font-heading">H4 Construction Solutions</div>
                 <div id="prop-cmp-addr" class="text-slate-500">Industrial Area, Tirur, Malappuram, Kerala</div>
                 <div id="prop-cmp-contact" class="text-slate-500">Phone: +91 9876543210 | Email: avchemkerala@gmail.com</div>
+                <div id="prop-cmp-web" class="text-indigo-700 font-medium">www.h4solutions.com</div>
+                <div id="prop-cmp-gstin" class="font-bold text-slate-900 mono">GSTIN: 32AABCA9876K1Z9</div>
               </div>
             </div>
             <div class="text-right">
-              <h2 id="prop-doc-title" class="text-base font-black text-indigo-950 uppercase tracking-wide">PROPOSAL</h2>
+              <h2 id="prop-doc-title" class="text-base font-black text-indigo-950 uppercase tracking-wide font-heading">PROPOSAL</h2>
               <div class="text-xs font-bold text-slate-800 mono" id="prop-doc-num">QTN-0001</div>
               <div class="text-[10px] text-slate-500">Date: <span id="prop-doc-date">26/09/2026</span></div>
               <div class="text-[10px] text-slate-500">Valid Until: <span id="prop-doc-valid">10/10/2026</span></div>
@@ -542,9 +594,9 @@
             </div>
           </div>
 
-          <!-- Proposal Specification Details Block -->
+          <!-- Specifications Block -->
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
-            <h4 class="font-bold text-slate-900 uppercase text-[10px] tracking-wider text-indigo-900">Work Scope & Engineering Specifications</h4>
+            <h4 class="font-bold text-slate-900 uppercase text-[10px] tracking-wider text-indigo-900 font-heading">Work Scope & Engineering Specifications</h4>
             <div id="prop-specs-content" class="text-[11px] leading-relaxed text-slate-700"></div>
           </div>
 
@@ -587,13 +639,13 @@
           <!-- Warranty & Milestones -->
           <div class="grid grid-cols-2 gap-4 border-t border-slate-200 pt-2 text-[10px] text-slate-600">
             <div>
-              <div class="font-bold text-slate-800 uppercase">Warranty & Guarantee:</div>
+              <div class="font-bold text-slate-800 uppercase font-heading">Warranty & Guarantee:</div>
               <div id="prop-disp-warranty" class="font-medium text-emerald-800">5 Years Comprehensive Warranty</div>
-              <div class="mt-1 font-bold text-slate-800 uppercase">Execution Schedule:</div>
+              <div class="mt-1 font-bold text-slate-800 uppercase font-heading">Execution Schedule:</div>
               <div id="prop-disp-timeline">4 to 6 Working Days</div>
             </div>
             <div>
-              <div class="font-bold text-slate-800 uppercase">Payment Terms:</div>
+              <div class="font-bold text-slate-800 uppercase font-heading">Payment Terms:</div>
               <div>• 50% Advance with Purchase Order</div>
               <div>• 40% on Material Delivery & Surface Prep</div>
               <div>• 10% Handover & Warranty Issue</div>
@@ -622,7 +674,7 @@
     <div id="view-invoice-list" class="hidden space-y-3">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Tax Invoices</span>
+        <span class="text-sm font-bold text-slate-800 font-heading">Tax Invoices</span>
         <button onclick="createNewInvoice()" class="text-xs bg-cyan-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-cyan-700">+ New Invoice</button>
       </div>
       <div id="invoice-list-container" class="space-y-3"></div>
@@ -632,17 +684,30 @@
     <div id="view-document-editor" class="hidden space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateBackFromEditor()" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Cancel</button>
-        <span id="editor-title" class="text-sm font-bold text-slate-800 uppercase tracking-tight">Create Document</span>
+        <span id="editor-title" class="text-sm font-bold text-slate-800 uppercase tracking-tight font-heading">Create Tax Invoice</span>
         <button onclick="previewCurrentDocument()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-bold shadow-sm hover:bg-indigo-700">Preview</button>
       </div>
 
       <form id="document-form" onsubmit="event.preventDefault(); saveCurrentDocument();" class="space-y-4 text-xs">
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
           <div class="flex justify-between items-center">
-            <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">1. Customer Selection</span>
+            <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700 font-heading">1. Customer Selection</span>
             <button type="button" onclick="navigateTo('customers')" class="text-indigo-600 font-semibold text-[11px]">+ Add Master</button>
           </div>
-          <div><label class="block text-slate-500 mb-1">Select Customer</label><select id="doc-customer-select" onchange="onDocumentCustomerChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></select></div>
+          <div>
+            <label class="block text-slate-500 mb-1">Select Customer</label>
+            <select id="doc-customer-select" onchange="onDocumentCustomerChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium"></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-500 mb-1">Customer / Company Name</label>
+              <input type="text" id="doc-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Type customer name" required>
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">Phone Number</label>
+              <input type="tel" id="doc-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Phone" required>
+            </div>
+          </div>
           <div class="grid grid-cols-1 gap-2 pt-1">
             <div><label class="block text-slate-500 text-[10px]">Billing Address</label><textarea id="doc-bill-to" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-medium"></textarea></div>
             <div><label class="block text-slate-500 text-[10px]">Site Address (Ship To)</label><textarea id="doc-ship-to" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-medium"></textarea></div>
@@ -650,7 +715,7 @@
         </div>
 
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">2. Document Details</span>
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700 font-heading">2. Document Details</span>
           <div class="grid grid-cols-2 gap-2">
             <div><label id="lbl-doc-number" class="block text-slate-500 mb-1">Document No</label><input type="text" id="doc-number" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" readonly></div>
             <div><label class="block text-slate-500 mb-1">Date</label><input type="date" id="doc-date" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></div>
@@ -673,14 +738,14 @@
 
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
           <div class="flex justify-between items-center">
-            <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">3. Products & Items</span>
+            <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700 font-heading">3. Products & Items</span>
             <button type="button" onclick="addDocumentItemRow()" class="text-emerald-600 font-bold text-xs flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Item</button>
           </div>
           <div id="doc-items-container" class="space-y-3"></div>
         </div>
 
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
-          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">4. Tax & Totals</span>
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700 font-heading">4. Tax & Totals</span>
           <div class="space-y-1.5 pt-1 text-slate-600 text-xs">
             <div class="flex justify-between"><span>Sub Total:</span> <span id="calc-subtotal" class="font-semibold mono">₹0.00</span></div>
             <div class="flex justify-between"><span>Trade Discount:</span> <span id="calc-discount" class="font-semibold mono text-red-500">₹0.00</span></div>
@@ -693,7 +758,7 @@
         </div>
 
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
-          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">5. Terms</span>
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700 font-heading">5. Terms</span>
           <textarea id="doc-terms" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded p-2 text-xs font-medium"></textarea>
         </div>
 
@@ -705,196 +770,101 @@
       </form>
     </div>
 
-    <!-- ================= ALL OTHER MODULES (PRESERVED) ================= -->
-    <div id="view-purchases" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Raw Material Purchases</span>
-        <button onclick="openNewPurchaseModal()" class="text-xs bg-teal-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-teal-700">+ New Inward</button>
-      </div>
-      <div id="purchases-list-container" class="space-y-3"></div>
-    </div>
-
-    <div id="view-production" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Production & BOM</span>
-        <div class="flex gap-1.5">
-          <button onclick="openRecipeModal()" class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-md font-bold hover:bg-purple-200">+ Recipe</button>
-          <button onclick="openRunBatchModal()" class="text-xs bg-purple-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-purple-700">+ Run Batch</button>
+    <!-- ================= INVOICE PRINT PREVIEW MODAL ================= -->
+    <div id="document-preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[94vh]">
+        <div class="bg-slate-900 text-white px-4 py-2.5 flex justify-between items-center no-print">
+          <span id="preview-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400 font-heading">TAX INVOICE PREVIEW</span>
+          <div class="flex items-center gap-2">
+            <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
+            <button onclick="shareActiveDocumentOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> WhatsApp</button>
+            <button onclick="closeDocumentPreviewModal()" class="text-slate-400 hover:text-white p-1">✕</button>
+          </div>
         </div>
-      </div>
-      <div class="flex gap-2 border-b border-slate-200 text-xs font-bold">
-        <button onclick="toggleProdTab('batches')" id="tab-btn-batches" class="py-1.5 border-b-2 border-purple-600 text-purple-700">Production Batches</button>
-        <button onclick="toggleProdTab('recipes')" id="tab-btn-recipes" class="py-1.5 border-b-2 border-transparent text-slate-500">BOM Recipes</button>
-      </div>
-      <div id="production-batches-container" class="space-y-3"></div>
-      <div id="production-recipes-container" class="space-y-3 hidden"></div>
-    </div>
-
-    <div id="view-raw-materials" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Raw Material Inventory</span>
-        <button onclick="openRawMaterialModal(false)" class="text-xs bg-amber-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-amber-700">+ Add Material</button>
-      </div>
-      <div id="raw-materials-list-container" class="space-y-3"></div>
-    </div>
-
-    <div id="view-suppliers" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Supplier Master</span>
-        <button onclick="openSupplierModal(false)" class="text-xs bg-slate-700 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-slate-800">+ Add Supplier</button>
-      </div>
-      <div id="suppliers-list-container" class="space-y-3"></div>
-    </div>
-
-    <div id="view-expenses" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Operating Expenses</span>
-        <button onclick="openAddExpenseModal()" class="text-xs bg-rose-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-rose-700">+ Add Expense</button>
-      </div>
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-          <span class="text-[10px] text-slate-400 block font-medium">Total Expenses</span>
-          <span id="exp-kpi-total" class="font-bold text-sm text-rose-600 mono">₹0.00</span>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-          <span class="text-[10px] text-slate-400 block font-medium">Power & Fuel</span>
-          <span id="exp-kpi-power" class="font-bold text-sm text-slate-800 mono">₹0.00</span>
-        </div>
-      </div>
-      <div id="expenses-list-container" class="space-y-3"></div>
-    </div>
-
-    <div id="view-reports" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Financial Reports</span>
-        <select id="report-date-filter" onchange="toggleCustomDateInputs(this.value); renderReportsScreen();" class="text-xs bg-white border border-slate-200 rounded p-1 font-semibold">
-          <option value="all">All Time</option>
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month" selected>This Month</option>
-          <option value="custom">Custom Range</option>
-        </select>
-      </div>
-      <div id="report-custom-date-container" class="hidden grid grid-cols-2 gap-2 bg-slate-100 p-2.5 rounded-xl border border-slate-200 text-xs">
-        <div><label class="block text-[10px] text-slate-500 mb-0.5">From Date</label><input type="date" id="rep-from-date" onchange="renderReportsScreen()" class="w-full bg-white border p-1 rounded mono"></div>
-        <div><label class="block text-[10px] text-slate-500 mb-0.5">To Date</label><input type="date" id="rep-to-date" onchange="renderReportsScreen()" class="w-full bg-white border p-1 rounded mono"></div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
-        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">P&L Calculation</h4>
-        <div class="space-y-1.5 mono">
-          <div class="flex justify-between"><span>Gross Revenue:</span> <strong id="rep-gross-sales">₹0.00</strong></div>
-          <div class="flex justify-between text-slate-500"><span>Less: COGS:</span> <span class="text-red-500" id="rep-cogs-total">-₹0.00</span></div>
-          <div class="flex justify-between border-t border-slate-200 pt-1 font-bold"><span>Gross Profit:</span> <span class="text-emerald-700" id="rep-gross-profit">₹0.00</span></div>
-          <div class="flex justify-between text-slate-500"><span>Less: Expenses:</span> <span class="text-red-500" id="rep-expenses-total">-₹0.00</span></div>
-          <div class="flex justify-between border-t-2 border-slate-900 pt-1 text-sm font-extrabold"><span>Net Operating Profit:</span> <span id="rep-net-profit" class="text-emerald-800">₹0.00</span></div>
-        </div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
-        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Product-Wise Profit Contribution</h4>
-        <div id="rep-product-profit-container" class="space-y-1.5"></div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
-        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Customer-Wise Profit Contribution</h4>
-        <div id="rep-customer-profit-container" class="space-y-1.5"></div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
-        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Tax Collections & Input Credit</h4>
-        <div class="space-y-1 mono text-[11px]">
-          <div class="flex justify-between"><span>Output CGST:</span> <span id="rep-cgst-total">₹0.00</span></div>
-          <div class="flex justify-between"><span>Output SGST:</span> <span id="rep-sgst-total">₹0.00</span></div>
-          <div class="flex justify-between"><span>Output IGST:</span> <span id="rep-igst-total">₹0.00</span></div>
-          <div class="flex justify-between border-t border-slate-200 pt-1 font-semibold text-teal-700"><span>Input GST Credit:</span> <span id="rep-input-gst">₹0.00</span></div>
-        </div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
-        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Recent Stock Movements</h4>
-        <div id="rep-stock-movements" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
-      </div>
-    </div>
-
-    <!-- ================= PAYMENTS SCREEN (FIX 2: PROPER IDS) ================= -->
-    <div id="view-payments" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Payments & Collections</span>
-        <button onclick="openRecordPaymentModal()" class="text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-emerald-700">+ Record</button>
-      </div>
-
-      <!-- Valid HTML IDs matching JS -->
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-          <span class="text-[10px] text-slate-400 block font-medium">Total Received</span>
-          <span id="pay-kpi-total" class="font-bold text-sm text-emerald-700 mono">₹0.00</span>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-          <span class="text-[10px] text-slate-400 block font-medium">Today's Collection</span>
-          <span id="pay-kpi-today" class="font-bold text-sm text-slate-900 mono">₹0.00</span>
-        </div>
-      </div>
-      <div id="payment-receipts-container" class="space-y-3 pt-1"></div>
-    </div>
-
-    <div id="view-backup" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Backup & Restore</span>
-        <div></div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
-        <h4 class="font-bold text-slate-900 text-sm">System Database Entities</h4>
-        <div class="grid grid-cols-3 gap-2 text-center mono">
-          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Customers</span><strong id="bkp-cust-count">0</strong></div>
-          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Products</span><strong id="bkp-prod-count">0</strong></div>
-          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Raw Mat</span><strong id="bkp-rm-count">0</strong></div>
-        </div>
-        <div class="space-y-2 pt-3 border-t border-slate-200">
-          <button onclick="exportBackupJSON()" class="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2">
-            <i data-lucide="download" class="w-4 h-4"></i> Download Full Backup JSON
-          </button>
-          <label class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center gap-2 cursor-pointer">
-            <i data-lucide="upload" class="w-4 h-4"></i> Restore From Backup JSON
-            <input type="file" accept=".json" class="hidden" onchange="importBackupJSON(event)">
-          </label>
+        <div id="printable-document" class="p-6 text-slate-800 text-[11px] leading-relaxed overflow-y-auto font-sans bg-white">
+          <div class="flex justify-between items-start border-b-2 border-slate-900 pb-3">
+            <div class="flex gap-3">
+              <div id="pdf-logo-holder" class="w-16 h-16 flex items-center justify-center"></div>
+              <div>
+                <h1 id="pdf-cmp-legal" class="font-extrabold text-base text-slate-950 uppercase font-heading">AV CHEM Chemical & Manufacturing</h1>
+                <div id="pdf-cmp-brand" class="text-xs font-semibold text-indigo-900 font-heading">H4 Construction Solutions</div>
+                <div id="pdf-cmp-addr" class="text-slate-500">Industrial Area, Tirur, Kerala</div>
+                <div id="pdf-cmp-contact" class="text-slate-500">Phone: +91 9876543210 | Email: avchemkerala@gmail.com</div>
+                <div id="pdf-cmp-web" class="text-indigo-700 font-medium">www.h4solutions.com</div>
+                <div id="pdf-cmp-gstin" class="font-bold text-slate-900 mono">GSTIN: 32AABCA9876K1Z9</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <h2 id="pdf-doc-type" class="text-xl font-black text-indigo-950 uppercase tracking-wide font-heading">TAX INVOICE</h2>
+              <div><span id="pdf-lbl-num">Invoice No:</span> <strong id="pdf-doc-num" class="mono">INV-0001</strong></div>
+              <div>Date: <span id="pdf-doc-date">26/09/2026</span></div>
+              <div>Due Date: <span id="pdf-doc-due">26/10/2026</span></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 py-3 border-b border-slate-300">
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">BILL TO:</span>
+              <div id="pdf-cust-name" class="font-bold text-slate-900 text-xs">ABC BUILDERS</div>
+              <div id="pdf-cust-phone" class="text-slate-600">Phone: +91 9876543210</div>
+              <div id="pdf-cust-bill-addr" class="text-slate-600">Tirur, Malappuram</div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">SUPPLY LOCATION:</span>
+              <div id="pdf-pos" class="font-bold text-slate-900">Kerala (32)</div>
+            </div>
+          </div>
+          <table class="w-full my-3 border-collapse">
+            <thead>
+              <tr class="bg-slate-100 border-y border-slate-300 text-left font-bold text-slate-700 text-[10px] uppercase">
+                <th class="py-1.5 px-2">#</th>
+                <th class="py-1.5 px-2">Description</th>
+                <th class="py-1.5 px-2 text-center">Qty</th>
+                <th class="py-1.5 px-2 text-center">Unit</th>
+                <th class="py-1.5 px-2 text-right">Rate</th>
+                <th class="py-1.5 px-2 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="pdf-items-body" class="divide-y divide-slate-200"></tbody>
+          </table>
+          <div class="flex justify-end pt-1">
+            <div class="w-64 space-y-1 text-right">
+              <div class="flex justify-between"><span>Subtotal:</span> <span id="pdf-subtotal" class="mono font-medium">₹0.00</span></div>
+              <div id="pdf-tax-breakup-container"></div>
+              <div class="flex justify-between font-extrabold text-sm border-t-2 border-slate-900 pt-1"><span>Grand Total:</span> <span id="pdf-grandtotal" class="mono text-indigo-900">₹0.00</span></div>
+            </div>
+          </div>
+          <div class="my-3 p-2 bg-slate-50 rounded border border-slate-200">
+            <span class="text-slate-500 font-medium">Amount in Words:</span>
+            <div id="pdf-words" class="font-bold text-slate-900 capitalize">Zero Rupees Only</div>
+          </div>
+          <div id="pdf-bank-section" class="grid grid-cols-2 gap-4 border-t border-slate-300 pt-3 text-[10px]">
+            <div>
+              <div class="font-bold uppercase">Bank Payment Details:</div>
+              <div>Bank: <span id="pdf-bank-name">State Bank of India</span></div>
+              <div>A/C: <span id="pdf-bank-acc" class="mono font-bold">123456789012</span> | IFSC: <span id="pdf-bank-ifsc" class="mono font-bold">SBIN0001234</span></div>
+              <div>UPI: <span id="pdf-bank-upi" class="mono">9876543210@upi</span></div>
+            </div>
+            <div class="text-right">
+              <div>For AV CHEM Chemical & Mfg</div>
+              <div id="pdf-stamp-sign-container" class="h-12 flex items-center justify-end my-1"></div>
+              <div class="text-slate-400">(Authorized Signatory)</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="view-templates" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Template Manager</span>
-        <div></div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
-        <h4 class="font-bold text-slate-900">Document Layout Style</h4>
-        <div class="grid grid-cols-3 gap-2">
-          <button onclick="selectTemplate('H4 Pro')" id="btn-tpl-h4pro" class="p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 text-center font-bold text-indigo-900">H4 Pro</button>
-          <button onclick="selectTemplate('Classic')" id="btn-tpl-classic" class="p-2.5 rounded-xl border border-slate-200 hover:border-slate-400 text-center font-semibold text-slate-700">Classic</button>
-          <button onclick="selectTemplate('Minimal')" id="btn-tpl-minimal" class="p-2.5 rounded-xl border border-slate-200 hover:border-slate-400 text-center font-semibold text-slate-700">Minimal</button>
-        </div>
-        <div class="pt-3 border-t border-slate-200 space-y-2">
-          <span class="font-bold text-slate-900 block text-xs">Element Visibility Switches</span>
-          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Bank Details Block</span><input type="checkbox" id="tpl-show-bank" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
-          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Digital Signature & Stamp</span><input type="checkbox" id="tpl-show-sign" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
-          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Terms & Conditions</span><input type="checkbox" id="tpl-show-terms" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
-        </div>
-      </div>
-    </div>
-
+    <!-- ================= THEME MANAGER VIEW (CUSTOM FONTS & COLOR PICKER) ================= -->
     <div id="view-theme" class="hidden space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Theme Manager</span>
+        <span class="text-sm font-bold text-slate-800 font-heading">Theme & Font Manager</span>
         <div></div>
       </div>
+
+      <!-- Preset Accents -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
-        <h4 class="font-bold text-slate-900">Global Primary Accent</h4>
+        <h4 class="font-bold text-slate-900 font-heading">Global Primary Accent Preset</h4>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="applyAppTheme('purple')" class="p-3 rounded-xl bg-gradient-to-r from-[#17053e] to-[#260e61] text-white font-bold text-center">Royal Purple</button>
           <button onclick="applyAppTheme('blue')" class="p-3 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-800 text-white font-bold text-center">Deep Ocean</button>
@@ -902,481 +872,66 @@
           <button onclick="applyAppTheme('dark')" class="p-3 rounded-xl bg-gradient-to-r from-slate-950 to-zinc-900 text-white font-bold text-center">Corporate Dark</button>
         </div>
       </div>
-    </div>
 
-    <div id="view-settings" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">System Settings</span>
-        <button onclick="saveGlobalSettings()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-semibold hover:bg-indigo-700">Save</button>
+      <!-- Live Text Color Picker -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
+        <h4 class="font-bold text-slate-900 font-heading">Interface Text Color Customizer</h4>
+        <div class="flex items-center gap-3">
+          <input type="color" id="theme-color-input" onchange="applyCustomTextColor(this.value)" class="w-10 h-10 rounded border border-slate-200 cursor-pointer">
+          <span class="text-slate-600 text-xs">Select primary text color across all ERP screens and tables</span>
+        </div>
       </div>
-      <form id="settings-form" onsubmit="event.preventDefault(); saveGlobalSettings();" class="space-y-4 text-xs">
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Prefixes</span>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Invoice Prefix</label><input type="text" id="set-inv-prefix" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
-            <div><label class="block text-slate-500 mb-1">Quotation Prefix</label><input type="text" id="set-qtn-prefix" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
+
+      <!-- CUSTOM FONT UPLOADERS (.ttf, .otf, .woff, .woff2) -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
+        <h4 class="font-bold text-slate-900 font-heading">Custom Font Uploader (.ttf, .otf, .woff, .woff2)</h4>
+        <p class="text-slate-500 text-[11px]">Upload custom branding typography to apply distinct fonts to different sections:</p>
+        
+        <div class="space-y-3 pt-1">
+          <!-- 1. Headings Font -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <span class="font-bold text-slate-800 block text-xs">1. Headings & Titles Font</span>
+            <div class="flex items-center justify-between">
+              <span id="font-heading-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (Inter)</span>
+              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
+                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'heading')">
+              </label>
+            </div>
           </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Purchase Prefix</label><input type="text" id="set-pur-prefix" value="PUR-" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
-            <div><label class="block text-slate-500 mb-1">Batch Prefix</label><input type="text" id="set-bat-prefix" value="BAT-" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
+
+          <!-- 2. Body Font -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <span class="font-bold text-slate-800 block text-xs">2. Body & General Text Font</span>
+            <div class="flex items-center justify-between">
+              <span id="font-body-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (Inter)</span>
+              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
+                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'body')">
+              </label>
+            </div>
+          </div>
+
+          <!-- 3. Monospace Numbers Font -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <span class="font-bold text-slate-800 block text-xs">3. Numbers & Currency Font</span>
+            <div class="flex items-center justify-between">
+              <span id="font-mono-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (JetBrains Mono)</span>
+              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
+                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'mono')">
+              </label>
+            </div>
           </div>
         </div>
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Defaults & Taxation</span>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Default Due Days</label><input type="number" id="set-def-due-days" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
-            <div><label class="block text-slate-500 mb-1">Seller State Code</label><input type="text" id="set-def-statecode" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono"></div>
-          </div>
-          <div><label class="block text-slate-500 mb-1">Default Terms & Conditions</label><textarea id="set-def-terms" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-medium"></textarea></div>
-          <div><label class="block text-slate-500 mb-1">Default Document Notes</label><input type="text" id="set-def-notes" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium"></div>
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl shadow">Save Settings</button>
-      </form>
-    </div>
-
-    <!-- COMPLETE COMPANY MASTER VIEW (FIX 12) -->
-    <div id="view-company" class="hidden space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Company Profile</span>
-        <button onclick="saveCompanyProfile()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-semibold hover:bg-indigo-700">Save</button>
       </div>
-      <form id="company-form" onsubmit="event.preventDefault(); saveCompanyProfile();" class="space-y-4 text-xs">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center space-y-3">
-          <div id="company-logo-preview" class="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden bg-slate-50 relative group"><span class="text-slate-400 text-[10px]">No Logo</span></div>
-          <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-3 py-1.5 rounded-lg text-xs transition border border-indigo-200">
-            Upload Company Logo<input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'logo')">
-          </label>
-        </div>
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-          <div><label class="block text-slate-500 mb-1">Legal Company Name</label><input type="text" id="cmp-legal-name" class="w-full bg-slate-50 border p-2 rounded-lg font-semibold text-slate-900" required></div>
-          <div><label class="block text-slate-500 mb-1">Brand Name</label><input type="text" id="cmp-brand-name" class="w-full bg-slate-50 border p-2 rounded-lg font-semibold text-slate-900" required></div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Phone</label><input type="text" id="cmp-phone" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></div>
-            <div><label class="block text-slate-500 mb-1">WhatsApp</label><input type="text" id="cmp-whatsapp" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Email</label><input type="email" id="cmp-email" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></div>
-            <div><label class="block text-slate-500 mb-1">GSTIN</label><input type="text" id="cmp-gstin" class="w-full bg-slate-50 border p-2 rounded-lg font-bold mono uppercase"></div>
-          </div>
-          <div><label class="block text-slate-500 mb-1">Address</label><textarea id="cmp-address" rows="2" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></textarea></div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">Bank Name</label><input type="text" id="cmp-bank-name" class="w-full bg-slate-50 border p-2 rounded font-medium"></div>
-            <div><label class="block text-slate-500 mb-1">Account No</label><input type="text" id="cmp-bank-acc" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-slate-500 mb-1">IFSC</label><input type="text" id="cmp-bank-ifsc" class="w-full bg-slate-50 border p-2 rounded font-bold mono uppercase"></div>
-            <div><label class="block text-slate-500 mb-1">UPI ID</label><input type="text" id="cmp-bank-upi" class="w-full bg-slate-50 border p-2 rounded font-medium mono"></div>
-          </div>
-        </div>
-        <button type="submit" class="w-full app-theme-btn text-white font-bold py-3 rounded-xl shadow-md transition">Save Company Settings</button>
-      </form>
-    </div>
-
-    <div id="view-customers" class="hidden space-y-3">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Customers</span>
-        <button onclick="openCustomerModal()" class="text-xs bg-blue-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-blue-700">+ New</button>
-      </div>
-      <div id="customer-list-container" class="space-y-3"></div>
-    </div>
-
-    <div id="view-products" class="hidden space-y-3">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800">Product Master (FG)</span>
-        <button onclick="openProductModal()" class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-orange-700">+ Add</button>
-      </div>
-      <div id="product-list-container" class="space-y-3"></div>
     </div>
 
   </main>
-
-  <!-- ================= INLINE MODAL: NEW PURCHASE ================= -->
-  <div id="modal-purchase" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-teal-800 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-teal-300">Raw Material Purchase & Landed Cost</h3>
-        <button onclick="closePurchaseModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="purchase-form" onsubmit="event.preventDefault(); savePurchaseRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <label class="text-slate-500 font-medium">Select Supplier</label>
-            <button type="button" onclick="openSupplierModal(true)" class="text-teal-700 font-bold text-[11px]">+ Add New Supplier</button>
-          </div>
-          <select id="pur-supplier-select" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></select>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Supplier Invoice No</label><input type="text" id="pur-inv-no" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 mono font-semibold" placeholder="INV-SUP-01" required></div>
-          <div><label class="block text-slate-500 mb-1">Purchase Date</label><input type="date" id="pur-date" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></div>
-        </div>
-
-        <div class="border border-slate-200 p-3 rounded-xl bg-slate-50/70 space-y-2.5">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-slate-900 uppercase tracking-wider text-[10px] text-teal-800">Items & Landed Allocations</span>
-            <div class="flex gap-2">
-              <button type="button" onclick="openRawMaterialModal(true)" class="text-teal-700 font-bold text-[10px]">+ New RM</button>
-              <button type="button" onclick="addPurchaseItemRow()" class="text-emerald-700 font-bold text-[10px]">+ Add Item Row</button>
-            </div>
-          </div>
-          <div id="pur-items-container" class="space-y-2"></div>
-        </div>
-
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 mono text-right text-[11px]">
-          <div class="flex justify-between text-slate-600"><span>Basic Goods Total:</span> <span id="pur-disp-basic">₹0.00</span></div>
-          <div class="flex justify-between text-teal-700"><span>Recoverable Input GST:</span> <span id="pur-disp-gst">₹0.00</span></div>
-          <div class="flex justify-between text-slate-600"><span>Freight / Transport:</span> <span id="pur-disp-freight">₹0.00</span></div>
-          <div class="flex justify-between text-slate-600"><span>Local Transport:</span> <span id="pur-disp-local">₹0.00</span></div>
-          <div class="flex justify-between text-slate-600"><span>Other Handling:</span> <span id="pur-disp-other">₹0.00</span></div>
-          <div class="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1"><span>Supplier Invoice Total:</span> <span id="pur-disp-total">₹0.00</span></div>
-          <div class="flex justify-between font-bold text-indigo-700"><span>Total Landed Cost (Excl. GST):</span> <span id="pur-disp-landed">₹0.00</span></div>
-        </div>
-
-        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-xl shadow transition">
-          Confirm Inward & Increase Stock
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= INLINE MODAL: NEW RAW MATERIAL (FIX 10) ================= -->
-  <div id="modal-raw-material" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-amber-800 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-amber-300">Raw Material Master</h3>
-        <button onclick="closeRawMaterialModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="raw-material-form" onsubmit="event.preventDefault(); saveRawMaterialRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div><label class="block text-slate-500 mb-1">Material Name</label><input type="text" id="rm-name" class="w-full bg-slate-50 border p-2 rounded-lg font-semibold" placeholder="E.g., OPC 53 Grade Cement" required></div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-slate-500 mb-1">Category</label>
-            <select id="rm-category" class="w-full bg-slate-50 border p-2 rounded-lg font-medium">
-              <option value="Cement">Cement / Binder</option>
-              <option value="Sand">Sand & Aggregates</option>
-              <option value="Chemical">Polymer / Chemical Additive</option>
-              <option value="Packaging">Packaging Bag / Bucket</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-slate-500 mb-1">Base Unit</label>
-            <select id="rm-unit" class="w-full bg-slate-50 border p-2 rounded-lg font-medium">
-              <option value="KG">KG</option>
-              <option value="LTR">Litre (LTR)</option>
-              <option value="NOS">Numbers (NOS)</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Pack Size</label><input type="text" id="rm-pack-size" placeholder="50 KG Bag" class="w-full bg-slate-50 border p-2 rounded"></div>
-          <div><label class="block text-slate-500 mb-1">Basic Rate / Unit (₹)</label><input type="number" id="rm-standard-rate" placeholder="7.50" step="0.01" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">GST %</label><input type="number" id="rm-gst" value="18" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-          <div><label class="block text-slate-500 mb-1">Freight / Unit (₹)</label><input type="number" id="rm-freight" value="0" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Opening Stock</label><input type="number" id="rm-stock" value="0" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-          <div><label class="block text-slate-500 mb-1">Min Alert Level</label><input type="number" id="rm-min-stock" value="50" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
-        </div>
-        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl shadow transition">Save Material</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= INLINE MODAL: NEW SUPPLIER ================= -->
-  <div id="modal-supplier" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-slate-800 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Supplier Profile</h3>
-        <button onclick="closeSupplierModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="supplier-form" onsubmit="event.preventDefault(); saveSupplierRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div><label class="block text-slate-500 mb-1">Supplier Firm Name</label><input type="text" id="sup-name" class="w-full bg-slate-50 border p-2 rounded-lg font-semibold" placeholder="E.g., Malabar Minerals" required></div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Phone</label><input type="tel" id="sup-phone" class="w-full bg-slate-50 border p-2 rounded font-medium mono" required></div>
-          <div><label class="block text-slate-500 mb-1">GSTIN</label><input type="text" id="sup-gstin" class="w-full bg-slate-50 border p-2 rounded font-bold mono uppercase"></div>
-        </div>
-        <div><label class="block text-slate-500 mb-1">Address / State</label><input type="text" id="sup-address" class="w-full bg-slate-50 border p-2 rounded font-medium" placeholder="City, State"></div>
-        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow transition">Save Supplier</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: RUN PRODUCTION BATCH ================= -->
-  <div id="modal-production-batch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-purple-900 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-purple-300">Run Manufacturing Batch</h3>
-        <button onclick="closeRunBatchModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="production-batch-form" onsubmit="event.preventDefault(); executeProductionBatch();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div>
-          <label class="block text-slate-500 mb-1">Select BOM Recipe</label>
-          <select id="prod-recipe-select" onchange="onRecipeSelectForBatch(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold text-slate-900" required></select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Batch Run Date</label><input type="date" id="batch-date" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></div>
-          <div><label class="block text-slate-500 mb-1">Batches to Produce</label><input type="number" id="batch-multiplier" value="1" min="1" oninput="calculateBatchRequirements()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" required></div>
-        </div>
-
-        <div class="border border-slate-200 p-2.5 rounded-xl bg-slate-50 space-y-2">
-          <span class="font-bold text-slate-800 uppercase tracking-wider text-[10px] block">Raw Material Stock Audit Check</span>
-          <div id="batch-rm-check-list" class="space-y-1.5 text-[11px]"></div>
-          <div id="batch-stock-error" class="hidden p-2 rounded bg-red-100 text-red-700 font-bold text-[11px]"></div>
-        </div>
-
-        <div class="bg-purple-50/70 p-3 rounded-xl border border-purple-200 space-y-1 text-right mono text-[11px]">
-          <div class="flex justify-between text-slate-600"><span>Raw Material Cost:</span> <span id="batch-disp-rm-cost">₹0.00</span></div>
-          <div class="flex justify-between text-slate-600"><span>Direct Labor & Power:</span> <span id="batch-disp-direct-cost">₹0.00</span></div>
-          <div class="flex justify-between text-slate-600"><span>Packaging Cost:</span> <span id="batch-disp-pack-cost">₹0.00</span></div>
-          <div class="flex justify-between font-bold text-slate-900 border-t border-purple-200 pt-1"><span>Total Batch Cost:</span> <span id="batch-disp-total-cost">₹0.00</span></div>
-          <div class="flex justify-between font-bold text-purple-900 text-xs"><span>Cost / KG:</span> <span id="batch-disp-kg-cost">₹0.00 / KG</span></div>
-          <div class="flex justify-between font-bold text-emerald-800 text-xs"><span>Cost / Pack:</span> <span id="batch-disp-unit-cost">₹0.00</span></div>
-        </div>
-
-        <button type="submit" id="btn-submit-batch" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition">
-          Execute Batch & Produce FG Stock
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: CREATE / EDIT RECIPE (BOM) ================= -->
-  <div id="modal-recipe" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-purple-900 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-purple-300">BOM Recipe Master</h3>
-        <button onclick="closeRecipeModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="recipe-form" onsubmit="event.preventDefault(); saveRecipeRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div>
-          <label class="block text-slate-500 mb-1">Target Finished Product</label>
-          <select id="rcp-product-select" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold" required></select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Batch Yield Output</label><input type="number" id="rcp-batch-size" value="100" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" required></div>
-          <div><label class="block text-slate-500 mb-1">Yield Unit</label><input type="text" id="rcp-unit" value="KG" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono" readonly></div>
-        </div>
-
-        <div class="border border-slate-200 p-2.5 rounded-xl bg-slate-50 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-slate-800 text-[10px] uppercase">Ingredients List (Per Batch)</span>
-            <button type="button" onclick="addRecipeIngredientRow()" class="text-purple-700 font-bold text-[10px]">+ Add Ingredient</button>
-          </div>
-          <div id="rcp-ingredients-container" class="space-y-1.5"></div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-1.5">
-          <div><label class="block text-[10px] text-slate-500">Labor/Power (₹)</label><input type="number" id="rcp-cost-direct" value="50" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-bold mono"></div>
-          <div><label class="block text-[10px] text-slate-500">Packaging (₹)</label><input type="number" id="rcp-cost-pack" value="30" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-bold mono"></div>
-          <div><label class="block text-[10px] text-slate-500">Overhead (₹)</label><input type="number" id="rcp-cost-overhead" value="20" class="w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-bold mono"></div>
-        </div>
-
-        <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition">Save Recipe</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: ADD OPERATING EXPENSE ================= -->
-  <div id="modal-expense" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-rose-900 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-rose-300">Add Operating Expense</h3>
-        <button onclick="closeAddExpenseModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="expense-form" onsubmit="event.preventDefault(); saveExpenseRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <label class="text-slate-500 font-medium">Expense Category</label>
-            <button type="button" onclick="openExpenseCategoryModal()" class="text-rose-700 font-bold text-[11px]">+ Add Category</button>
-          </div>
-          <select id="exp-category" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium"></select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Amount (₹)</label><input type="number" id="exp-amount" class="w-full bg-white border border-slate-200 rounded-lg p-2 font-bold mono text-rose-600 text-sm" required></div>
-          <div><label class="block text-slate-500 mb-1">Date</label><input type="date" id="exp-date" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></div>
-        </div>
-        <div><label class="block text-slate-500 mb-1">Notes / Narration</label><input type="text" id="exp-notes" placeholder="E.g., KSEB Factory power bill for August" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium"></div>
-        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl shadow transition">Save Expense</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: ADD EXPENSE CATEGORY (FIX 11) -->
-  <div id="modal-expense-category" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
-      <div class="flex justify-between font-bold text-slate-900"><span>Add Expense Type</span><button onclick="closeExpenseCategoryModal()">✕</button></div>
-      <form onsubmit="event.preventDefault(); saveExpenseCategory();" class="space-y-3">
-        <div><label class="block text-slate-500 mb-1">Expense Type Name</label><input type="text" id="exp-cat-name" placeholder="E.g., Diesel Fuel, Marketing" class="w-full bg-slate-50 border p-2 rounded" required></div>
-        <button type="submit" class="w-full bg-rose-600 text-white font-bold py-2 rounded-xl">Save Expense Type</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- PRINT & PREVIEW MODAL (INVOICE) -->
-  <div id="document-preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[94vh]">
-      <div class="bg-slate-900 text-white px-4 py-2.5 flex justify-between items-center no-print">
-        <span id="preview-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400">DOCUMENT PREVIEW</span>
-        <div class="flex items-center gap-2">
-          <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
-          <button onclick="shareActiveDocumentOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> WhatsApp</button>
-          <button onclick="closeDocumentPreviewModal()" class="text-slate-400 hover:text-white p-1">✕</button>
-        </div>
-      </div>
-      <div id="printable-document" class="p-6 text-slate-800 text-[11px] leading-relaxed overflow-y-auto font-sans bg-white">
-        <div class="flex justify-between items-start border-b-2 border-slate-900 pb-3">
-          <div class="flex gap-3">
-            <div id="pdf-logo-holder" class="w-16 h-16 flex items-center justify-center"></div>
-            <div>
-              <h1 id="pdf-cmp-legal" class="font-extrabold text-base text-slate-950 uppercase">AV CHEM Chemical & Manufacturing</h1>
-              <div id="pdf-cmp-brand" class="text-xs font-semibold text-indigo-900">H4 Construction Solutions</div>
-              <div id="pdf-cmp-addr" class="text-slate-500">Industrial Area, Tirur, Kerala</div>
-              <div id="pdf-cmp-gstin" class="font-bold text-slate-900 mono">GSTIN: 32AABCA9876K1Z9</div>
-            </div>
-          </div>
-          <div class="text-right">
-            <h2 id="pdf-doc-type" class="text-xl font-black text-indigo-950 uppercase tracking-wide">INVOICE</h2>
-            <div><span id="pdf-lbl-num">Invoice No:</span> <strong id="pdf-doc-num" class="mono">INV-0001</strong></div>
-            <div>Date: <span id="pdf-doc-date">26/09/2026</span></div>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 py-3 border-b border-slate-300">
-          <div>
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">BILL TO:</span>
-            <div id="pdf-cust-name" class="font-bold text-slate-900 text-xs">ABC BUILDERS</div>
-            <div id="pdf-cust-bill-addr" class="text-slate-600">Tirur, Malappuram</div>
-          </div>
-          <div class="text-right">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">SUPPLY:</span>
-            <div id="pdf-pos" class="font-bold text-slate-900">Kerala (32)</div>
-          </div>
-        </div>
-        <table class="w-full my-3 border-collapse">
-          <thead>
-            <tr class="bg-slate-100 border-y border-slate-300 text-left font-bold text-slate-700 text-[10px] uppercase">
-              <th class="py-1.5 px-2">#</th>
-              <th class="py-1.5 px-2">Item Description</th>
-              <th class="py-1.5 px-2 text-center">Qty</th>
-              <th class="py-1.5 px-2 text-center">Unit</th>
-              <th class="py-1.5 px-2 text-right">Rate</th>
-              <th class="py-1.5 px-2 text-right">Amount</th>
-            </tr>
-          </thead>
-          <tbody id="pdf-items-body" class="divide-y divide-slate-200"></tbody>
-        </table>
-        <div class="flex justify-end pt-1">
-          <div class="w-64 space-y-1 text-right">
-            <div class="flex justify-between"><span>Subtotal:</span> <span id="pdf-subtotal" class="mono font-medium">₹0.00</span></div>
-            <div id="pdf-tax-breakup-container"></div>
-            <div class="flex justify-between font-extrabold text-sm border-t-2 border-slate-900 pt-1"><span>Grand Total:</span> <span id="pdf-grandtotal" class="mono text-indigo-900">₹0.00</span></div>
-          </div>
-        </div>
-        <div class="my-3 p-2 bg-slate-50 rounded border border-slate-200">
-          <span class="text-slate-500 font-medium">Amount in Words:</span>
-          <div id="pdf-words" class="font-bold text-slate-900 capitalize">Zero Rupees Only</div>
-        </div>
-        <div id="pdf-bank-section" class="grid grid-cols-2 gap-4 border-t border-slate-300 pt-3 text-[10px]">
-          <div>Bank: State Bank of India | IFSC: SBIN0001234 | UPI: 9876543210@upi</div>
-          <div class="text-right">For AV CHEM Chemical & Mfg<br><br>(Authorized Signatory)</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CUSTOMER & PRODUCT MODALS -->
-  <div id="modal-customer" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
-      <div class="flex justify-between font-bold text-slate-900"><span>New Customer</span><button onclick="closeCustomerModal()">✕</button></div>
-      <form onsubmit="event.preventDefault(); saveNewCustomer();" class="space-y-3">
-        <input type="text" id="cust-name" placeholder="Contact Person" class="w-full bg-slate-50 border p-2 rounded" required>
-        <input type="text" id="cust-company" placeholder="Company Name" class="w-full bg-slate-50 border p-2 rounded" required>
-        <input type="tel" id="cust-phone" placeholder="Phone" class="w-full bg-slate-50 border p-2 rounded" required>
-        <textarea id="cust-billing-address" placeholder="Billing Address" class="w-full bg-slate-50 border p-2 rounded" required></textarea>
-        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl">Save Customer</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="modal-product" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
-      <div class="flex justify-between font-bold text-slate-900"><span>New Finished Product</span><button onclick="closeProductModal()">✕</button></div>
-      <form onsubmit="event.preventDefault(); saveNewProduct();" class="space-y-3">
-        <input type="text" id="prod-name" placeholder="Product Name & Grade" class="w-full bg-slate-50 border p-2 rounded" required>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="prod-unit" placeholder="Unit (Bag / Bucket)" class="bg-slate-50 border p-2 rounded" value="Bag" required>
-          <input type="number" id="prod-pack-weight" placeholder="Pack Weight (e.g. 20 KG)" class="bg-slate-50 border p-2 rounded" value="20" required>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="prod-price-retail" placeholder="Retail Price" class="bg-slate-50 border p-2 rounded" required>
-          <input type="number" id="prod-price-contractor" placeholder="Contractor Price" class="bg-slate-50 border p-2 rounded" required>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="prod-stock" value="100" placeholder="Opening Stock" class="bg-slate-50 border p-2 rounded">
-          <select id="prod-gst" class="bg-slate-50 border p-2 rounded"><option value="18">18% GST</option><option value="28">28% GST</option></select>
-        </div>
-        <button type="submit" class="w-full bg-orange-600 text-white font-bold py-2 rounded-xl">Save Product</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= PAYMENT RECORD MODAL ================= -->
-  <div id="modal-payment" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-      <div class="bg-emerald-800 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-300">Record Customer Payment</h3>
-        <button onclick="closeRecordPaymentModal()" class="text-slate-300 hover:text-white">✕</button>
-      </div>
-      <form id="payment-form" onsubmit="event.preventDefault(); savePaymentRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
-        <div>
-          <label class="block text-slate-500 mb-1">Select Customer</label>
-          <select id="pay-customer-select" onchange="onPaymentCustomerChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></select>
-        </div>
-        <div>
-          <label class="block text-slate-500 mb-1">Select Invoice</label>
-          <select id="pay-invoice-select" onchange="onPaymentInvoiceChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono text-slate-900" required></select>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-center mono">
-          <div><span class="text-[9px] text-slate-400 block font-sans">Total</span><strong id="pay-disp-total">₹0</strong></div>
-          <div><span class="text-[9px] text-slate-400 block font-sans">Paid</span><strong id="pay-disp-paid" class="text-emerald-700">₹0</strong></div>
-          <div><span class="text-[9px] text-slate-400 block font-sans">Balance</span><strong id="pay-disp-balance" class="text-red-600">₹0</strong></div>
-        </div>
-
-        <div>
-          <label class="block text-slate-500 mb-1">Payment Amount (₹)</label>
-          <input type="number" id="pay-amount" class="w-full bg-white border border-slate-200 rounded-lg p-2 font-bold mono text-emerald-700 text-sm" required>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div><label class="block text-slate-500 mb-1">Payment Date</label><input type="date" id="pay-date" class="w-full bg-slate-50 border p-2 rounded" required></div>
-          <div>
-            <label class="block text-slate-500 mb-1">Payment Mode</label>
-            <select id="pay-method" class="w-full bg-slate-50 border p-2 rounded font-medium">
-              <option value="UPI">UPI (GPay / PhonePe)</option>
-              <option value="Bank Transfer">Bank Transfer (NEFT/RTGS)</option>
-              <option value="Cash">Cash</option>
-              <option value="Cheque">Cheque</option>
-            </select>
-          </div>
-        </div>
-        <div><label class="block text-slate-500 mb-1">Ref / UTR / Cheque No</label><input type="text" id="pay-ref" placeholder="Transaction ID..." class="w-full bg-slate-50 border p-2 rounded mono"></div>
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow transition">Confirm & Save Payment</button>
-      </form>
-    </div>
-  </div>
 
   <!-- ================= JAVASCRIPT MASTER STATE ENGINE ================= -->
   <script>
     const DB_KEY = 'H4_ERP_DB_V2';
 
     const defaultData = {
-      version: "5.0",
+      version: "5.5",
       counters: { quotation: 0, invoice: 0, payment: 0, purchase: 0, production: 0, expense: 0 },
       settings: {
         invoicePrefix: 'INV-',
@@ -1392,7 +947,9 @@
         showBank: true,
         showSignature: true,
         showTerms: true,
-        theme: 'purple'
+        theme: 'purple',
+        textColor: '#1e293b',
+        customFonts: {}
       },
       expenseCategories: [
         'Electricity & Power',
@@ -1409,6 +966,7 @@
         phone: '+91 9876543210',
         whatsapp: '+91 9876543210',
         email: 'avchemkerala@gmail.com',
+        website: 'www.h4solutions.com',
         address: 'Building 12/48, Industrial Area, Tirur',
         place: 'Tirur',
         district: 'Malappuram',
@@ -1449,7 +1007,7 @@
           packWeight: 20,
           retailPrice: 450,
           contractorPrice: 390,
-          currentMfgCost: null, // FIX 4: Strictly null until real production batch is executed!
+          currentMfgCost: null, // STRICTLY NULL until production batch is run!
           gst: 18,
           stock: 250
         }
@@ -1663,29 +1221,65 @@
       return (str.trim() + ' Rupees Only');
     }
 
-    // THEME ENGINE IMPLEMENTATION (FIX 5)
-    function applyAppTheme(themeKey, persist = true) {
-      const root = document.documentElement;
-      const themes = {
-        purple: { start: '#17053e', mid: '#200b52', end: '#260e61', btn: '#4f46e5', btnHover: '#4338ca' },
-        blue: { start: '#1e3a8a', mid: '#1d4ed8', end: '#1e40af', btn: '#2563eb', btnHover: '#1d4ed8' },
-        emerald: { start: '#064e3b', mid: '#047857', end: '#065f46', btn: '#059669', btnHover: '#047857' },
-        dark: { start: '#09090b', mid: '#18181b', end: '#27272a', btn: '#3f3f46', btnHover: '#27272a' }
-      };
+    // ================= DYNAMIC CUSTOM FONT ENGINE (.ttf, .otf, .woff, .woff2) =================
+    function handleCustomFontUpload(event, targetRole) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        const fontName = 'Custom_' + targetRole + '_' + Date.now();
+        let format = 'truetype';
+        if (file.name.endsWith('.woff2')) format = 'woff2';
+        else if (file.name.endsWith('.woff')) format = 'woff';
+        else if (file.name.endsWith('.otf')) format = 'opentype';
 
-      const t = themes[themeKey] || themes.purple;
-      root.style.setProperty('--theme-gradient-start', t.start);
-      root.style.setProperty('--theme-gradient-mid', t.mid);
-      root.style.setProperty('--theme-gradient-end', t.end);
-      root.style.setProperty('--theme-btn', t.btn);
-      root.style.setProperty('--theme-btn-hover', t.btnHover);
-
-      if (persist) {
         const db = getDB();
-        db.settings.theme = themeKey;
+        db.settings.customFonts = db.settings.customFonts || {};
+        db.settings.customFonts[targetRole] = { name: fontName, data: base64, format: format, fileName: file.name };
         saveDB(db);
-        showToast(`Applied ${themeKey.toUpperCase()} system theme`);
+        applyCustomFonts();
+        showToast(`Font uploaded for ${targetRole.toUpperCase()}`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyCustomFonts() {
+      const db = getDB();
+      const styleEl = document.getElementById('custom-font-style');
+      let css = '';
+      const root = document.documentElement;
+
+      if (db.settings && db.settings.customFonts) {
+        const f = db.settings.customFonts;
+        if (f.heading) {
+          css += `@font-face { font-family: '${f.heading.name}'; src: url('${f.heading.data}') format('${f.heading.format}'); }\n`;
+          root.style.setProperty('--custom-font-heading', `'${f.heading.name}'`);
+          const label = document.getElementById('font-heading-name');
+          if (label) label.innerText = f.heading.fileName;
+        }
+        if (f.body) {
+          css += `@font-face { font-family: '${f.body.name}'; src: url('${f.body.data}') format('${f.body.format}'); }\n`;
+          root.style.setProperty('--custom-font-body', `'${f.body.name}'`);
+          const label = document.getElementById('font-body-name');
+          if (label) label.innerText = f.body.fileName;
+        }
+        if (f.mono) {
+          css += `@font-face { font-family: '${f.mono.name}'; src: url('${f.mono.data}') format('${f.mono.format}'); }\n`;
+          root.style.setProperty('--custom-font-mono', `'${f.mono.name}'`);
+          const label = document.getElementById('font-mono-name');
+          if (label) label.innerText = f.mono.fileName;
+        }
       }
+      styleEl.innerHTML = css;
+    }
+
+    function applyCustomTextColor(colorVal) {
+      document.documentElement.style.setProperty('--theme-text-color', colorVal);
+      const db = getDB();
+      db.settings.textColor = colorVal;
+      saveDB(db);
+      showToast(`Text color changed to ${colorVal}`);
     }
 
     // Master Navigation Router
@@ -1729,7 +1323,7 @@
     let activeEditingId = null;
     let currentConvertingQuotationId = null;
 
-    // ================= RESTORED LIST RENDERERS (FIX 1) =================
+    // ================= RESTORED LIST RENDERERS =================
     function renderRawMaterialsScreen() {
       const db = getDB();
       const c = document.getElementById('raw-materials-list-container');
@@ -1779,7 +1373,7 @@
       lucide.createIcons();
     }
 
-    // ================= NEW QUOTATION FLOW (WATERPROOFING VS EPOXY) =================
+    // ================= NEW QUOTATION WORKFLOW (WATERPROOFING VS EPOXY) =================
     function createNewQuotation() {
       document.getElementById('modal-quotation-type-select').classList.remove('hidden');
     }
@@ -1787,12 +1381,28 @@
       document.getElementById('modal-quotation-type-select').classList.add('hidden');
     }
 
+    function onProposalCustomerSelect(custId, prefix) {
+      if (!custId) return;
+      const db = getDB();
+      const cust = db.customers.find(c => c.id === custId);
+      if (!cust) return;
+      if (prefix === 'wp') {
+        document.getElementById('wp-cust-name-input').value = cust.company;
+        document.getElementById('wp-cust-phone-input').value = cust.phone;
+        document.getElementById('wp-site-location').value = cust.shippingAddress || cust.billingAddress;
+      } else {
+        document.getElementById('epx-cust-name-input').value = cust.company;
+        document.getElementById('epx-cust-phone-input').value = cust.phone;
+        document.getElementById('epx-site-location').value = cust.shippingAddress || cust.billingAddress;
+      }
+    }
+
     // --- WATERPROOFING PROPOSAL ENGINE ---
     function openWaterproofingProposalModal() {
       closeQuotationTypeSelectModal();
       const db = getDB();
       const s = document.getElementById('wp-cust-select');
-      s.innerHTML = '<option value="">-- Choose Customer --</option>';
+      s.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
       db.customers.forEach(c => s.innerHTML += `<option value="${c.id}">${c.company} (${c.name})</option>`);
       document.getElementById('wp-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('wp-validity').value = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
@@ -1804,7 +1414,6 @@
     function calculateWaterproofingRate() {
       const appSelect = document.getElementById('wp-app-type');
       const baseRate = parseFloat(appSelect.options[appSelect.selectedIndex].getAttribute('data-rate')) || 65;
-
       const sysSelect = document.getElementById('wp-system');
       const sysAdd = parseFloat(sysSelect.options[sysSelect.selectedIndex].getAttribute('data-add')) || 0;
 
@@ -1833,9 +1442,9 @@
 
     function saveWaterproofingProposal() {
       const db = getDB();
-      const custId = document.getElementById('wp-cust-select').value;
-      const customer = db.customers.find(c => c.id === custId);
-      if (!customer) { showToast('Select a customer'); return; }
+      const custName = document.getElementById('wp-cust-name-input').value.trim();
+      const custPhone = document.getElementById('wp-cust-phone-input').value.trim();
+      if (!custName || !custPhone) { showToast('Please enter customer name and phone'); return; }
 
       const area = parseFloat(document.getElementById('wp-area').value) || 0;
       const rate = parseFloat(document.getElementById('wp-final-rate').value) || 0;
@@ -1852,9 +1461,9 @@
         docNumber: qtnNo,
         date: document.getElementById('wp-date').value,
         expiryDate: document.getElementById('wp-validity').value,
-        customerId: customer.id,
-        customerName: customer.company,
-        customerPhone: customer.phone,
+        customerId: document.getElementById('wp-cust-select').value || 'direct_lead',
+        customerName: custName,
+        customerPhone: custPhone,
         siteLocation: document.getElementById('wp-site-location').value,
         area: area,
         rate: rate,
@@ -1883,7 +1492,7 @@
       closeQuotationTypeSelectModal();
       const db = getDB();
       const s = document.getElementById('epx-cust-select');
-      s.innerHTML = '<option value="">-- Choose Customer --</option>';
+      s.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
       db.customers.forEach(c => s.innerHTML += `<option value="${c.id}">${c.company} (${c.name})</option>`);
       document.getElementById('epx-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('epx-validity').value = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
@@ -1895,7 +1504,6 @@
     function calculateEpoxyRate() {
       const sysSelect = document.getElementById('epx-system');
       const baseRate = parseFloat(sysSelect.options[sysSelect.selectedIndex].getAttribute('data-base')) || 95;
-
       const thickSelect = document.getElementById('epx-thickness');
       const thickAdd = parseFloat(thickSelect.options[thickSelect.selectedIndex].getAttribute('data-add')) || 0;
 
@@ -1922,9 +1530,9 @@
 
     function saveEpoxyProposal() {
       const db = getDB();
-      const custId = document.getElementById('epx-cust-select').value;
-      const customer = db.customers.find(c => c.id === custId);
-      if (!customer) { showToast('Select a customer'); return; }
+      const custName = document.getElementById('epx-cust-name-input').value.trim();
+      const custPhone = document.getElementById('epx-cust-phone-input').value.trim();
+      if (!custName || !custPhone) { showToast('Please enter customer name and phone'); return; }
 
       const area = parseFloat(document.getElementById('epx-area').value) || 0;
       const rate = parseFloat(document.getElementById('epx-final-rate').value) || 0;
@@ -1941,9 +1549,9 @@
         docNumber: qtnNo,
         date: document.getElementById('epx-date').value,
         expiryDate: document.getElementById('epx-validity').value,
-        customerId: customer.id,
-        customerName: customer.company,
-        customerPhone: customer.phone,
+        customerId: document.getElementById('epx-cust-select').value || 'direct_lead',
+        customerName: custName,
+        customerPhone: custPhone,
         siteLocation: document.getElementById('epx-site-location').value,
         area: area,
         rate: rate,
@@ -1981,6 +1589,7 @@
       document.getElementById('prop-cmp-brand').innerText = comp.brandName;
       document.getElementById('prop-cmp-addr').innerText = comp.address + ', ' + comp.place;
       document.getElementById('prop-cmp-contact').innerText = `Phone: ${comp.phone} | Email: ${comp.email}`;
+      document.getElementById('prop-cmp-web').innerText = comp.website || 'www.h4solutions.com';
 
       const isWaterproof = prop.type === 'WATERPROOFING_PROPOSAL';
       document.getElementById('prop-doc-title').innerText = isWaterproof ? 'PREMIUM WATERPROOFING PROPOSAL' : 'PREMIUM EPOXY FLOORING PROPOSAL';
@@ -2059,10 +1668,11 @@
 
       closeProposalPreviewModal();
 
-      // Launch invoice editor with Proposal as an approved Project Contract line item!
       const invoicePrefill = {
         sourceQuotationId: prop.id,
         customerId: prop.customerId,
+        customerName: prop.customerName,
+        customerPhone: prop.customerPhone,
         billTo: `${prop.customerName}\nPhone: ${prop.customerPhone}`,
         shipTo: prop.siteLocation,
         posState: '32',
@@ -2074,7 +1684,8 @@
             rate: prop.rate,
             discount: 0,
             unit: 'Sq.Ft',
-            gst: 18
+            gst: 18,
+            isContractService: true // Flags as a service contract, exempt from inventory stock deductions
           }
         ]
       };
@@ -2092,14 +1703,728 @@
       window.open(url, '_blank');
     }
 
-    // ================= APP INITIALIZATION =================
+    // ================= DOCUMENT CREATOR & INVOICE ENGINE =================
+    function populateCustomerDropdown(selectedCustId) {
+      const db = getDB();
+      const select = document.getElementById('doc-customer-select');
+      select.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
+      db.customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.company} (${c.name} - ${c.phone})`;
+        if (selectedCustId && c.id === selectedCustId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function onDocumentCustomerChange(custId) {
+      if (!custId) return;
+      const db = getDB();
+      const customer = db.customers.find(c => c.id === custId);
+      if (!customer) return;
+      document.getElementById('doc-cust-name-input').value = customer.company;
+      document.getElementById('doc-cust-phone-input').value = customer.phone;
+      document.getElementById('doc-bill-to').value = `${customer.company}\n${customer.billingAddress}\nPhone: ${customer.phone}\nGSTIN: ${customer.gstin || 'Unregistered'}`;
+      document.getElementById('doc-ship-to').value = customer.shippingAddress || customer.billingAddress;
+      document.getElementById('doc-pos-state').value = customer.stateCode || '32';
+      calculateDocumentTotals();
+    }
+
+    function createNewInvoice(prefillData = null) {
+      const db = getDB();
+      activeDocType = 'INVOICE';
+      activeEditingId = null;
+      currentConvertingQuotationId = prefillData ? prefillData.sourceQuotationId : null;
+      document.getElementById('editor-title').innerText = 'New GST Tax Invoice';
+      document.getElementById('lbl-doc-number').innerText = 'Invoice No';
+      document.getElementById('lbl-doc-expiry').innerText = 'Payment Due Date';
+      document.getElementById('btn-submit-doc').innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Save & Preview';
+
+      document.getElementById('doc-number').value = getNextDocNumber('INVOICE');
+      const today = new Date().toISOString().split('T')[0];
+      const dueDays = db.settings.defaultDueDays || 30;
+      const dueDate = new Date(Date.now() + dueDays * 86400000).toISOString().split('T')[0];
+      document.getElementById('doc-date').value = today;
+      document.getElementById('doc-expiry').value = dueDate;
+      document.getElementById('doc-terms').value = db.settings.defaultTerms || '1. Goods once sold will not be taken back.';
+
+      populateCustomerDropdown(prefillData ? prefillData.customerId : null);
+      document.getElementById('doc-items-container').innerHTML = '';
+
+      if (prefillData) {
+        document.getElementById('quotation-ref-wrapper').classList.remove('hidden');
+        document.getElementById('doc-ref-qtn').value = prefillData.refQuotation || '';
+        document.getElementById('doc-cust-name-input').value = prefillData.customerName || '';
+        document.getElementById('doc-cust-phone-input').value = prefillData.customerPhone || '';
+        document.getElementById('doc-bill-to').value = prefillData.billTo || '';
+        document.getElementById('doc-ship-to').value = prefillData.shipTo || '';
+        document.getElementById('doc-pos-state').value = prefillData.posState || '32';
+        prefillData.items.forEach(it => addDocumentItemRow(it));
+      } else {
+        document.getElementById('quotation-ref-wrapper').classList.add('hidden');
+        document.getElementById('doc-ref-qtn').value = '';
+        document.getElementById('doc-cust-name-input').value = '';
+        document.getElementById('doc-cust-phone-input').value = '';
+        addDocumentItemRow();
+      }
+
+      navigateTo('document-editor');
+      calculateDocumentTotals();
+      lucide.createIcons();
+    }
+
+    function addDocumentItemRow(itemData = null) {
+      const db = getDB();
+      const container = document.getElementById('doc-items-container');
+      const row = document.createElement('div');
+      row.className = 'doc-item-row border border-slate-200 p-2.5 rounded-lg bg-slate-50 space-y-2';
+
+      let optionsHtml = '<option value="">-- Select Product Master (or Type Custom Service Below) --</option>';
+      db.products.forEach(p => {
+        optionsHtml += `<option value="${p.id}" data-name="${p.name}" data-rate="${p.retailPrice}" data-gst="${p.gst}" data-unit="${p.unit}">${p.name} - ₹${p.retailPrice} / ${p.unit} (Stock: ${p.stock || 0})</option>`;
+      });
+
+      row.innerHTML = `
+        <div class="flex justify-between items-center gap-2">
+          <select class="item-product-select w-full bg-white border border-slate-200 rounded p-1.5 font-medium text-xs" onchange="onProductSelectInRow(this)">
+            ${optionsHtml}
+          </select>
+          <button type="button" onclick="this.closest('.doc-item-row').remove(); calculateDocumentTotals();" class="text-red-500 hover:text-red-700 p-1">✕</button>
+        </div>
+        <input type="text" class="item-description w-full bg-white border border-slate-200 rounded p-1 text-[11px]" placeholder="Item description / project scope..." value="${itemData ? itemData.description : ''}">
+        <div class="grid grid-cols-5 gap-1.5">
+          <div><label class="block text-[10px] text-slate-400">Qty</label><input type="number" class="item-qty w-full bg-white border border-slate-200 rounded p-1 text-center font-bold" value="${itemData ? itemData.qty : 10}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Rate (₹)</label><input type="number" class="item-rate w-full bg-white border border-slate-200 rounded p-1 text-right font-bold mono" value="${itemData ? itemData.rate : 450}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Disc (₹)</label><input type="number" class="item-disc w-full bg-white border border-slate-200 rounded p-1 text-right font-medium mono" value="${itemData ? itemData.discount : 0}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">GST %</label><input type="number" class="item-gst-rate w-full bg-white border border-slate-200 rounded p-1 text-center font-bold mono" value="${itemData ? itemData.gst : 18}" oninput="calculateDocumentTotals()"></div>
+          <div><label class="block text-[10px] text-slate-400">Amount (₹)</label><div class="item-line-total bg-slate-100 rounded p-1 text-right font-bold mono text-slate-800">0.00</div></div>
+        </div>
+        <input type="hidden" class="item-unit-val" value="${itemData ? itemData.unit : 'Bag'}">
+        <input type="hidden" class="item-is-contract" value="${itemData && itemData.isContractService ? 'true' : 'false'}">
+      `;
+
+      container.appendChild(row);
+      if (itemData && itemData.productId) {
+        row.querySelector('.item-product-select').value = itemData.productId;
+      }
+      calculateDocumentTotals();
+    }
+
+    function onProductSelectInRow(selectEl) {
+      const selectedOption = selectEl.options[selectEl.selectedIndex];
+      if (!selectedOption.value) return;
+      const row = selectEl.closest('.doc-item-row');
+      row.querySelector('.item-rate').value = selectedOption.getAttribute('data-rate');
+      row.querySelector('.item-gst-rate').value = selectedOption.getAttribute('data-gst');
+      row.querySelector('.item-unit-val').value = selectedOption.getAttribute('data-unit');
+      row.querySelector('.item-description').value = selectedOption.getAttribute('data-name');
+      row.querySelector('.item-is-contract').value = 'false';
+      calculateDocumentTotals();
+    }
+
+    function calculateDocumentTotals() {
+      const db = getDB();
+      const sellerState = db.company.stateCode || '32';
+      const buyerState = document.getElementById('doc-pos-state').value;
+      const isInterState = sellerState !== buyerState;
+
+      let subtotal = 0, totalDiscount = 0, totalTaxable = 0, totalTax = 0;
+      const slabMap = {};
+
+      document.querySelectorAll('.doc-item-row').forEach(r => {
+        const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
+        const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
+        const disc = parseFloat(r.querySelector('.item-disc').value) || 0;
+        const gstRate = parseFloat(r.querySelector('.item-gst-rate').value) || 0;
+
+        const lineGross = qty * rate;
+        const lineTaxable = Math.max(0, lineGross - disc);
+        const lineTax = (lineTaxable * gstRate) / 100;
+
+        r.querySelector('.item-line-total').innerText = (lineTaxable + lineTax).toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+        subtotal += lineGross;
+        totalDiscount += disc;
+        totalTaxable += lineTaxable;
+        totalTax += lineTax;
+
+        if (!slabMap[gstRate]) slabMap[gstRate] = { taxable: 0, tax: 0, cgst: 0, sgst: 0, igst: 0 };
+        slabMap[gstRate].taxable += lineTaxable;
+        slabMap[gstRate].tax += lineTax;
+        if (isInterState) slabMap[gstRate].igst += lineTax;
+        else { slabMap[gstRate].cgst += lineTax / 2; slabMap[gstRate].sgst += lineTax / 2; }
+      });
+
+      const grossWithTax = totalTaxable + totalTax;
+      const grandTotal = Math.round(grossWithTax);
+      const roundOff = (grandTotal - grossWithTax);
+
+      document.getElementById('calc-subtotal').innerText = '₹' + subtotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-discount').innerText = '₹' + totalDiscount.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-taxable').innerText = '₹' + totalTaxable.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-roundoff').innerText = (roundOff >= 0 ? '+₹' : '-₹') + Math.abs(roundOff).toFixed(2);
+      document.getElementById('calc-grandtotal').innerText = '₹' + grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('calc-words').innerText = numberToWordsIndian(grandTotal);
+
+      const gstContainer = document.getElementById('calc-gst-breakup');
+      gstContainer.innerHTML = '';
+      Object.keys(slabMap).forEach(slab => {
+        const item = slabMap[slab];
+        if (item.taxable > 0) {
+          if (isInterState) {
+            gstContainer.innerHTML += `<div class="flex justify-between text-blue-700 font-medium"><span>IGST (${slab}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.igst.toFixed(2)}</span></div>`;
+          } else {
+            const halfRate = (parseFloat(slab) / 2);
+            gstContainer.innerHTML += `
+              <div class="flex justify-between text-slate-500"><span>CGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.cgst.toFixed(2)}</span></div>
+              <div class="flex justify-between text-slate-500"><span>SGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.sgst.toFixed(2)}</span></div>
+            `;
+          }
+        }
+      });
+
+      return { subtotal, totalDiscount, taxableValue: totalTaxable, totalTax, roundOff, grandTotal, isInterState, slabMap };
+    }
+
+    // STRICT INVOICE SAVE (BLOCKS IF PRODUCT COST IS MISSING, ALLOWS CONTRACT SERVICES)
+    function saveCurrentDocument() {
+      const db = getDB();
+      const custName = document.getElementById('doc-cust-name-input').value.trim();
+      const custPhone = document.getElementById('doc-cust-phone-input').value.trim();
+      if (!custName) { showToast('Please enter customer name'); return; }
+
+      const docNum = document.getElementById('doc-number').value;
+      const items = [];
+      let invoiceTotalCogs = 0;
+
+      for (const r of document.querySelectorAll('.doc-item-row')) {
+        const prodSelect = r.querySelector('.item-product-select');
+        const prodId = prodSelect.value;
+        const p = db.products.find(prod => prod.id === prodId);
+        const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
+        const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
+        const discount = parseFloat(r.querySelector('.item-disc').value) || 0;
+        const isContract = r.querySelector('.item-is-contract').value === 'true';
+
+        let cogsUnit = 0;
+        let cogsTotal = 0;
+
+        if (!isContract && prodId) {
+          // Finished Physical Goods MUST have recorded mfg cost (RULE 3)
+          if (!p || typeof p.currentMfgCost !== 'number' || p.currentMfgCost <= 0) {
+            showToast(`Invoice Blocked: Product "${p ? p.name : 'Item'}" has no recorded manufacturing cost! Run a production batch first.`);
+            return; // Hard Block
+          }
+          // Validate Finished Goods Stock (RULE 15)
+          if ((p.stock || 0) < qty) {
+            showToast(`Invoice Blocked: Insufficient stock for "${p.name}"! Available: ${p.stock || 0} ${p.unit}, Required: ${qty} ${p.unit}`);
+            return; // Hard Block
+          }
+          cogsUnit = p.currentMfgCost;
+          cogsTotal = qty * cogsUnit;
+          invoiceTotalCogs += cogsTotal;
+        }
+
+        items.push({
+          productId: prodId || null,
+          description: r.querySelector('.item-description').value || 'Service Item',
+          qty: qty,
+          rate: rate,
+          discount: discount,
+          unit: r.querySelector('.item-unit-val').value || 'Nos',
+          gst: parseFloat(r.querySelector('.item-gst-rate').value) || 18,
+          cogsUnit: cogsUnit,
+          cogsTotal: cogsTotal,
+          isContractService: isContract
+        });
+      }
+
+      if (items.length === 0) { showToast('Please add at least one item row'); return; }
+
+      const calc = calculateDocumentTotals();
+
+      const docObj = {
+        id: activeEditingId || ('inv_' + Date.now()),
+        type: 'INVOICE',
+        docNumber: docNum,
+        date: document.getElementById('doc-date').value,
+        expiryDate: document.getElementById('doc-expiry').value,
+        refQuotation: document.getElementById('doc-ref-qtn').value,
+        customerId: document.getElementById('doc-customer-select').value || 'direct_customer',
+        customerName: custName,
+        customerPhone: custPhone,
+        billTo: document.getElementById('doc-bill-to').value,
+        shipTo: document.getElementById('doc-ship-to').value,
+        posState: document.getElementById('doc-pos-state').value,
+        items: items,
+        subtotal: calc.subtotal,
+        discount: calc.totalDiscount,
+        taxable: calc.taxableValue,
+        tax: calc.totalTax,
+        slabMap: calc.slabMap,
+        roundOff: calc.roundOff,
+        grandTotal: calc.grandTotal,
+        cogsTotal: invoiceTotalCogs,
+        paid: 0,
+        balance: calc.grandTotal,
+        isInterState: calc.isInterState,
+        terms: document.getElementById('doc-terms').value,
+        status: 'DUE'
+      };
+
+      commitDocNumber('INVOICE', docNum);
+      db.invoices.unshift(docObj);
+
+      // Deduct Finished Goods Stock and Record Movement
+      docObj.items.forEach(line => {
+        if (!line.isContractService && line.productId) {
+          recordStockMovement(db, 'FG', line.productId, line.description, line.qty, line.unit, 'OUT', 'INVOICE', docObj.docNumber, line.cogsUnit || 0);
+        }
+      });
+
+      // Update Quotation Conversion Status
+      if (currentConvertingQuotationId) {
+        const sourceQtn = db.quotations.find(q => q.id === currentConvertingQuotationId);
+        if (sourceQtn) {
+          sourceQtn.status = 'CONVERTED';
+          sourceQtn.convertedInvoiceNo = docObj.docNumber;
+        }
+        currentConvertingQuotationId = null;
+      }
+
+      saveDB(db);
+      renderDocumentPrintModal(docObj);
+      showToast('Tax Invoice created & Stock deducted!');
+    }
+
+    function renderDocumentPrintModal(doc) {
+      viewingDocObject = doc;
+      const db = getDB();
+      const comp = db.company;
+      const set = db.settings;
+
+      const printDoc = document.getElementById('printable-document');
+      printDoc.className = 'p-6 leading-relaxed overflow-y-auto bg-white ' + (set.template === 'Classic' ? 'tpl-classic' : (set.template === 'Minimal' ? 'tpl-minimal' : 'tpl-h4pro'));
+
+      const logoHolder = document.getElementById('pdf-logo-holder');
+      if (comp.logoUrl) logoHolder.innerHTML = `<img src="${comp.logoUrl}" class="max-h-full max-w-full object-contain">`;
+      else logoHolder.innerHTML = `<svg class="w-12 h-12 text-amber-500 fill-current" viewBox="0 0 24 24"><path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/></svg>`;
+
+      document.getElementById('pdf-cmp-legal').innerText = comp.legalName;
+      document.getElementById('pdf-cmp-brand').innerText = comp.brandName;
+      document.getElementById('pdf-cmp-addr').innerText = comp.address + ', ' + comp.place;
+      document.getElementById('pdf-cmp-contact').innerText = `Phone: ${comp.phone} | Email: ${comp.email}`;
+      document.getElementById('pdf-cmp-web').innerText = comp.website || 'www.h4solutions.com';
+      document.getElementById('pdf-cmp-gstin').innerText = `GSTIN: ${comp.gstin}`;
+
+      document.getElementById('pdf-doc-num').innerText = doc.docNumber;
+      document.getElementById('pdf-doc-date').innerText = doc.date;
+      document.getElementById('pdf-doc-due').innerText = doc.expiryDate;
+
+      document.getElementById('pdf-cust-name').innerText = doc.customerName;
+      document.getElementById('pdf-cust-phone').innerText = `Phone: ${doc.customerPhone}`;
+      document.getElementById('pdf-cust-bill-addr').innerText = doc.billTo;
+      document.getElementById('pdf-pos').innerText = doc.posState === '32' ? 'Kerala (32)' : `State Code: ${doc.posState}`;
+
+      const tableBody = document.getElementById('pdf-items-body');
+      tableBody.innerHTML = '';
+      doc.items.forEach((it, idx) => {
+        const lineTotal = (it.qty * it.rate) - it.discount;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-1.5 px-2">${idx + 1}</td>
+          <td class="py-1.5 px-2 font-medium">${it.description}</td>
+          <td class="py-1.5 px-2 text-center font-bold">${it.qty}</td>
+          <td class="py-1.5 px-2 text-center">${it.unit}</td>
+          <td class="py-1.5 px-2 text-right mono">₹${it.rate.toFixed(2)}</td>
+          <td class="py-1.5 px-2 text-right font-bold mono">₹${lineTotal.toFixed(2)}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      document.getElementById('pdf-subtotal').innerText = '₹' + doc.subtotal.toFixed(2);
+      document.getElementById('pdf-grandtotal').innerText = '₹' + doc.grandTotal.toFixed(2);
+      document.getElementById('pdf-words').innerText = numberToWordsIndian(doc.grandTotal);
+
+      // Switches for Bank & Signature
+      document.getElementById('pdf-bank-section').style.display = set.showBank ? 'grid' : 'none';
+      document.getElementById('pdf-bank-name').innerText = comp.bankName;
+      document.getElementById('pdf-bank-acc').innerText = comp.accNo;
+      document.getElementById('pdf-bank-ifsc').innerText = comp.ifsc;
+      document.getElementById('pdf-bank-upi').innerText = comp.upi;
+
+      const signStampContainer = document.getElementById('pdf-stamp-sign-container');
+      signStampContainer.innerHTML = '';
+      if (set.showSignature) {
+        if (comp.stampUrl) signStampContainer.innerHTML += `<img src="${comp.stampUrl}" class="h-10 object-contain">`;
+        if (comp.signatureUrl) signStampContainer.innerHTML += `<img src="${comp.signatureUrl}" class="h-10 object-contain">`;
+      }
+
+      document.getElementById('document-preview-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeDocumentPreviewModal() {
+      document.getElementById('document-preview-modal').classList.add('hidden');
+      navigateTo('invoice-list');
+    }
+
+    function shareActiveDocumentOnWhatsApp() {
+      if (!viewingDocObject) return;
+      const doc = viewingDocObject;
+      const db = getDB();
+      const text = `*${db.company.brandName}*\nDear Customer,\nPlease find your *Tax Invoice*:\nInvoice No: *${doc.docNumber}*\nDate: ${doc.date}\nAmount: *₹${doc.grandTotal.toLocaleString('en-IN')}*\nThank you!`;
+      const url = `https://wa.me/${doc.customerPhone ? doc.customerPhone.replace(/[^0-9]/g, '') : ''}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    // ================= PAYMENTS ENGINE =================
+    function openRecordPaymentModal(prefillInvId = null) {
+      const db = getDB();
+      const custSelect = document.getElementById('pay-customer-select');
+      custSelect.innerHTML = '<option value="">-- Select Customer --</option>';
+      db.customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.company} (Due: ₹${c.due.toLocaleString('en-IN')})`;
+        custSelect.appendChild(opt);
+      });
+
+      document.getElementById('pay-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-payment').classList.remove('hidden');
+
+      if (prefillInvId) {
+        const inv = db.invoices.find(i => i.id === prefillInvId);
+        if (inv) {
+          custSelect.value = inv.customerId;
+          onPaymentCustomerChange(inv.customerId, inv.id);
+        }
+      } else {
+        document.getElementById('pay-invoice-select').innerHTML = '<option value="">-- Choose Customer First --</option>';
+        resetPaymentDisplay();
+      }
+    }
+
+    function closeRecordPaymentModal() { document.getElementById('modal-payment').classList.add('hidden'); }
+
+    function onPaymentCustomerChange(custId, preselectedInvId = null) {
+      const db = getDB();
+      const invSelect = document.getElementById('pay-invoice-select');
+      invSelect.innerHTML = '<option value="">-- Select Unpaid Invoice --</option>';
+      
+      const unpaid = db.invoices.filter(i => (i.customerId === custId || i.customerName === custId) && i.balance > 0);
+      unpaid.forEach(inv => {
+        const opt = document.createElement('option');
+        opt.value = inv.id;
+        opt.textContent = `${inv.docNumber} (Balance: ₹${inv.balance.toLocaleString('en-IN')})`;
+        if (preselectedInvId && inv.id === preselectedInvId) opt.selected = true;
+        invSelect.appendChild(opt);
+      });
+
+      if (preselectedInvId) onPaymentInvoiceChange(preselectedInvId);
+      else resetPaymentDisplay();
+    }
+
+    function onPaymentInvoiceChange(invId) {
+      const db = getDB();
+      const inv = db.invoices.find(i => i.id === invId);
+      if (!inv) { resetPaymentDisplay(); return; }
+
+      document.getElementById('pay-disp-total').innerText = '₹' + inv.grandTotal.toLocaleString('en-IN');
+      document.getElementById('pay-disp-paid').innerText = '₹' + (inv.paid || 0).toLocaleString('en-IN');
+      document.getElementById('pay-disp-balance').innerText = '₹' + inv.balance.toLocaleString('en-IN');
+      document.getElementById('pay-amount').value = inv.balance;
+    }
+
+    function resetPaymentDisplay() {
+      document.getElementById('pay-disp-total').innerText = '₹0';
+      document.getElementById('pay-disp-paid').innerText = '₹0';
+      document.getElementById('pay-disp-balance').innerText = '₹0';
+      document.getElementById('pay-amount').value = '';
+    }
+
+    function savePaymentRecord() {
+      const db = getDB();
+      const invId = document.getElementById('pay-invoice-select').value;
+      const inv = db.invoices.find(i => i.id === invId);
+      const cust = db.customers.find(c => c.id === inv?.customerId);
+      const payAmount = parseFloat(document.getElementById('pay-amount').value) || 0;
+
+      if (!inv) { showToast('Select a valid invoice'); return; }
+      if (payAmount <= 0) { showToast('Payment amount must be greater than zero'); return; }
+      if (payAmount > inv.balance) {
+        showToast(`Payment (₹${payAmount}) cannot exceed invoice balance (₹${inv.balance})!`);
+        return;
+      }
+
+      const receiptNum = getNextDocNumber('PAYMENT');
+      commitDocNumber('PAYMENT', receiptNum);
+
+      const paymentObj = {
+        id: 'pay_' + Date.now(),
+        receiptNo: receiptNum,
+        date: document.getElementById('pay-date').value,
+        invoiceId: inv.id,
+        invoiceNo: inv.docNumber,
+        customerId: inv.customerId,
+        customerName: inv.customerName,
+        amount: payAmount,
+        method: document.getElementById('pay-method').value,
+        ref: document.getElementById('pay-ref').value
+      };
+
+      db.payments.unshift(paymentObj);
+      inv.paid = (inv.paid || 0) + payAmount;
+      inv.balance = Math.max(0, inv.grandTotal - inv.paid);
+      inv.status = computeInvoiceStatus(inv);
+
+      if (cust) cust.due = Math.max(0, (cust.due || 0) - payAmount);
+
+      saveDB(db);
+      closeRecordPaymentModal();
+      renderPaymentsScreen();
+      showToast(`Payment ${receiptNum} recorded. Invoice updated!`);
+    }
+
+    // ================= FULL REPORTS SUITE (PRODUCT & CUSTOMER P&L) =================
+    function toggleCustomDateInputs(filterVal) {
+      const box = document.getElementById('report-custom-date-container');
+      if (filterVal === 'custom') {
+        box.classList.remove('hidden');
+        const today = new Date().toISOString().split('T')[0];
+        if (!document.getElementById('rep-from-date').value) document.getElementById('rep-from-date').value = today;
+        if (!document.getElementById('rep-to-date').value) document.getElementById('rep-to-date').value = today;
+      } else box.classList.add('hidden');
+    }
+
+    function isDateInFilter(dateStr, filter) {
+      if (!dateStr) return false;
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      if (filter === 'all') return true;
+      if (filter === 'today') return dateStr === todayStr;
+
+      if (filter === 'week') {
+        const d = new Date(today);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(d.setDate(diff)).toISOString().split('T')[0];
+        return dateStr >= monday && dateStr <= todayStr;
+      }
+
+      if (filter === 'month') {
+        const curMonth = todayStr.substring(0, 7);
+        return dateStr.startsWith(curMonth);
+      }
+
+      if (filter === 'custom') {
+        const fromDate = document.getElementById('rep-from-date').value;
+        const toDate = document.getElementById('rep-to-date').value;
+        if (fromDate && dateStr < fromDate) return false;
+        if (toDate && dateStr > toDate) return false;
+        return true;
+      }
+      return true;
+    }
+
+    function renderReportsScreen() {
+      const db = getDB();
+      const filter = document.getElementById('report-date-filter').value;
+
+      const filteredInvoices = db.invoices.filter(i => isDateInFilter(i.date, filter));
+      const filteredExpenses = db.expenses.filter(e => isDateInFilter(e.date, filter));
+      const filteredPurchases = db.purchases.filter(p => isDateInFilter(p.date, filter));
+
+      let grossSales = 0, totalCogs = 0, cgst = 0, sgst = 0, igst = 0;
+      const productStats = {};
+      const customerStats = {};
+
+      filteredInvoices.forEach(inv => {
+        grossSales += inv.taxable || 0;
+        totalCogs += (inv.cogsTotal || 0);
+
+        if (inv.items) {
+          inv.items.forEach(it => {
+            if (!productStats[it.description]) {
+              productStats[it.description] = { name: it.description, qty: 0, revenue: 0, cogs: 0, unit: it.unit };
+            }
+            productStats[it.description].qty += it.qty;
+            productStats[it.description].revenue += ((it.qty * it.rate) - it.discount);
+            productStats[it.description].cogs += (it.cogsTotal || 0);
+
+            if (!customerStats[inv.customerName]) {
+              customerStats[inv.customerName] = { name: inv.customerName, billed: 0, cogs: 0 };
+            }
+            customerStats[inv.customerName].billed += ((it.qty * it.rate) - it.discount);
+            customerStats[inv.customerName].cogs += (it.cogsTotal || 0);
+          });
+        }
+
+        if (inv.slabMap) {
+          Object.values(inv.slabMap).forEach(s => {
+            cgst += s.cgst || 0;
+            sgst += s.sgst || 0;
+            igst += s.igst || 0;
+          });
+        }
+      });
+
+      const totalExpenses = filteredExpenses.reduce((acc, e) => acc + (e.amount || 0), 0);
+      const grossProfit = grossSales - totalCogs;
+      const netProfit = grossProfit - totalExpenses;
+      const inputGst = filteredPurchases.reduce((acc, p) => acc + (p.gstTotal || 0), 0);
+
+      document.getElementById('rep-gross-sales').innerText = '₹' + grossSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('rep-cogs-total').innerText = (totalCogs > 0 ? '-₹' : '₹') + totalCogs.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('rep-gross-profit').innerText = '₹' + grossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('rep-expenses-total').innerText = '-₹' + totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('rep-net-profit').innerText = (netProfit >= 0 ? '₹' : '-₹') + Math.abs(netProfit).toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      document.getElementById('rep-cgst-total').innerText = '₹' + cgst.toFixed(2);
+      document.getElementById('rep-sgst-total').innerText = '₹' + sgst.toFixed(2);
+      document.getElementById('rep-igst-total').innerText = '₹' + igst.toFixed(2);
+      document.getElementById('rep-input-gst').innerText = '₹' + inputGst.toFixed(2);
+
+      // Render Product-wise Profit
+      const prodContainer = document.getElementById('rep-product-profit-container');
+      prodContainer.innerHTML = '';
+      if (Object.keys(productStats).length === 0) {
+        prodContainer.innerHTML = '<div class="text-slate-400 italic">No invoiced sales in this period.</div>';
+      } else {
+        Object.values(productStats).forEach(ps => {
+          const profit = ps.revenue - ps.cogs;
+          const profitPerUnit = ps.qty > 0 ? (profit / ps.qty) : 0;
+          prodContainer.innerHTML += `
+            <div class="p-2 rounded bg-slate-50 border border-slate-100 flex justify-between items-center text-[11px]">
+              <div><strong>${ps.name}</strong> (${ps.qty} ${ps.unit} sold)<div class="text-slate-500">Rev: ₹${ps.revenue.toFixed(0)} | COGS: ₹${ps.cogs.toFixed(0)}</div></div>
+              <div class="text-right"><span class="font-bold text-emerald-700 block mono">₹${profit.toFixed(2)}</span><span class="text-[9px] text-slate-400 font-mono">₹${profitPerUnit.toFixed(1)}/${ps.unit}</span></div>
+            </div>
+          `;
+        });
+      }
+
+      // Render Customer-wise Profit
+      const custContainer = document.getElementById('rep-customer-profit-container');
+      custContainer.innerHTML = '';
+      if (Object.keys(customerStats).length === 0) {
+        custContainer.innerHTML = '<div class="text-slate-400 italic">No customer transactions in this period.</div>';
+      } else {
+        Object.values(customerStats).forEach(cs => {
+          const profit = cs.billed - cs.cogs;
+          custContainer.innerHTML += `
+            <div class="p-2 rounded bg-slate-50 border border-slate-100 flex justify-between items-center text-[11px]">
+              <div><strong>${cs.name}</strong><div class="text-slate-500">Billed: ₹${cs.billed.toFixed(0)} | COGS: ₹${cs.cogs.toFixed(0)}</div></div>
+              <span class="font-bold text-emerald-700 mono">₹${profit.toFixed(2)}</span>
+            </div>
+          `;
+        });
+      }
+
+      // Render Stock Ledger
+      const smBox = document.getElementById('rep-stock-movements');
+      smBox.innerHTML = '';
+      if (db.stockMovements.length === 0) smBox.innerHTML = '<div class="text-slate-400 italic">No movements logged yet.</div>';
+      db.stockMovements.slice(0, 15).forEach(m => {
+        const isIn = m.direction === 'IN';
+        smBox.innerHTML += `
+          <div class="flex justify-between items-center p-1.5 rounded bg-slate-50 border border-slate-100 text-[10px]">
+            <div><strong>${m.itemName}</strong> <span class="text-slate-400">(${m.refType}: ${m.refNo})</span></div>
+            <div class="${isIn ? 'text-emerald-700' : 'text-red-600'} font-bold mono">${isIn ? '+' : '-'}${m.qty} ${m.unit} (Bal: ${m.balanceAfter})</div>
+          </div>
+        `;
+      });
+    }
+
+    // ================= FULL BACKUP SCHEMA & TYPE VALIDATION =================
+    function exportBackupJSON() {
+      const db = getDB();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", `H4_ERP_Complete_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(dl);
+      dl.click();
+      dl.remove();
+      showToast('Comprehensive database exported!');
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imp = JSON.parse(e.target.result);
+          const arrayKeys = ['customers', 'products', 'rawMaterials', 'suppliers', 'purchases', 'productions', 'invoices', 'payments', 'recipes', 'stockMovements', 'expenses', 'quotations', 'expenseCategories'];
+          const objectKeys = ['company', 'settings', 'counters'];
+
+          for (const k of arrayKeys) {
+            if (!Array.isArray(imp[k])) {
+              showToast(`Restore Failed: "${k}" must be a valid array!`);
+              return;
+            }
+          }
+          for (const k of objectKeys) {
+            if (!imp[k] || typeof imp[k] !== 'object' || Array.isArray(imp[k])) {
+              showToast(`Restore Failed: "${k}" must be a valid configuration object!`);
+              return;
+            }
+          }
+
+          saveDB(imp);
+          showToast('Database verified & fully restored!');
+          navigateTo('dashboard');
+        } catch(err) {
+          showToast('Invalid JSON file format');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Dashboard Live KPI Update
+    function updateDashboardKPI() {
+      const db = getDB();
+      const totalSales = db.invoices.reduce((acc, inv) => acc + (inv.grandTotal || 0), 0);
+      document.getElementById('kpi-sales-total').innerText = '₹' + totalSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      const curMonth = new Date().toISOString().substring(0, 7);
+      let grossSales = 0, cogs = 0;
+      db.invoices.filter(i => (i.date || '').startsWith(curMonth)).forEach(inv => {
+        grossSales += (inv.taxable || 0);
+        cogs += (inv.cogsTotal || 0);
+      });
+      const exp = db.expenses.filter(e => (e.date || '').startsWith(curMonth)).reduce((acc, e) => acc + e.amount, 0);
+      const net = (grossSales - cogs) - exp;
+      document.getElementById('kpi-net-profit').innerText = (net >= 0 ? '₹' : '-₹') + Math.abs(net).toLocaleString('en-IN');
+    }
+
+    function applySearchPill(term) {
+      document.getElementById('global-search').value = term;
+      handleGlobalSearch(term);
+    }
+
+    function handleGlobalSearch(term) {
+      if (!term.trim()) return;
+      const lower = term.toLowerCase();
+      const db = getDB();
+      if (lower.startsWith('qtn')) { navigateTo('quotation-list'); return; }
+      if (lower.startsWith('inv')) { navigateTo('invoice-list'); return; }
+      if (db.customers.some(c => c.company.toLowerCase().includes(lower))) { navigateTo('customers'); return; }
+      if (db.products.some(p => p.name.toLowerCase().includes(lower))) { navigateTo('products'); return; }
+      if (db.rawMaterials.some(r => r.name.toLowerCase().includes(lower))) { navigateTo('raw-materials'); return; }
+    }
+
+    // App Initialization
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       updateDashboardKPI();
       const db = getDB();
-      if (db.settings && db.settings.theme) {
-        applyAppTheme(db.settings.theme, false);
+      if (db.settings) {
+        if (db.settings.theme) applyAppTheme(db.settings.theme, false);
+        if (db.settings.textColor) document.documentElement.style.setProperty('--theme-text-color', db.settings.textColor);
       }
+      applyCustomFonts();
     });
   </script>
 </body>
