@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- PURE PINCH-TO-ZOOM ENABLED VIEWPORT -->
+  <!-- PINCH-TO-ZOOM FULLY ENABLED -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes">
-  <title>H4 ERP - Chemical & Construction Manufacturing Platform</title>
+  <title>H4 ERP - Chemical & Construction Platform</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts -->
@@ -57,38 +57,19 @@
       background-color: var(--theme-btn-hover) !important;
     }
 
-    /* TEMPLATE 1: H4 ULTRA PRO (MODERN CORPORATE) */
+    /* TEMPLATE STYLES */
     .tpl-h4pro {
       font-family: var(--custom-font-body, 'Inter'), sans-serif !important;
       border: 1px solid #e2e8f0;
     }
-    .tpl-h4pro thead tr {
-      background-color: #1e1b4b !important;
-      color: #ffffff !important;
-    }
-
-    /* TEMPLATE 2: CLASSIC INDUSTRIAL */
     .tpl-classic {
       font-family: 'Times New Roman', serif !important;
       border: 3px double #0f172a !important;
       padding: 1.5rem !important;
     }
-    .tpl-classic thead tr {
-      background-color: #f1f5f9 !important;
-      color: #000000 !important;
-      border-top: 2px solid #000;
-      border-bottom: 2px solid #000;
-    }
-
-    /* TEMPLATE 3: MINIMAL SCANDINAVIAN */
     .tpl-minimal {
       font-family: var(--custom-font-body, 'Inter'), sans-serif !important;
       border: none !important;
-    }
-    .tpl-minimal thead tr {
-      background-color: transparent !important;
-      border-bottom: 2px solid #94a3b8 !important;
-      color: #475569 !important;
     }
 
     @media print {
@@ -155,7 +136,7 @@
           <input 
             type="text" 
             id="global-search"
-            placeholder="Search Customers, Products, Invoices, Proposals..." 
+            placeholder="Search Customers, Products, Invoices, RM, Batches..." 
             class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent shadow-sm"
             oninput="handleGlobalSearch(this.value)"
           >
@@ -216,7 +197,7 @@
         </div>
       </div>
 
-      <!-- SECTION 2: PRODUCTION & PROCUREMENT -->
+      <!-- SECTION 2: PRODUCTION & INVENTORY -->
       <div class="pt-2">
         <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Manufacturing & Inventory</span>
         <div class="grid grid-cols-2 gap-3">
@@ -252,7 +233,7 @@
 
       <!-- SECTION 3: FINANCE & ADMINISTRATION -->
       <div class="pt-2">
-        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Finance & Administration</span>
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-heading">Finance & Settings</span>
         <div class="grid grid-cols-2 gap-3">
           <div onclick="navigateTo('expenses')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#e11d48] to-[#fb7185] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
             <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Opex</span>
@@ -268,24 +249,38 @@
             <p class="text-[11px] text-indigo-100 font-normal">P&L & COGS Audits</p>
           </div>
 
-          <div onclick="navigateTo('suppliers')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#334155] to-[#64748b] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
-            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Vendors</span>
-            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="store" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight font-heading">Suppliers</h3>
-            <p class="text-[11px] text-slate-100 font-normal">Supplier Directory</p>
+          <div onclick="navigateTo('templates')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#c026d3] to-[#e879f9] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Design</span>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="palette" class="w-5 h-5 text-white"></i></div>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Templates</h3>
+            <p class="text-[11px] text-fuchsia-100 font-normal">3 Corporate Layouts</p>
           </div>
 
-          <div onclick="navigateTo('company')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#4f46e5] to-[#3b82f6] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
-            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Profile</span>
-            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="building-2" class="w-5 h-5 text-white"></i></div>
-            <h3 class="font-bold text-sm tracking-tight font-heading">Company</h3>
-            <p class="text-[11px] text-blue-100 font-normal">Website, Logo & Bank</p>
+          <div onclick="navigateTo('theme')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#0284c7] to-[#38bdf8] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Style</span>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="paint-brush" class="w-5 h-5 text-white"></i></div>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Theme</h3>
+            <p class="text-[11px] text-sky-100 font-normal">Fonts & Color Picker</p>
+          </div>
+
+          <div onclick="navigateTo('backup')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#ea580c] to-[#f97316] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">Data</span>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="save" class="w-5 h-5 text-white"></i></div>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Backup</h3>
+            <p class="text-[11px] text-orange-100 font-normal">JSON Export & Import</p>
+          </div>
+
+          <div onclick="navigateTo('settings')" class="relative overflow-hidden rounded-2xl p-3.5 text-white bg-gradient-to-r from-[#1e1b4b] to-[#312e81] shadow-sm hover:shadow-md cursor-pointer active:scale-95 transition-all">
+            <span class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full">System</span>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mb-3"><i data-lucide="settings" class="w-5 h-5 text-white"></i></div>
+            <h3 class="font-bold text-sm tracking-tight font-heading">Settings</h3>
+            <p class="text-[11px] text-indigo-200 font-normal">Prefixes & Defaults</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ================= 2. QUOTATION SELECTION & LIST ================= -->
+    <!-- ================= 2. QUOTATION LIST VIEW ================= -->
     <div id="view-quotation-list" class="hidden space-y-3">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
@@ -320,19 +315,18 @@
           <button onclick="closeWaterproofingEditor()" class="text-slate-300 hover:text-white">✕</button>
         </div>
         <form id="waterproofing-form" onsubmit="event.preventDefault(); saveWaterproofingProposal();" class="p-4 space-y-3 text-xs overflow-y-auto">
-          <!-- Client Details: Allows Select OR Direct Typing -->
           <div>
             <label class="block text-slate-500 mb-1">Select Customer</label>
             <select id="wp-cust-select" onchange="onProposalCustomerSelect(this.value, 'wp')" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></select>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-slate-500 mb-1">Customer / Company Name</label>
-              <input type="text" id="wp-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Type customer name" required>
+              <label class="block text-slate-500 mb-1">Customer / Company</label>
+              <input type="text" id="wp-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Customer name" required>
             </div>
             <div>
               <label class="block text-slate-500 mb-1">Phone Number</label>
-              <input type="tel" id="wp-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile / WhatsApp" required>
+              <input type="tel" id="wp-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile" required>
             </div>
           </div>
           <div>
@@ -346,14 +340,14 @@
 
           <!-- Dynamic Rate Specification (₹/sq.ft) -->
           <div class="border border-blue-200 bg-blue-50/50 p-3 rounded-xl space-y-2">
-            <span class="font-bold text-blue-950 uppercase tracking-wider text-[10px] block font-heading">Engineering Specification & Rate Engine</span>
+            <span class="font-bold text-blue-950 uppercase tracking-wider text-[10px] block font-heading">Rate Specification Engine</span>
             <div>
               <label class="block text-slate-500 text-[10px]">Area in Sq.Ft</label>
               <input type="number" id="wp-area" value="1000" min="1" oninput="calculateWaterproofingRate()" class="w-full bg-white border p-1.5 rounded font-bold mono text-sm" required>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="block text-slate-500 text-[10px]">Structure / Application</label>
+                <label class="block text-slate-500 text-[10px]">Application Structure</label>
                 <select id="wp-app-type" onchange="calculateWaterproofingRate()" class="w-full bg-white border p-1 rounded font-medium text-[11px]">
                   <option value="terrace" data-rate="65">Roof Terrace Slab (₹65/sq.ft)</option>
                   <option value="bathroom" data-rate="55">Bathrooms & Wet Areas (₹55/sq.ft)</option>
@@ -371,18 +365,15 @@
               </div>
             </div>
 
-            <!-- Optional Systems -->
             <div class="space-y-1 pt-1 text-[11px] text-slate-700">
-              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-crack" onchange="calculateWaterproofingRate()" class="accent-blue-600"> V-Groove Crack Filling & PU Sealant (+₹12/sq.ft)</label>
-              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-mesh" checked onchange="calculateWaterproofingRate()" class="accent-blue-600"> Glass Fiber Mesh Reinforcement (+₹15/sq.ft)</label>
-              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-screed" onchange="calculateWaterproofingRate()" class="accent-blue-600"> Protection Screed / UV Shield (+₹20/sq.ft)</label>
-              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-test" checked class="accent-blue-600"> 48-Hour Ponding Water Test Included</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-crack" onchange="calculateWaterproofingRate()" class="accent-blue-600"> V-Groove Crack Filling with PU Sealant (+₹12/sq.ft)</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-mesh" checked onchange="calculateWaterproofingRate()" class="accent-blue-600"> 45 GSM Glass Fiber Mesh Layer (+₹15/sq.ft)</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="wp-opt-screed" onchange="calculateWaterproofingRate()" class="accent-blue-600"> UV Protective Shield Screed (+₹20/sq.ft)</label>
             </div>
 
-            <!-- Calculated Rate & Custom Override -->
             <div class="pt-2 border-t border-blue-200 grid grid-cols-2 gap-2 text-right">
               <div>
-                <label class="block text-slate-500 text-[10px] text-left">Calculated ₹/sq.ft</label>
+                <label class="block text-slate-500 text-[10px] text-left">Calculated Rate</label>
                 <div id="wp-calculated-rate-disp" class="font-bold mono text-sm text-slate-800 text-left">₹95.00</div>
               </div>
               <div>
@@ -392,9 +383,8 @@
             </div>
           </div>
 
-          <!-- Proposal Warranty & Execution Details -->
           <div class="border border-slate-200 p-2.5 rounded-xl space-y-2 text-xs">
-            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Proposal Specifications</span>
+            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Specifications & Schedule</span>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-slate-500 text-[10px]">Execution Timeline</label><input type="text" id="wp-timeline" value="5 to 7 Working Days" class="w-full bg-slate-50 border p-1 rounded"></div>
               <div>
@@ -408,7 +398,6 @@
             </div>
           </div>
 
-          <!-- Proposal Commercials Summary -->
           <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-right mono text-xs space-y-1">
             <div class="flex justify-between"><span>Base Project Cost:</span> <span id="wp-disp-subtotal">₹95,000.00</span></div>
             <div class="flex justify-between text-slate-500"><span>GST (18%):</span> <span id="wp-disp-gst">₹17,100.00</span></div>
@@ -428,23 +417,22 @@
           <button onclick="closeEpoxyEditor()" class="text-slate-300 hover:text-white">✕</button>
         </div>
         <form id="epoxy-form" onsubmit="event.preventDefault(); saveEpoxyProposal();" class="p-4 space-y-3 text-xs overflow-y-auto">
-          <!-- Client & Site: Allows Select OR Direct Typing -->
           <div>
             <label class="block text-slate-500 mb-1">Select Customer</label>
             <select id="epx-cust-select" onchange="onProposalCustomerSelect(this.value, 'epx')" class="w-full bg-slate-50 border p-2 rounded-lg font-medium"></select>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-slate-500 mb-1">Customer / Company Name</label>
-              <input type="text" id="epx-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Type customer name" required>
+              <label class="block text-slate-500 mb-1">Customer / Company</label>
+              <input type="text" id="epx-cust-name-input" class="w-full bg-slate-50 border p-1.5 rounded font-semibold text-slate-900" placeholder="Customer name" required>
             </div>
             <div>
               <label class="block text-slate-500 mb-1">Phone Number</label>
-              <input type="tel" id="epx-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile / WhatsApp" required>
+              <input type="tel" id="epx-cust-phone-input" class="w-full bg-slate-50 border p-1.5 rounded mono" placeholder="Mobile" required>
             </div>
           </div>
           <div>
-            <label class="block text-slate-500 mb-1">Project Site / Facility Location</label>
+            <label class="block text-slate-500 mb-1">Project Site Location</label>
             <input type="text" id="epx-site-location" class="w-full bg-slate-50 border p-2 rounded-lg font-medium" placeholder="E.g., Warehouse Floor, Industrial Estate, Tirur" required>
           </div>
           <div class="grid grid-cols-2 gap-2">
@@ -452,7 +440,7 @@
             <div><label class="block text-slate-500 mb-1">Validity</label><input type="date" id="epx-validity" class="w-full bg-slate-50 border p-1.5 rounded" required></div>
           </div>
 
-          <!-- Dynamic Rate Specification (₹/sq.ft) -->
+          <!-- Dynamic Rate Engine (₹/sq.ft) -->
           <div class="border border-purple-200 bg-purple-50/50 p-3 rounded-xl space-y-2">
             <span class="font-bold text-purple-950 uppercase tracking-wider text-[10px] block font-heading">Flooring Specification & Rate Engine</span>
             <div>
@@ -461,17 +449,17 @@
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="block text-slate-500 text-[10px]">Epoxy Flooring System</label>
+                <label class="block text-slate-500 text-[10px]">Flooring System</label>
                 <select id="epx-system" onchange="calculateEpoxyRate()" class="w-full bg-white border p-1 rounded font-medium text-[11px]">
                   <option value="self-level" data-base="95">Epoxy Self-Levelling (₹95/sq.ft)</option>
-                  <option value="screed" data-base="130">Heavy Duty Epoxy Screed (₹130/sq.ft)</option>
+                  <option value="screed" data-base="130">Heavy Duty Screed (₹130/sq.ft)</option>
                   <option value="metallic" data-base="165">Metallic Pearl Designer (₹165/sq.ft)</option>
-                  <option value="flake" data-base="115">Decorative Flake System (₹115/sq.ft)</option>
+                  <option value="flake" data-base="115">Decorative Flakes (₹115/sq.ft)</option>
                   <option value="3d" data-base="220">3D Artistic Epoxy (₹220/sq.ft)</option>
                 </select>
               </div>
               <div>
-                <label class="block text-slate-500 text-[10px]">System Thickness</label>
+                <label class="block text-slate-500 text-[10px]">Thickness</label>
                 <select id="epx-thickness" onchange="calculateEpoxyRate()" class="w-full bg-white border p-1 rounded font-medium text-[11px]">
                   <option value="1mm" data-add="0">1 mm Thickness</option>
                   <option value="2mm" data-add="25">2 mm Thickness (+₹25)</option>
@@ -491,21 +479,18 @@
                 </select>
               </div>
               <div>
-                <label class="block text-slate-500 text-[10px]">Color / Shade Code</label>
+                <label class="block text-slate-500 text-[10px]">Color / Shade</label>
                 <input type="text" id="epx-color" value="RAL 7035 Light Grey" class="w-full bg-white border p-1 rounded text-[11px]">
               </div>
             </div>
 
-            <!-- Optional Features -->
             <div class="space-y-1 pt-1 text-[11px] text-slate-700">
               <label class="flex items-center gap-2"><input type="checkbox" id="epx-opt-pu" checked onchange="calculateEpoxyRate()" class="accent-purple-700"> Aliphatic PU Anti-Scratch Top Coat (+₹20/sq.ft)</label>
-              <label class="flex items-center gap-2"><input type="checkbox" id="epx-opt-grind" checked class="accent-purple-700"> Diamond Grinding & Dustless Vacuum Prep Included</label>
             </div>
 
-            <!-- Calculated Rate & Custom Override -->
             <div class="pt-2 border-t border-purple-200 grid grid-cols-2 gap-2 text-right">
               <div>
-                <label class="block text-slate-500 text-[10px] text-left">Calculated ₹/sq.ft</label>
+                <label class="block text-slate-500 text-[10px] text-left">Calculated Rate</label>
                 <div id="epx-calculated-rate-disp" class="font-bold mono text-sm text-slate-800 text-left">₹115.00</div>
               </div>
               <div>
@@ -515,11 +500,10 @@
             </div>
           </div>
 
-          <!-- Proposal Warranty & Execution Details -->
           <div class="border border-slate-200 p-2.5 rounded-xl space-y-2 text-xs">
-            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Project Execution & Warranty</span>
+            <span class="font-bold text-slate-800 uppercase text-[10px] block font-heading">Execution & Warranty</span>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-slate-500 text-[10px]">Execution Timeline</label><input type="text" id="epx-timeline" value="4 to 6 Working Days" class="w-full bg-slate-50 border p-1 rounded"></div>
+              <div><label class="block text-slate-500 text-[10px]">Timeline</label><input type="text" id="epx-timeline" value="4 to 6 Working Days" class="w-full bg-slate-50 border p-1 rounded"></div>
               <div>
                 <label class="block text-slate-500 text-[10px]">Warranty</label>
                 <select id="epx-warranty" class="w-full bg-slate-50 border p-1 rounded font-medium">
@@ -531,7 +515,6 @@
             </div>
           </div>
 
-          <!-- Proposal Commercials Summary -->
           <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-right mono text-xs space-y-1">
             <div class="flex justify-between"><span>Base Project Cost:</span> <span id="epx-disp-subtotal">₹1,38,000.00</span></div>
             <div class="flex justify-between text-slate-500"><span>GST (18%):</span> <span id="epx-disp-gst">₹24,840.00</span></div>
@@ -547,7 +530,7 @@
     <div id="proposal-preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
       <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[94vh]">
         <div class="bg-slate-900 text-white px-4 py-2.5 flex justify-between items-center no-print">
-          <span id="proposal-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400 font-heading">ENGINEERING PROPOSAL PREVIEW</span>
+          <span id="proposal-modal-badge" class="font-bold text-xs uppercase tracking-wider text-amber-400 font-heading">PROPOSAL PREVIEW</span>
           <div class="flex items-center gap-2">
             <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
             <button onclick="shareActiveProposalOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> WhatsApp</button>
@@ -587,7 +570,7 @@
             </div>
             <div class="text-right flex flex-col justify-between">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">PROPOSAL STATUS:</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">STATUS:</span>
                 <span id="prop-status-badge" class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded text-[10px]">ACTIVE PROPOSAL</span>
               </div>
               <div id="prop-convert-btn-holder" class="pt-2 no-print"></div>
@@ -596,7 +579,7 @@
 
           <!-- Specifications Block -->
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
-            <h4 class="font-bold text-slate-900 uppercase text-[10px] tracking-wider text-indigo-900 font-heading">Work Scope & Engineering Specifications</h4>
+            <h4 class="font-bold text-slate-900 uppercase text-[10px] tracking-wider text-indigo-900 font-heading">Work Scope & Specifications</h4>
             <div id="prop-specs-content" class="text-[11px] leading-relaxed text-slate-700"></div>
           </div>
 
@@ -612,10 +595,10 @@
             </thead>
             <tbody>
               <tr>
-                <td class="py-2 px-2 font-medium" id="prop-item-title">Epoxy Flooring System Application</td>
-                <td class="py-2 px-2 text-center font-bold mono" id="prop-item-area">1,200</td>
-                <td class="py-2 px-2 text-right mono" id="prop-item-rate">₹115.00</td>
-                <td class="py-2 px-2 text-right font-bold mono" id="prop-item-amount">₹1,38,000.00</td>
+                <td class="py-2 px-2 font-medium" id="prop-item-title">Coating System Application</td>
+                <td class="py-2 px-2 text-center font-bold mono" id="prop-item-area">1,000</td>
+                <td class="py-2 px-2 text-right mono" id="prop-item-rate">₹95.00</td>
+                <td class="py-2 px-2 text-right font-bold mono" id="prop-item-amount">₹95,000.00</td>
               </tr>
             </tbody>
           </table>
@@ -623,39 +606,39 @@
           <!-- Financial Summary -->
           <div class="flex justify-end pt-1">
             <div class="w-64 space-y-1 text-right mono text-xs">
-              <div class="flex justify-between"><span>Base Amount:</span> <span id="prop-disp-base">₹1,38,000.00</span></div>
-              <div class="flex justify-between text-slate-500"><span>GST (18%):</span> <span id="prop-disp-tax">₹24,840.00</span></div>
+              <div class="flex justify-between"><span>Base Amount:</span> <span id="prop-disp-base">₹95,000.00</span></div>
+              <div class="flex justify-between text-slate-500"><span>GST (18%):</span> <span id="prop-disp-tax">₹17,100.00</span></div>
               <div class="flex justify-between font-extrabold text-sm border-t-2 border-slate-900 pt-1 text-indigo-950">
-                <span>Grand Total:</span> <span id="prop-disp-grand">₹1,62,840.00</span>
+                <span>Grand Total:</span> <span id="prop-disp-grand">₹1,12,100.00</span>
               </div>
             </div>
           </div>
 
           <div class="p-2 bg-slate-50 rounded border border-slate-200 text-xs">
             <span class="text-slate-500">Total in Words:</span>
-            <div id="prop-disp-words" class="font-bold text-slate-900 capitalize">One Lakh Sixty Two Thousand Eight Hundred Forty Rupees Only</div>
+            <div id="prop-disp-words" class="font-bold text-slate-900 capitalize">One Lakh Twelve Thousand One Hundred Rupees Only</div>
           </div>
 
           <!-- Warranty & Milestones -->
           <div class="grid grid-cols-2 gap-4 border-t border-slate-200 pt-2 text-[10px] text-slate-600">
             <div>
-              <div class="font-bold text-slate-800 uppercase font-heading">Warranty & Guarantee:</div>
-              <div id="prop-disp-warranty" class="font-medium text-emerald-800">5 Years Comprehensive Warranty</div>
-              <div class="mt-1 font-bold text-slate-800 uppercase font-heading">Execution Schedule:</div>
-              <div id="prop-disp-timeline">4 to 6 Working Days</div>
+              <div class="font-bold text-slate-800 uppercase font-heading">Warranty:</div>
+              <div id="prop-disp-warranty" class="font-medium text-emerald-800">5 Years Warranty</div>
+              <div class="mt-1 font-bold text-slate-800 uppercase font-heading">Schedule:</div>
+              <div id="prop-disp-timeline">5 to 7 Days</div>
             </div>
             <div>
               <div class="font-bold text-slate-800 uppercase font-heading">Payment Terms:</div>
-              <div>• 50% Advance with Purchase Order</div>
-              <div>• 40% on Material Delivery & Surface Prep</div>
-              <div>• 10% Handover & Warranty Issue</div>
+              <div>• 50% Advance with PO</div>
+              <div>• 40% on Material Delivery</div>
+              <div>• 10% on Final Handover</div>
             </div>
           </div>
 
-          <!-- Signatures & Authorization -->
+          <!-- Signatures -->
           <div class="grid grid-cols-2 gap-4 border-t border-slate-300 pt-4 text-[10px]">
             <div>
-              <div class="text-slate-400 mb-6">Client Acceptance Signature:</div>
+              <div class="text-slate-400 mb-6">Client Acceptance:</div>
               <div class="border-t border-slate-300 w-36"></div>
             </div>
             <div class="text-right flex flex-col justify-between items-end">
@@ -854,15 +837,253 @@
       </div>
     </div>
 
-    <!-- ================= THEME MANAGER VIEW (CUSTOM FONTS & COLOR PICKER) ================= -->
+    <!-- ================= CUSTOMER, PRODUCT & PAYMENT MODALS ================= -->
+    <div id="modal-customer" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold text-slate-900"><span>New Customer</span><button onclick="closeCustomerModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveNewCustomer();" class="space-y-3">
+          <input type="text" id="cust-name" placeholder="Contact Person" class="w-full bg-slate-50 border p-2 rounded" required>
+          <input type="text" id="cust-company" placeholder="Company Name" class="w-full bg-slate-50 border p-2 rounded" required>
+          <input type="tel" id="cust-phone" placeholder="Phone" class="w-full bg-slate-50 border p-2 rounded" required>
+          <textarea id="cust-billing-address" placeholder="Billing Address" class="w-full bg-slate-50 border p-2 rounded" required></textarea>
+          <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl">Save Customer</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-product" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold text-slate-900"><span>New Finished Product</span><button onclick="closeProductModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveNewProduct();" class="space-y-3">
+          <input type="text" id="prod-name" placeholder="Product Name & Grade" class="w-full bg-slate-50 border p-2 rounded" required>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="prod-unit" placeholder="Unit (Bag / Bucket)" class="bg-slate-50 border p-2 rounded" value="Bag" required>
+            <input type="number" id="prod-pack-weight" placeholder="Pack Weight (e.g. 20 KG)" class="bg-slate-50 border p-2 rounded" value="20" required>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="prod-price-retail" placeholder="Retail Price" class="bg-slate-50 border p-2 rounded" required>
+            <input type="number" id="prod-price-contractor" placeholder="Contractor Price" class="bg-slate-50 border p-2 rounded" required>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="prod-stock" value="100" placeholder="Opening Stock" class="bg-slate-50 border p-2 rounded">
+            <select id="prod-gst" class="bg-slate-50 border p-2 rounded"><option value="18">18% GST</option><option value="28">28% GST</option></select>
+          </div>
+          <button type="submit" class="w-full bg-orange-600 text-white font-bold py-2 rounded-xl">Save Product</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-payment" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
+        <div class="bg-emerald-800 text-white px-4 py-3 flex justify-between items-center">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-300">Record Customer Payment</h3>
+          <button onclick="closeRecordPaymentModal()" class="text-slate-300 hover:text-white">✕</button>
+        </div>
+        <form id="payment-form" onsubmit="event.preventDefault(); savePaymentRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
+          <div>
+            <label class="block text-slate-500 mb-1">Select Customer</label>
+            <select id="pay-customer-select" onchange="onPaymentCustomerChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium" required></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 mb-1">Select Invoice</label>
+            <select id="pay-invoice-select" onchange="onPaymentInvoiceChange(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold mono text-slate-900" required></select>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-center mono">
+            <div><span class="text-[9px] text-slate-400 block font-sans">Total</span><strong id="pay-disp-total">₹0</strong></div>
+            <div><span class="text-[9px] text-slate-400 block font-sans">Paid</span><strong id="pay-disp-paid" class="text-emerald-700">₹0</strong></div>
+            <div><span class="text-[9px] text-slate-400 block font-sans">Balance</span><strong id="pay-disp-balance" class="text-red-600">₹0</strong></div>
+          </div>
+
+          <div>
+            <label class="block text-slate-500 mb-1">Payment Amount (₹)</label>
+            <input type="number" id="pay-amount" class="w-full bg-white border border-slate-200 rounded-lg p-2 font-bold mono text-emerald-700 text-sm" required>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Payment Date</label><input type="date" id="pay-date" class="w-full bg-slate-50 border p-2 rounded" required></div>
+            <div>
+              <label class="block text-slate-500 mb-1">Payment Mode</label>
+              <select id="pay-method" class="w-full bg-slate-50 border p-2 rounded font-medium">
+                <option value="UPI">UPI (GPay / PhonePe)</option>
+                <option value="Bank Transfer">Bank Transfer (NEFT/RTGS)</option>
+                <option value="Cash">Cash</option>
+                <option value="Cheque">Cheque</option>
+              </select>
+            </div>
+          </div>
+          <div><label class="block text-slate-500 mb-1">Ref / UTR / Cheque No</label><input type="text" id="pay-ref" placeholder="Transaction ID..." class="w-full bg-slate-50 border p-2 rounded mono"></div>
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow transition">Confirm & Save Payment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= PURCAHSES, PRODUCTION, RAW MATERIALS, SUPPLIERS, EXPENSES, REPORTS, SETTINGS, THEME VIEWS (CLEAN & DEDUPLICATED) ================= -->
+    <div id="view-purchases" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Raw Material Purchases</span>
+        <button onclick="openNewPurchaseModal()" class="text-xs bg-teal-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-teal-700">+ New Inward</button>
+      </div>
+      <div id="purchases-list-container" class="space-y-3"></div>
+    </div>
+
+    <div id="view-production" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Production & BOM</span>
+        <div class="flex gap-1.5">
+          <button onclick="openRecipeModal()" class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-md font-bold hover:bg-purple-200">+ Recipe</button>
+          <button onclick="openRunBatchModal()" class="text-xs bg-purple-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-purple-700">+ Run Batch</button>
+        </div>
+      </div>
+      <div class="flex gap-2 border-b border-slate-200 text-xs font-bold">
+        <button onclick="toggleProdTab('batches')" id="tab-btn-batches" class="py-1.5 border-b-2 border-purple-600 text-purple-700">Production Batches</button>
+        <button onclick="toggleProdTab('recipes')" id="tab-btn-recipes" class="py-1.5 border-b-2 border-transparent text-slate-500">BOM Recipes</button>
+      </div>
+      <div id="production-batches-container" class="space-y-3"></div>
+      <div id="production-recipes-container" class="space-y-3 hidden"></div>
+    </div>
+
+    <div id="view-raw-materials" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Raw Material Inventory</span>
+        <button onclick="openRawMaterialModal(false)" class="text-xs bg-amber-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-amber-700">+ Add Material</button>
+      </div>
+      <div id="raw-materials-list-container" class="space-y-3"></div>
+    </div>
+
+    <div id="view-suppliers" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Supplier Master</span>
+        <button onclick="openSupplierModal(false)" class="text-xs bg-slate-700 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-slate-800">+ Add Supplier</button>
+      </div>
+      <div id="suppliers-list-container" class="space-y-3"></div>
+    </div>
+
+    <div id="view-expenses" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Operating Expenses</span>
+        <button onclick="openAddExpenseModal()" class="text-xs bg-rose-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-rose-700">+ Add Expense</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-[10px] text-slate-400 block font-medium">Total Expenses</span>
+          <span id="exp-kpi-total" class="font-bold text-sm text-rose-600 mono">₹0.00</span>
+        </div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-[10px] text-slate-400 block font-medium">Power & Fuel</span>
+          <span id="exp-kpi-power" class="font-bold text-sm text-slate-800 mono">₹0.00</span>
+        </div>
+      </div>
+      <div id="expenses-list-container" class="space-y-3"></div>
+    </div>
+
+    <div id="view-reports" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Financial Reports</span>
+        <select id="report-date-filter" onchange="toggleCustomDateInputs(this.value); renderReportsScreen();" class="text-xs bg-white border border-slate-200 rounded p-1 font-semibold">
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month" selected>This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+      <div id="report-custom-date-container" class="hidden grid grid-cols-2 gap-2 bg-slate-100 p-2.5 rounded-xl border border-slate-200 text-xs">
+        <div><label class="block text-[10px] text-slate-500 mb-0.5">From Date</label><input type="date" id="rep-from-date" onchange="renderReportsScreen()" class="w-full bg-white border p-1 rounded mono"></div>
+        <div><label class="block text-[10px] text-slate-500 mb-0.5">To Date</label><input type="date" id="rep-to-date" onchange="renderReportsScreen()" class="w-full bg-white border p-1 rounded mono"></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">P&L Calculation</h4>
+        <div class="space-y-1.5 mono">
+          <div class="flex justify-between"><span>Gross Revenue:</span> <strong id="rep-gross-sales">₹0.00</strong></div>
+          <div class="flex justify-between text-slate-500"><span>Less: COGS:</span> <span class="text-red-500" id="rep-cogs-total">-₹0.00</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-1 font-bold"><span>Gross Profit:</span> <span class="text-emerald-700" id="rep-gross-profit">₹0.00</span></div>
+          <div class="flex justify-between text-slate-500"><span>Less: Expenses:</span> <span class="text-red-500" id="rep-expenses-total">-₹0.00</span></div>
+          <div class="flex justify-between border-t-2 border-slate-900 pt-1 text-sm font-extrabold"><span>Net Operating Profit:</span> <span id="rep-net-profit" class="text-emerald-800">₹0.00</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Product-Wise Profit Contribution</h4>
+        <div id="rep-product-profit-container" class="space-y-1.5"></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Customer-Wise Profit Contribution</h4>
+        <div id="rep-customer-profit-container" class="space-y-1.5"></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Tax Collections & Input Credit</h4>
+        <div class="space-y-1 mono text-[11px]">
+          <div class="flex justify-between"><span>Output CGST:</span> <span id="rep-cgst-total">₹0.00</span></div>
+          <div class="flex justify-between"><span>Output SGST:</span> <span id="rep-sgst-total">₹0.00</span></div>
+          <div class="flex justify-between"><span>Output IGST:</span> <span id="rep-igst-total">₹0.00</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-1 font-semibold text-teal-700"><span>Input GST Credit:</span> <span id="rep-input-gst">₹0.00</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+        <h4 class="font-bold text-slate-900 uppercase text-[11px] text-indigo-700">Recent Stock Movements</h4>
+        <div id="rep-stock-movements" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+
+    <div id="view-backup" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Backup & Restore</span>
+        <div></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
+        <h4 class="font-bold text-slate-900 text-sm">System Database Entities</h4>
+        <div class="grid grid-cols-3 gap-2 text-center mono">
+          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Customers</span><strong id="bkp-cust-count">0</strong></div>
+          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Products</span><strong id="bkp-prod-count">0</strong></div>
+          <div class="bg-slate-50 p-2 rounded-lg"><span class="text-slate-400 block text-[10px]">Raw Mat</span><strong id="bkp-rm-count">0</strong></div>
+        </div>
+        <div class="space-y-2 pt-3 border-t border-slate-200">
+          <button onclick="exportBackupJSON()" class="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i> Download Full Backup JSON
+          </button>
+          <label class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center gap-2 cursor-pointer">
+            <i data-lucide="upload" class="w-4 h-4"></i> Restore From Backup JSON
+            <input type="file" accept=".json" class="hidden" onchange="importBackupJSON(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-templates" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Template Manager</span>
+        <div></div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
+        <h4 class="font-bold text-slate-900">Document Layout Style</h4>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="selectTemplate('H4 Pro')" id="btn-tpl-h4pro" class="p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 text-center font-bold text-indigo-900">H4 Pro</button>
+          <button onclick="selectTemplate('Classic')" id="btn-tpl-classic" class="p-2.5 rounded-xl border border-slate-200 hover:border-slate-400 text-center font-semibold text-slate-700">Classic</button>
+          <button onclick="selectTemplate('Minimal')" id="btn-tpl-minimal" class="p-2.5 rounded-xl border border-slate-200 hover:border-slate-400 text-center font-semibold text-slate-700">Minimal</button>
+        </div>
+        <div class="pt-3 border-t border-slate-200 space-y-2">
+          <span class="font-bold text-slate-900 block text-xs">Element Visibility Switches</span>
+          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Bank Details Block</span><input type="checkbox" id="tpl-show-bank" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
+          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Digital Signature & Stamp</span><input type="checkbox" id="tpl-show-sign" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
+          <label class="flex justify-between items-center py-1"><span class="text-slate-600">Show Terms & Conditions</span><input type="checkbox" id="tpl-show-terms" checked onchange="saveTemplateConfig()" class="w-4 h-4 accent-indigo-600"></label>
+        </div>
+      </div>
+    </div>
+
     <div id="view-theme" class="hidden space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
         <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <span class="text-sm font-bold text-slate-800 font-heading">Theme & Font Manager</span>
+        <span class="text-sm font-bold text-slate-800 font-heading">Theme & Typography</span>
         <div></div>
       </div>
-
-      <!-- Preset Accents -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 font-heading">Global Primary Accent Preset</h4>
         <div class="grid grid-cols-2 gap-2">
@@ -872,66 +1093,259 @@
           <button onclick="applyAppTheme('dark')" class="p-3 rounded-xl bg-gradient-to-r from-slate-950 to-zinc-900 text-white font-bold text-center">Corporate Dark</button>
         </div>
       </div>
-
-      <!-- Live Text Color Picker -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
-        <h4 class="font-bold text-slate-900 font-heading">Interface Text Color Customizer</h4>
+        <h4 class="font-bold text-slate-900 font-heading">Interface Text Color</h4>
         <div class="flex items-center gap-3">
           <input type="color" id="theme-color-input" onchange="applyCustomTextColor(this.value)" class="w-10 h-10 rounded border border-slate-200 cursor-pointer">
-          <span class="text-slate-600 text-xs">Select primary text color across all ERP screens and tables</span>
+          <span class="text-slate-600 text-xs">Choose primary text color across the ERP system</span>
         </div>
       </div>
-
-      <!-- CUSTOM FONT UPLOADERS (.ttf, .otf, .woff, .woff2) -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 font-heading">Custom Font Uploader (.ttf, .otf, .woff, .woff2)</h4>
-        <p class="text-slate-500 text-[11px]">Upload custom branding typography to apply distinct fonts to different sections:</p>
-        
         <div class="space-y-3 pt-1">
-          <!-- 1. Headings Font -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <span class="font-bold text-slate-800 block text-xs">1. Headings & Titles Font</span>
-            <div class="flex items-center justify-between">
-              <span id="font-heading-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (Inter)</span>
-              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
-                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'heading')">
-              </label>
-            </div>
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div><span class="font-bold text-slate-800 block text-xs">1. Headings Font</span><span id="font-heading-name" class="text-slate-500 text-[11px]">Default (Inter)</span></div>
+            <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'heading')"></label>
           </div>
-
-          <!-- 2. Body Font -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <span class="font-bold text-slate-800 block text-xs">2. Body & General Text Font</span>
-            <div class="flex items-center justify-between">
-              <span id="font-body-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (Inter)</span>
-              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
-                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'body')">
-              </label>
-            </div>
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div><span class="font-bold text-slate-800 block text-xs">2. Body Font</span><span id="font-body-name" class="text-slate-500 text-[11px]">Default (Inter)</span></div>
+            <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'body')"></label>
           </div>
-
-          <!-- 3. Monospace Numbers Font -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <span class="font-bold text-slate-800 block text-xs">3. Numbers & Currency Font</span>
-            <div class="flex items-center justify-between">
-              <span id="font-mono-name" class="text-slate-500 text-[11px] truncate max-w-[180px]">Default (JetBrains Mono)</span>
-              <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">
-                Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'mono')">
-              </label>
-            </div>
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div><span class="font-bold text-slate-800 block text-xs">3. Numbers Font</span><span id="font-mono-name" class="text-slate-500 text-[11px]">Default (JetBrains Mono)</span></div>
+            <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded text-xs border border-indigo-200">Upload Font<input type="file" accept=".ttf,.otf,.woff,.woff2" class="hidden" onchange="handleCustomFontUpload(event, 'mono')"></label>
           </div>
         </div>
       </div>
     </div>
 
+    <div id="view-settings" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">System Settings</span>
+        <button onclick="saveGlobalSettings()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-semibold hover:bg-indigo-700">Save</button>
+      </div>
+      <form id="settings-form" onsubmit="event.preventDefault(); saveGlobalSettings();" class="space-y-4 text-xs">
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Prefixes</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Invoice Prefix</label><input type="text" id="set-inv-prefix" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+            <div><label class="block text-slate-500 mb-1">Quotation Prefix</label><input type="text" id="set-qtn-prefix" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Purchase Prefix</label><input type="text" id="set-pur-prefix" value="PUR-" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+            <div><label class="block text-slate-500 mb-1">Batch Prefix</label><input type="text" id="set-bat-prefix" value="BAT-" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+          </div>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="font-bold text-slate-900 text-xs uppercase tracking-wider text-indigo-700">Defaults & Policies</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Default Due Days</label><input type="number" id="set-def-due-days" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+            <div><label class="block text-slate-500 mb-1">Seller State Code</label><input type="text" id="set-def-statecode" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+          </div>
+          <div><label class="block text-slate-500 mb-1">Default Terms</label><textarea id="set-def-terms" rows="2" class="w-full bg-slate-50 border p-1.5 rounded"></textarea></div>
+          <div><label class="block text-slate-500 mb-1">Default Notes</label><input type="text" id="set-def-notes" class="w-full bg-slate-50 border p-2 rounded"></div>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl shadow">Save Settings</button>
+      </form>
+    </div>
+
+    <div id="view-company" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Company Profile</span>
+        <button onclick="saveCompanyProfile()" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md font-semibold hover:bg-indigo-700">Save</button>
+      </div>
+      <form id="company-form" onsubmit="event.preventDefault(); saveCompanyProfile();" class="space-y-4 text-xs">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center space-y-3">
+          <div id="company-logo-preview" class="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden bg-slate-50"><span class="text-slate-400 text-[10px]">No Logo</span></div>
+          <label class="cursor-pointer bg-indigo-50 text-indigo-700 font-bold px-3 py-1.5 rounded-lg text-xs border border-indigo-200">Upload Logo<input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'logo')"></label>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div><label class="block text-slate-500 mb-1">Legal Company Name</label><input type="text" id="cmp-legal-name" class="w-full bg-slate-50 border p-2 rounded font-semibold text-slate-900" required></div>
+          <div><label class="block text-slate-500 mb-1">Brand Name</label><input type="text" id="cmp-brand-name" class="w-full bg-slate-50 border p-2 rounded font-semibold text-slate-900" required></div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Phone</label><input type="text" id="cmp-phone" class="w-full bg-slate-50 border p-2 rounded"></div>
+            <div><label class="block text-slate-500 mb-1">WhatsApp</label><input type="text" id="cmp-whatsapp" class="w-full bg-slate-50 border p-2 rounded"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Email</label><input type="email" id="cmp-email" class="w-full bg-slate-50 border p-2 rounded"></div>
+            <div><label class="block text-slate-500 mb-1">Website</label><input type="text" id="cmp-website" class="w-full bg-slate-50 border p-2 rounded"></div>
+          </div>
+          <div><label class="block text-slate-500 mb-1">Address</label><textarea id="cmp-address" rows="2" class="w-full bg-slate-50 border p-2 rounded"></textarea></div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">GSTIN</label><input type="text" id="cmp-gstin" class="w-full bg-slate-50 border p-2 rounded font-bold mono uppercase"></div>
+            <div><label class="block text-slate-500 mb-1">Bank Name</label><input type="text" id="cmp-bank-name" class="w-full bg-slate-50 border p-2 rounded"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-slate-500 mb-1">Account No</label><input type="text" id="cmp-bank-acc" class="w-full bg-slate-50 border p-2 rounded font-bold mono"></div>
+            <div><label class="block text-slate-500 mb-1">IFSC</label><input type="text" id="cmp-bank-ifsc" class="w-full bg-slate-50 border p-2 rounded font-bold mono uppercase"></div>
+          </div>
+          <div><label class="block text-slate-500 mb-1">UPI ID</label><input type="text" id="cmp-bank-upi" class="w-full bg-slate-50 border p-2 rounded font-medium mono"></div>
+        </div>
+        <button type="submit" class="w-full app-theme-btn text-white font-bold py-3 rounded-xl shadow transition">Save Company Profile</button>
+      </form>
+    </div>
+
+    <div id="view-customers" class="hidden space-y-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Customers</span>
+        <button onclick="openCustomerModal()" class="text-xs bg-blue-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-blue-700">+ New</button>
+      </div>
+      <div id="customer-list-container" class="space-y-3"></div>
+    </div>
+
+    <div id="view-products" class="hidden space-y-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <button onclick="navigateTo('dashboard')" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <span class="text-sm font-bold text-slate-800">Product Master (FG)</span>
+        <button onclick="openProductModal()" class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-md font-bold shadow-sm hover:bg-orange-700">+ Add</button>
+      </div>
+      <div id="product-list-container" class="space-y-3"></div>
+    </div>
+
+    <!-- MODALS: ADD PURCHASE, ADD RM, ADD SUPPLIER, RUN BATCH, RECIPE, EXPENSE, EXPENSE CATEGORY -->
+    <div id="modal-purchase" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
+        <div class="bg-teal-800 text-white px-4 py-3 flex justify-between items-center"><h3 class="font-bold text-xs uppercase text-teal-300">Raw Material Purchase</h3><button onclick="closePurchaseModal()">✕</button></div>
+        <form id="purchase-form" onsubmit="event.preventDefault(); savePurchaseRecord();" class="p-4 space-y-3 text-xs overflow-y-auto">
+          <div><div class="flex justify-between items-center mb-1"><label class="text-slate-500">Supplier</label><button type="button" onclick="openSupplierModal(true)" class="text-teal-700 font-bold">+ New Supplier</button></div><select id="pur-supplier-select" class="w-full bg-slate-50 border p-2 rounded" required></select></div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="pur-inv-no" placeholder="Supplier Inv No" class="bg-slate-50 border p-2 rounded mono" required>
+            <input type="date" id="pur-date" class="bg-slate-50 border p-2 rounded" required>
+          </div>
+          <div class="border p-2.5 rounded-xl bg-slate-50 space-y-2">
+            <div class="flex justify-between items-center"><span class="font-bold text-[10px] text-teal-800 uppercase">Items & Landed Allocations</span><div class="flex gap-2"><button type="button" onclick="openRawMaterialModal(true)" class="text-teal-700 font-bold text-[10px]">+ New RM</button><button type="button" onclick="addPurchaseItemRow()" class="text-emerald-700 font-bold text-[10px]">+ Add Row</button></div></div>
+            <div id="pur-items-container" class="space-y-2"></div>
+          </div>
+          <div class="bg-slate-50 p-2 rounded border mono text-right text-[11px] space-y-0.5">
+            <div class="flex justify-between"><span>Basic:</span> <span id="pur-disp-basic">₹0.00</span></div>
+            <div class="flex justify-between text-teal-700"><span>Input GST:</span> <span id="pur-disp-gst">₹0.00</span></div>
+            <div class="flex justify-between"><span>Freight:</span> <span id="pur-disp-freight">₹0.00</span></div>
+            <div class="flex justify-between"><span>Local Tr:</span> <span id="pur-disp-local">₹0.00</span></div>
+            <div class="flex justify-between font-bold border-t pt-1"><span>Supplier Total:</span> <span id="pur-disp-total">₹0.00</span></div>
+            <div class="flex justify-between font-bold text-indigo-700"><span>Landed Cost:</span> <span id="pur-disp-landed">₹0.00</span></div>
+          </div>
+          <button type="submit" class="w-full bg-teal-600 text-white font-bold py-2 rounded-xl">Save Inward Purchase</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-raw-material" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold"><span>Raw Material Master</span><button onclick="closeRawMaterialModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveRawMaterialRecord();" class="space-y-2">
+          <input type="text" id="rm-name" placeholder="Material Name" class="w-full bg-slate-50 border p-2 rounded" required>
+          <div class="grid grid-cols-2 gap-2">
+            <select id="rm-category" class="bg-slate-50 border p-2 rounded"><option value="Cement">Cement</option><option value="Sand">Sand</option><option value="Chemical">Chemical</option></select>
+            <select id="rm-unit" class="bg-slate-50 border p-2 rounded"><option value="KG">KG</option><option value="LTR">LTR</option></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="rm-pack-size" placeholder="Pack Size (50 KG)" class="bg-slate-50 border p-2 rounded">
+            <input type="number" id="rm-standard-rate" placeholder="Rate / KG" step="0.01" class="bg-slate-50 border p-2 rounded">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="rm-stock" placeholder="Opening Stock" value="0" class="bg-slate-50 border p-2 rounded">
+            <input type="number" id="rm-min-stock" placeholder="Min Alert" value="50" class="bg-slate-50 border p-2 rounded">
+          </div>
+          <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-xl">Save Raw Material</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-supplier" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold"><span>Supplier Profile</span><button onclick="closeSupplierModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveSupplierRecord();" class="space-y-2">
+          <input type="text" id="sup-name" placeholder="Supplier Firm Name" class="w-full bg-slate-50 border p-2 rounded" required>
+          <input type="tel" id="sup-phone" placeholder="Phone" class="w-full bg-slate-50 border p-2 rounded" required>
+          <input type="text" id="sup-gstin" placeholder="GSTIN" class="w-full bg-slate-50 border p-2 rounded uppercase">
+          <button type="submit" class="w-full bg-slate-700 text-white font-bold py-2 rounded-xl">Save Supplier</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-production-batch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold text-purple-900"><span>Run Manufacturing Batch</span><button onclick="closeRunBatchModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); executeProductionBatch();" class="space-y-2">
+          <select id="prod-recipe-select" onchange="onRecipeSelectForBatch(this.value)" class="w-full bg-slate-50 border p-2 rounded font-bold" required></select>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="date" id="batch-date" class="bg-slate-50 border p-2 rounded" required>
+            <input type="number" id="batch-multiplier" value="1" min="1" oninput="calculateBatchRequirements()" class="bg-slate-50 border p-2 rounded font-bold mono" required>
+          </div>
+          <div class="border p-2 rounded bg-slate-50 text-[11px] space-y-1">
+            <span class="font-bold block text-[10px] uppercase">Stock Check</span>
+            <div id="batch-rm-check-list"></div>
+            <div id="batch-stock-error" class="hidden text-red-600 font-bold"></div>
+          </div>
+          <div class="p-2 bg-purple-50 rounded text-right mono space-y-0.5">
+            <div class="flex justify-between"><span>Batch Total Cost:</span> <span id="batch-disp-total-cost">₹0.00</span></div>
+            <div class="flex justify-between font-bold text-purple-900"><span>Cost / Pack:</span> <span id="batch-disp-unit-cost">₹0.00</span></div>
+          </div>
+          <button type="submit" id="btn-submit-batch" class="w-full bg-purple-700 text-white font-bold py-2 rounded-xl">Produce Finished Stock</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-recipe" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold text-purple-900"><span>BOM Recipe Master</span><button onclick="closeRecipeModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveRecipeRecord();" class="space-y-2">
+          <select id="rcp-product-select" class="w-full bg-slate-50 border p-2 rounded font-bold" required></select>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="rcp-batch-size" value="100" placeholder="Batch Yield (KG)" class="bg-slate-50 border p-2 rounded font-bold mono" required>
+            <input type="text" id="rcp-unit" value="KG" class="bg-slate-50 border p-2 rounded font-bold mono" readonly>
+          </div>
+          <div class="border p-2 rounded bg-slate-50 space-y-1.5">
+            <div class="flex justify-between items-center"><span class="font-bold text-[10px] uppercase">Ingredients</span><button type="button" onclick="addRecipeIngredientRow()" class="text-purple-700 font-bold">+ Add Row</button></div>
+            <div id="rcp-ingredients-container" class="space-y-1"></div>
+          </div>
+          <div class="grid grid-cols-3 gap-1">
+            <input type="number" id="rcp-cost-direct" value="50" placeholder="Labor" class="bg-slate-50 border p-1 rounded font-bold mono">
+            <input type="number" id="rcp-cost-pack" value="30" placeholder="Pack" class="bg-slate-50 border p-1 rounded font-bold mono">
+            <input type="number" id="rcp-cost-overhead" value="20" placeholder="Opex" class="bg-slate-50 border p-1 rounded font-bold mono">
+          </div>
+          <button type="submit" class="w-full bg-purple-700 text-white font-bold py-2 rounded-xl">Save BOM Recipe</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-expense" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+      <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold text-rose-900"><span>Add Operating Expense</span><button onclick="closeAddExpenseModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveExpenseRecord();" class="space-y-2">
+          <div class="flex justify-between items-center mb-1"><label class="text-slate-500">Category</label><button type="button" onclick="openExpenseCategoryModal()" class="text-rose-700 font-bold">+ Add Type</button></div>
+          <select id="exp-category" class="w-full bg-slate-50 border p-2 rounded"></select>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="exp-amount" placeholder="Amount (₹)" class="bg-slate-50 border p-2 rounded font-bold mono text-rose-600" required>
+            <input type="date" id="exp-date" class="bg-slate-50 border p-2 rounded" required>
+          </div>
+          <input type="text" id="exp-notes" placeholder="Notes" class="w-full bg-slate-50 border p-2 rounded">
+          <button type="submit" class="w-full bg-rose-600 text-white font-bold py-2 rounded-xl">Save Expense</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-expense-category" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+      <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <div class="flex justify-between font-bold"><span>Add Expense Type</span><button onclick="closeExpenseCategoryModal()">✕</button></div>
+        <form onsubmit="event.preventDefault(); saveExpenseCategory();" class="space-y-2">
+          <input type="text" id="exp-cat-name" placeholder="Expense Type Name" class="w-full bg-slate-50 border p-2 rounded" required>
+          <button type="submit" class="w-full bg-rose-600 text-white font-bold py-2 rounded-xl">Save Type</button>
+        </form>
+      </div>
+    </div>
+
   </main>
 
-  <!-- ================= JAVASCRIPT MASTER STATE ENGINE ================= -->
+  <!-- ================= JAVASCRIPT MASTER STATE & MOBILE BACK BUTTON CONTROLLER ================= -->
   <script>
     const DB_KEY = 'H4_ERP_DB_V2';
 
     const defaultData = {
-      version: "5.5",
+      version: "6.0",
       counters: { quotation: 0, invoice: 0, payment: 0, purchase: 0, production: 0, expense: 0 },
       settings: {
         invoicePrefix: 'INV-',
@@ -951,15 +1365,7 @@
         textColor: '#1e293b',
         customFonts: {}
       },
-      expenseCategories: [
-        'Electricity & Power',
-        'Factory Rent',
-        'Labor & Wages',
-        'Fuel & Logistics',
-        'Machinery Repair',
-        'Office & Admin',
-        'Other'
-      ],
+      expenseCategories: ['Electricity & Power', 'Factory Rent', 'Labor & Wages', 'Fuel & Logistics', 'Machinery Repair', 'Office & Admin', 'Other'],
       company: {
         legalName: 'AV CHEM Chemical & Manufacturing',
         brandName: 'H4 Construction Solutions',
@@ -1007,7 +1413,7 @@
           packWeight: 20,
           retailPrice: 450,
           contractorPrice: 390,
-          currentMfgCost: null, // STRICTLY NULL until production batch is run!
+          currentMfgCost: null, // STRICTLY NULL until production batch is executed!
           gst: 18,
           stock: 250
         }
@@ -1221,74 +1627,34 @@
       return (str.trim() + ' Rupees Only');
     }
 
-    // ================= DYNAMIC CUSTOM FONT ENGINE (.ttf, .otf, .woff, .woff2) =================
-    function handleCustomFontUpload(event, targetRole) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64 = e.target.result;
-        const fontName = 'Custom_' + targetRole + '_' + Date.now();
-        let format = 'truetype';
-        if (file.name.endsWith('.woff2')) format = 'woff2';
-        else if (file.name.endsWith('.woff')) format = 'woff';
-        else if (file.name.endsWith('.otf')) format = 'opentype';
+    // ================= SMART MOBILE HARDWARE BACK BUTTON CONTROLLER =================
+    const ALL_MODAL_IDS = [
+      'modal-customer', 'modal-product', 'modal-purchase', 'modal-raw-material',
+      'modal-supplier', 'modal-production-batch', 'modal-recipe', 'modal-expense',
+      'modal-expense-category', 'modal-payment', 'modal-quotation-type-select',
+      'modal-waterproofing-editor', 'modal-epoxy-editor', 'proposal-preview-modal',
+      'document-preview-modal'
+    ];
 
-        const db = getDB();
-        db.settings.customFonts = db.settings.customFonts || {};
-        db.settings.customFonts[targetRole] = { name: fontName, data: base64, format: format, fileName: file.name };
-        saveDB(db);
-        applyCustomFonts();
-        showToast(`Font uploaded for ${targetRole.toUpperCase()}`);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function applyCustomFonts() {
-      const db = getDB();
-      const styleEl = document.getElementById('custom-font-style');
-      let css = '';
-      const root = document.documentElement;
-
-      if (db.settings && db.settings.customFonts) {
-        const f = db.settings.customFonts;
-        if (f.heading) {
-          css += `@font-face { font-family: '${f.heading.name}'; src: url('${f.heading.data}') format('${f.heading.format}'); }\n`;
-          root.style.setProperty('--custom-font-heading', `'${f.heading.name}'`);
-          const label = document.getElementById('font-heading-name');
-          if (label) label.innerText = f.heading.fileName;
-        }
-        if (f.body) {
-          css += `@font-face { font-family: '${f.body.name}'; src: url('${f.body.data}') format('${f.body.format}'); }\n`;
-          root.style.setProperty('--custom-font-body', `'${f.body.name}'`);
-          const label = document.getElementById('font-body-name');
-          if (label) label.innerText = f.body.fileName;
-        }
-        if (f.mono) {
-          css += `@font-face { font-family: '${f.mono.name}'; src: url('${f.mono.data}') format('${f.mono.format}'); }\n`;
-          root.style.setProperty('--custom-font-mono', `'${f.mono.name}'`);
-          const label = document.getElementById('font-mono-name');
-          if (label) label.innerText = f.mono.fileName;
-        }
+    function getActiveOpenModal() {
+      for (const id of ALL_MODAL_IDS) {
+        const el = document.getElementById(id);
+        if (el && !el.classList.contains('hidden')) return id;
       }
-      styleEl.innerHTML = css;
+      return null;
     }
 
-    function applyCustomTextColor(colorVal) {
-      document.documentElement.style.setProperty('--theme-text-color', colorVal);
-      const db = getDB();
-      db.settings.textColor = colorVal;
-      saveDB(db);
-      showToast(`Text color changed to ${colorVal}`);
-    }
+    // Master Navigation Function with History Support
+    function navigateTo(viewId, isHistoryAction = false) {
+      const openModal = getActiveOpenModal();
+      if (openModal) document.getElementById(openModal).classList.add('hidden');
 
-    // Master Navigation Router
-    function navigateTo(viewId) {
       const views = ['dashboard', 'company', 'customers', 'products', 'quotation-list', 'invoice-list', 'document-editor', 'payments', 'backup', 'templates', 'theme', 'settings', 'reports', 'purchases', 'production', 'raw-materials', 'suppliers', 'expenses'];
       views.forEach(v => {
         const el = document.getElementById('view-' + v);
         if (el) el.classList.add('hidden');
       });
+
       const target = document.getElementById('view-' + viewId);
       if (target) {
         target.classList.remove('hidden');
@@ -1308,9 +1674,29 @@
         if (viewId === 'suppliers') renderSuppliersScreen();
         if (viewId === 'expenses') renderExpensesScreen();
       }
+
+      if (!isHistoryAction) {
+        if (viewId === 'dashboard') history.pushState({ view: 'dashboard' }, '', '#dashboard');
+        else history.pushState({ view: viewId }, '', '#' + viewId);
+      }
+
       window.scrollTo(0, 0);
       lucide.createIcons();
     }
+
+    // Popstate Listener: Catches phone back button
+    window.addEventListener('popstate', (e) => {
+      const activeModal = getActiveOpenModal();
+      if (activeModal) {
+        document.getElementById(activeModal).classList.add('hidden');
+        return;
+      }
+      if (e.state && e.state.view && e.state.view !== 'dashboard') {
+        navigateTo(e.state.view, true);
+      } else {
+        navigateTo('dashboard', true);
+      }
+    });
 
     function navigateBackFromEditor() {
       if (activeDocType === 'QUOTATION') navigateTo('quotation-list');
@@ -1373,967 +1759,963 @@
       lucide.createIcons();
     }
 
-    // ================= NEW QUOTATION WORKFLOW (WATERPROOFING VS EPOXY) =================
-    function createNewQuotation() {
-      document.getElementById('modal-quotation-type-select').classList.remove('hidden');
-    }
-    function closeQuotationTypeSelectModal() {
-      document.getElementById('modal-quotation-type-select').classList.add('hidden');
-    }
-
-    function onProposalCustomerSelect(custId, prefix) {
-      if (!custId) return;
+    function renderCustomerList() {
       const db = getDB();
-      const cust = db.customers.find(c => c.id === custId);
-      if (!cust) return;
-      if (prefix === 'wp') {
-        document.getElementById('wp-cust-name-input').value = cust.company;
-        document.getElementById('wp-cust-phone-input').value = cust.phone;
-        document.getElementById('wp-site-location').value = cust.shippingAddress || cust.billingAddress;
-      } else {
-        document.getElementById('epx-cust-name-input').value = cust.company;
-        document.getElementById('epx-cust-phone-input').value = cust.phone;
-        document.getElementById('epx-site-location').value = cust.shippingAddress || cust.billingAddress;
+      const c = document.getElementById('customer-list-container');
+      c.innerHTML = '';
+      if (db.customers.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No customers yet.</div>';
+        return;
       }
-    }
-
-    // --- WATERPROOFING PROPOSAL ENGINE ---
-    function openWaterproofingProposalModal() {
-      closeQuotationTypeSelectModal();
-      const db = getDB();
-      const s = document.getElementById('wp-cust-select');
-      s.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
-      db.customers.forEach(c => s.innerHTML += `<option value="${c.id}">${c.company} (${c.name})</option>`);
-      document.getElementById('wp-date').value = new Date().toISOString().split('T')[0];
-      document.getElementById('wp-validity').value = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
-      calculateWaterproofingRate();
-      document.getElementById('modal-waterproofing-editor').classList.remove('hidden');
-    }
-    function closeWaterproofingEditor() { document.getElementById('modal-waterproofing-editor').classList.add('hidden'); }
-
-    function calculateWaterproofingRate() {
-      const appSelect = document.getElementById('wp-app-type');
-      const baseRate = parseFloat(appSelect.options[appSelect.selectedIndex].getAttribute('data-rate')) || 65;
-      const sysSelect = document.getElementById('wp-system');
-      const sysAdd = parseFloat(sysSelect.options[sysSelect.selectedIndex].getAttribute('data-add')) || 0;
-
-      let addons = 0;
-      if (document.getElementById('wp-opt-crack').checked) addons += 12;
-      if (document.getElementById('wp-opt-mesh').checked) addons += 15;
-      if (document.getElementById('wp-opt-screed').checked) addons += 20;
-
-      const calcRate = baseRate + sysAdd + addons;
-      document.getElementById('wp-calculated-rate-disp').innerText = '₹' + calcRate.toFixed(2);
-      document.getElementById('wp-final-rate').value = calcRate;
-      calculateWaterproofingFinal();
-    }
-
-    function calculateWaterproofingFinal() {
-      const area = parseFloat(document.getElementById('wp-area').value) || 0;
-      const rate = parseFloat(document.getElementById('wp-final-rate').value) || 0;
-      const baseCost = area * rate;
-      const gst = baseCost * 0.18;
-      const grand = baseCost + gst;
-
-      document.getElementById('wp-disp-subtotal').innerText = '₹' + baseCost.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('wp-disp-gst').innerText = '₹' + gst.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('wp-disp-total').innerText = '₹' + grand.toLocaleString('en-IN', {minimumFractionDigits: 2});
-    }
-
-    function saveWaterproofingProposal() {
-      const db = getDB();
-      const custName = document.getElementById('wp-cust-name-input').value.trim();
-      const custPhone = document.getElementById('wp-cust-phone-input').value.trim();
-      if (!custName || !custPhone) { showToast('Please enter customer name and phone'); return; }
-
-      const area = parseFloat(document.getElementById('wp-area').value) || 0;
-      const rate = parseFloat(document.getElementById('wp-final-rate').value) || 0;
-      const baseCost = area * rate;
-      const gst = baseCost * 0.18;
-      const grand = Math.round(baseCost + gst);
-
-      const qtnNo = getNextDocNumber('QUOTATION');
-      commitDocNumber('QUOTATION', qtnNo);
-
-      const propObj = {
-        id: 'qtn_' + Date.now(),
-        type: 'WATERPROOFING_PROPOSAL',
-        docNumber: qtnNo,
-        date: document.getElementById('wp-date').value,
-        expiryDate: document.getElementById('wp-validity').value,
-        customerId: document.getElementById('wp-cust-select').value || 'direct_lead',
-        customerName: custName,
-        customerPhone: custPhone,
-        siteLocation: document.getElementById('wp-site-location').value,
-        area: area,
-        rate: rate,
-        baseAmount: baseCost,
-        gstAmount: gst,
-        grandTotal: grand,
-        appType: document.getElementById('wp-app-type').options[document.getElementById('wp-app-type').selectedIndex].text,
-        system: document.getElementById('wp-system').options[document.getElementById('wp-system').selectedIndex].text,
-        timeline: document.getElementById('wp-timeline').value,
-        warranty: document.getElementById('wp-warranty').value,
-        crackTreatment: document.getElementById('wp-opt-crack').checked,
-        mesh: document.getElementById('wp-opt-mesh').checked,
-        screed: document.getElementById('wp-opt-screed').checked,
-        status: 'ACTIVE PROPOSAL'
-      };
-
-      db.quotations.unshift(propObj);
-      saveDB(db);
-      closeWaterproofingEditor();
-      renderProposalPrintModal(propObj);
-      showToast(`Waterproofing Proposal ${qtnNo} generated!`);
-    }
-
-    // --- EPOXY FLOORING PROPOSAL ENGINE ---
-    function openEpoxyProposalModal() {
-      closeQuotationTypeSelectModal();
-      const db = getDB();
-      const s = document.getElementById('epx-cust-select');
-      s.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
-      db.customers.forEach(c => s.innerHTML += `<option value="${c.id}">${c.company} (${c.name})</option>`);
-      document.getElementById('epx-date').value = new Date().toISOString().split('T')[0];
-      document.getElementById('epx-validity').value = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
-      calculateEpoxyRate();
-      document.getElementById('modal-epoxy-editor').classList.remove('hidden');
-    }
-    function closeEpoxyEditor() { document.getElementById('modal-epoxy-editor').classList.add('hidden'); }
-
-    function calculateEpoxyRate() {
-      const sysSelect = document.getElementById('epx-system');
-      const baseRate = parseFloat(sysSelect.options[sysSelect.selectedIndex].getAttribute('data-base')) || 95;
-      const thickSelect = document.getElementById('epx-thickness');
-      const thickAdd = parseFloat(thickSelect.options[thickSelect.selectedIndex].getAttribute('data-add')) || 0;
-
-      let addons = 0;
-      if (document.getElementById('epx-opt-pu').checked) addons += 20;
-
-      const calcRate = baseRate + thickAdd + addons;
-      document.getElementById('epx-calculated-rate-disp').innerText = '₹' + calcRate.toFixed(2);
-      document.getElementById('epx-final-rate').value = calcRate;
-      calculateEpoxyFinal();
-    }
-
-    function calculateEpoxyFinal() {
-      const area = parseFloat(document.getElementById('epx-area').value) || 0;
-      const rate = parseFloat(document.getElementById('epx-final-rate').value) || 0;
-      const baseCost = area * rate;
-      const gst = baseCost * 0.18;
-      const grand = baseCost + gst;
-
-      document.getElementById('epx-disp-subtotal').innerText = '₹' + baseCost.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('epx-disp-gst').innerText = '₹' + gst.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('epx-disp-total').innerText = '₹' + grand.toLocaleString('en-IN', {minimumFractionDigits: 2});
-    }
-
-    function saveEpoxyProposal() {
-      const db = getDB();
-      const custName = document.getElementById('epx-cust-name-input').value.trim();
-      const custPhone = document.getElementById('epx-cust-phone-input').value.trim();
-      if (!custName || !custPhone) { showToast('Please enter customer name and phone'); return; }
-
-      const area = parseFloat(document.getElementById('epx-area').value) || 0;
-      const rate = parseFloat(document.getElementById('epx-final-rate').value) || 0;
-      const baseCost = area * rate;
-      const gst = baseCost * 0.18;
-      const grand = Math.round(baseCost + gst);
-
-      const qtnNo = getNextDocNumber('QUOTATION');
-      commitDocNumber('QUOTATION', qtnNo);
-
-      const propObj = {
-        id: 'qtn_' + Date.now(),
-        type: 'EPOXY_PROPOSAL',
-        docNumber: qtnNo,
-        date: document.getElementById('epx-date').value,
-        expiryDate: document.getElementById('epx-validity').value,
-        customerId: document.getElementById('epx-cust-select').value || 'direct_lead',
-        customerName: custName,
-        customerPhone: custPhone,
-        siteLocation: document.getElementById('epx-site-location').value,
-        area: area,
-        rate: rate,
-        baseAmount: baseCost,
-        gstAmount: gst,
-        grandTotal: grand,
-        flooringSystem: document.getElementById('epx-system').options[document.getElementById('epx-system').selectedIndex].text,
-        thickness: document.getElementById('epx-thickness').options[document.getElementById('epx-thickness').selectedIndex].text,
-        finish: document.getElementById('epx-finish').value,
-        colorShade: document.getElementById('epx-color').value,
-        puTopCoat: document.getElementById('epx-opt-pu').checked,
-        timeline: document.getElementById('epx-timeline').value,
-        warranty: document.getElementById('epx-warranty').value,
-        status: 'ACTIVE PROPOSAL'
-      };
-
-      db.quotations.unshift(propObj);
-      saveDB(db);
-      closeEpoxyEditor();
-      renderProposalPrintModal(propObj);
-      showToast(`Epoxy Proposal ${qtnNo} generated!`);
-    }
-
-    // --- PROPOSAL PRINT / PREVIEW MODAL ---
-    function renderProposalPrintModal(prop) {
-      viewingProposalObject = prop;
-      const db = getDB();
-      const comp = db.company;
-
-      const logoHolder = document.getElementById('prop-logo-holder');
-      if (comp.logoUrl) logoHolder.innerHTML = `<img src="${comp.logoUrl}" class="max-h-full max-w-full object-contain">`;
-      else logoHolder.innerHTML = `<svg class="w-12 h-12 text-amber-500 fill-current" viewBox="0 0 24 24"><path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/></svg>`;
-
-      document.getElementById('prop-cmp-legal').innerText = comp.legalName;
-      document.getElementById('prop-cmp-brand').innerText = comp.brandName;
-      document.getElementById('prop-cmp-addr').innerText = comp.address + ', ' + comp.place;
-      document.getElementById('prop-cmp-contact').innerText = `Phone: ${comp.phone} | Email: ${comp.email}`;
-      document.getElementById('prop-cmp-web').innerText = comp.website || 'www.h4solutions.com';
-
-      const isWaterproof = prop.type === 'WATERPROOFING_PROPOSAL';
-      document.getElementById('prop-doc-title').innerText = isWaterproof ? 'PREMIUM WATERPROOFING PROPOSAL' : 'PREMIUM EPOXY FLOORING PROPOSAL';
-      document.getElementById('prop-doc-num').innerText = prop.docNumber;
-      document.getElementById('prop-doc-date').innerText = prop.date;
-      document.getElementById('prop-doc-valid').innerText = prop.expiryDate;
-
-      document.getElementById('prop-cust-name').innerText = prop.customerName;
-      document.getElementById('prop-cust-phone').innerText = `Phone: ${prop.customerPhone}`;
-      document.getElementById('prop-site-addr').innerText = `Project Site: ${prop.siteLocation}`;
-
-      const statusBadge = document.getElementById('prop-status-badge');
-      const convertHolder = document.getElementById('prop-convert-btn-holder');
-
-      if (prop.status === 'CONVERTED') {
-        statusBadge.className = 'bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded text-[10px]';
-        statusBadge.innerText = `CONVERTED → ${prop.convertedInvoiceNo}`;
-        convertHolder.innerHTML = '';
-      } else {
-        statusBadge.className = 'bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded text-[10px]';
-        statusBadge.innerText = 'ACTIVE PROPOSAL';
-        convertHolder.innerHTML = `
-          <button onclick="convertProposalToInvoice('${prop.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 shadow">
-            <i data-lucide="file-check-2" class="w-3.5 h-3.5"></i> Convert to Invoice
-          </button>
+      db.customers.forEach(cust => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm">${cust.company}</h4>
+              <p class="text-slate-500 text-[11px]">👤 ${cust.name} | 📞 ${cust.phone}</p>
+              <p class="text-slate-400 text-[10px]">📍 ${cust.billingAddress}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-red-600 mono block">Due: ₹${(cust.due || 0).toLocaleString('en-IN')}</span>
+              <span class="text-[10px] text-slate-400">Inv: ${cust.invoicesCount || 0}</span>
+            </div>
+          </div>
         `;
-      }
-
-      // Render Specifications
-      const specsBox = document.getElementById('prop-specs-content');
-      if (isWaterproof) {
-        document.getElementById('prop-item-title').innerText = `Waterproofing Coating System: ${prop.system} (${prop.appType})`;
-        specsBox.innerHTML = `
-          <div>• <strong>Application Scope:</strong> ${prop.appType} on substrate area ${prop.area} Sq.Ft.</div>
-          <div>• <strong>Treatment:</strong> Surface grinding, vacuum cleaning ${prop.crackTreatment ? '+ V-Groove crack filling with high-grade PU Sealant' : ''}.</div>
-          <div>• <strong>Membrane & Coats:</strong> Primer application followed by ${prop.system} ${prop.mesh ? 'embedded with 45 GSM Glass Fiber Mesh' : ''}.</div>
-          <div>• <strong>Protection:</strong> ${prop.screed ? 'Heavy-duty UV Protective Coat included.' : 'Standard protective coat.'}</div>
-          <div>• <strong>Testing:</strong> Full 48-Hour ponding water test upon completion.</div>
-        `;
-      } else {
-        document.getElementById('prop-item-title').innerText = `Epoxy Flooring System: ${prop.flooringSystem} (${prop.thickness})`;
-        specsBox.innerHTML = `
-          <div>• <strong>Application Scope:</strong> ${prop.flooringSystem} on concrete slab area ${prop.area} Sq.Ft.</div>
-          <div>• <strong>Preparation:</strong> Dustless diamond grinding to CSP-2 profile + high-penetration epoxy primer.</div>
-          <div>• <strong>Build & Texture:</strong> Thickness build ${prop.thickness}, finish: ${prop.finish}, Shade: ${prop.colorShade}.</div>
-          <div>• <strong>Top Coat:</strong> ${prop.puTopCoat ? 'Industrial Aliphatic Polyurethane (PU) Scratch-Resistant Top Coat.' : 'Standard Epoxy Glaze Coat.'}</div>
-        `;
-      }
-
-      document.getElementById('prop-item-area').innerText = prop.area.toLocaleString('en-IN');
-      document.getElementById('prop-item-rate').innerText = '₹' + prop.rate.toFixed(2);
-      document.getElementById('prop-item-amount').innerText = '₹' + prop.baseAmount.toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-      document.getElementById('prop-disp-base').innerText = '₹' + prop.baseAmount.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('prop-disp-tax').innerText = '₹' + prop.gstAmount.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('prop-disp-grand').innerText = '₹' + prop.grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('prop-disp-words').innerText = numberToWordsIndian(prop.grandTotal);
-
-      document.getElementById('prop-disp-warranty').innerText = prop.warranty;
-      document.getElementById('prop-disp-timeline').innerText = prop.timeline;
-      document.getElementById('prop-sign-cmp').innerText = `For ${comp.legalName}`;
-
-      document.getElementById('proposal-preview-modal').classList.remove('hidden');
+        c.appendChild(card);
+      });
       lucide.createIcons();
     }
 
-    function closeProposalPreviewModal() {
-      document.getElementById('proposal-preview-modal').classList.add('hidden');
-      navigateTo('quotation-list');
+    function renderProductList() {
+      const db = getDB();
+      const c = document.getElementById('product-list-container');
+      c.innerHTML = '';
+      if (db.products.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No finished products yet.</div>';
+        return;
+      }
+      db.products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">${p.category} (${p.packWeight || 20} KG / ${p.unit})</span>
+              <h4 class="font-bold text-slate-900">${p.name}</h4>
+              <p class="text-slate-500 text-[11px]">Retail: ₹${p.retailPrice} | Contractor: ₹${p.contractorPrice}</p>
+              <p class="text-purple-700 text-[10px] font-semibold">Actual Mfg Cost: ${p.currentMfgCost ? '₹' + p.currentMfgCost.toFixed(2) + ' / ' + p.unit : 'Not Recorded (Run Batch)'}</p>
+            </div>
+            <span class="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded mono text-xs">Stock: ${p.stock || 0}</span>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
     }
 
-    function convertProposalToInvoice(propId) {
+    function renderQuotationList() {
       const db = getDB();
-      const prop = db.quotations.find(q => q.id === propId);
-      if (!prop) return;
+      const c = document.getElementById('quotation-list-container');
+      c.innerHTML = '';
+      if (db.quotations.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No quotations generated yet.</div>';
+        return;
+      }
+      db.quotations.forEach(q => {
+        const isConverted = q.status === 'CONVERTED';
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-sky-700 mono">${q.docNumber}</span>
+              <h4 class="font-bold text-slate-900">${q.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Valid Until: ${q.expiryDate}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-slate-900 mono">₹${q.grandTotal.toLocaleString('en-IN')}</span>
+              <span class="${isConverted ? 'bg-purple-100 text-purple-800' : 'bg-sky-50 text-sky-700'} text-[10px] font-bold px-2 py-0.5 rounded block mt-0.5">${isConverted ? `CONVERTED → ${q.convertedInvoiceNo}` : 'ACTIVE QUOTE'}</span>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick='renderProposalPrintModal(${JSON.stringify(q)})' class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 rounded-lg transition">View Proposal</button>
+            ${!isConverted ? `<button onclick="convertProposalToInvoice('${q.id}')" class="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-700 font-semibold py-1.5 rounded-lg transition">Convert to Invoice</button>` : ''}
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
 
-      closeProposalPreviewModal();
+    function renderInvoiceList() {
+      const db = getDB();
+      const c = document.getElementById('invoice-list-container');
+      c.innerHTML = '';
+      if (db.invoices.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No tax invoices generated yet.</div>';
+        return;
+      }
+      db.invoices.forEach(inv => {
+        const liveStatus = computeInvoiceStatus(inv);
+        const badgeColor = liveStatus === 'PAID' ? 'bg-emerald-100 text-emerald-800' : (liveStatus === 'OVERDUE' ? 'bg-red-600 text-white animate-pulse' : (liveStatus === 'PARTIAL' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-700'));
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-cyan-700 mono">${inv.docNumber}</span>
+              <h4 class="font-bold text-slate-900">${inv.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Due: ${inv.expiryDate} | Bal: <strong class="text-red-600 mono">₹${(inv.balance || 0).toLocaleString('en-IN')}</strong></p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-slate-900 mono">₹${inv.grandTotal.toLocaleString('en-IN')}</span>
+              <span class="${badgeColor} font-bold px-1.5 py-0.5 rounded text-[10px] block mt-0.5">${liveStatus}</span>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick='renderDocumentPrintModal(${JSON.stringify(inv)})' class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 rounded-lg transition">View / Print</button>
+            <button onclick="openRecordPaymentModal('${inv.id}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold py-1.5 rounded-lg transition">Record Payment</button>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
 
-      const invoicePrefill = {
-        sourceQuotationId: prop.id,
-        customerId: prop.customerId,
-        customerName: prop.customerName,
-        customerPhone: prop.customerPhone,
-        billTo: `${prop.customerName}\nPhone: ${prop.customerPhone}`,
-        shipTo: prop.siteLocation,
-        posState: '32',
-        refQuotation: prop.docNumber,
-        items: [
-          {
-            description: `${prop.type === 'WATERPROOFING_PROPOSAL' ? 'Waterproofing Project Contract' : 'Epoxy Flooring Project Contract'}: ${prop.siteLocation} (${prop.area} Sq.Ft @ ₹${prop.rate}/Sq.Ft)`,
-            qty: prop.area,
-            rate: prop.rate,
-            discount: 0,
-            unit: 'Sq.Ft',
-            gst: 18,
-            isContractService: true // Flags as a service contract, exempt from inventory stock deductions
-          }
-        ]
+    function renderPaymentsScreen() {
+      const db = getDB();
+      const container = document.getElementById('payment-receipts-container');
+      container.innerHTML = '';
+
+      const totalReceived = db.payments.reduce((acc, p) => acc + (p.amount || 0), 0);
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayReceived = db.payments.filter(p => p.date === todayStr).reduce((acc, p) => acc + (p.amount || 0), 0);
+
+      document.getElementById('pay-kpi-total').innerText = '₹' + totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('pay-kpi-today').innerText = '₹' + todayReceived.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      if (db.payments.length === 0) {
+        container.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No payments recorded yet.</div>';
+        return;
+      }
+      db.payments.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-emerald-700 mono">${p.receiptNo}</span>
+              <h4 class="font-bold text-slate-900">${p.customerName}</h4>
+              <p class="text-slate-400 text-[11px]">Invoice: ${p.invoiceNo} | Mode: ${p.method}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-emerald-700 mono">₹${p.amount.toLocaleString('en-IN')}</span>
+              <span class="block text-[10px] text-slate-400 mono">${p.date}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function renderBackupScreen() {
+      const db = getDB();
+      document.getElementById('bkp-cust-count').innerText = db.customers.length;
+      document.getElementById('bkp-prod-count').innerText = db.products.length;
+      document.getElementById('bkp-rm-count').innerText = db.rawMaterials.length;
+    }
+
+    function loadTemplateConfig() {
+      const db = getDB();
+      selectTemplate(db.settings.template || 'H4 Pro', false);
+      document.getElementById('tpl-show-bank').checked = db.settings.showBank !== false;
+      document.getElementById('tpl-show-sign').checked = db.settings.showSignature !== false;
+      document.getElementById('tpl-show-terms').checked = db.settings.showTerms !== false;
+    }
+
+    function selectTemplate(tplName, doSave = true) {
+      ['h4pro', 'classic', 'minimal'].forEach(t => {
+        const btn = document.getElementById('btn-tpl-' + t);
+        if (btn) btn.className = 'p-2.5 rounded-xl border border-slate-200 text-center font-semibold text-slate-700';
+      });
+      const activeId = tplName === 'Classic' ? 'btn-tpl-classic' : (tplName === 'Minimal' ? 'btn-tpl-minimal' : 'btn-tpl-h4pro');
+      const activeBtn = document.getElementById(activeId);
+      if (activeBtn) activeBtn.className = 'p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 text-center font-bold text-indigo-900';
+
+      if (doSave) {
+        const db = getDB();
+        db.settings.template = tplName;
+        saveDB(db);
+        showToast(`Template changed to ${tplName}`);
+      }
+    }
+
+    function saveTemplateConfig() {
+      const db = getDB();
+      db.settings.showBank = document.getElementById('tpl-show-bank').checked;
+      db.settings.showSignature = document.getElementById('tpl-show-sign').checked;
+      db.settings.showTerms = document.getElementById('tpl-show-terms').checked;
+      saveDB(db);
+      showToast('Template preferences saved');
+    }
+
+    function loadGlobalSettings() {
+      const db = getDB();
+      document.getElementById('set-inv-prefix').value = db.settings.invoicePrefix || 'INV-';
+      document.getElementById('set-qtn-prefix').value = db.settings.quotationPrefix || 'QTN-';
+      document.getElementById('set-pur-prefix').value = db.settings.purchasePrefix || 'PUR-';
+      document.getElementById('set-bat-prefix').value = db.settings.batchPrefix || 'BAT-';
+      document.getElementById('set-def-due-days').value = db.settings.defaultDueDays || 30;
+      document.getElementById('set-def-terms').value = db.settings.defaultTerms || '';
+      document.getElementById('set-def-notes').value = db.settings.defaultNotes || '';
+      document.getElementById('set-def-statecode').value = db.settings.defaultStateCode || '32';
+    }
+
+    function saveGlobalSettings() {
+      const db = getDB();
+      db.settings.invoicePrefix = document.getElementById('set-inv-prefix').value;
+      db.settings.quotationPrefix = document.getElementById('set-qtn-prefix').value;
+      db.settings.purchasePrefix = document.getElementById('set-pur-prefix').value;
+      db.settings.batchPrefix = document.getElementById('set-bat-prefix').value;
+      db.settings.defaultDueDays = parseInt(document.getElementById('set-def-due-days').value) || 30;
+      db.settings.defaultTerms = document.getElementById('set-def-terms').value;
+      db.settings.defaultNotes = document.getElementById('set-def-notes').value;
+      db.settings.defaultStateCode = document.getElementById('set-def-statecode').value;
+      saveDB(db);
+      showToast('System configuration saved');
+      navigateTo('dashboard');
+    }
+
+    function loadCompanyProfile() {
+      const db = getDB();
+      const c = db.company;
+      document.getElementById('cmp-legal-name').value = c.legalName || '';
+      document.getElementById('cmp-brand-name').value = c.brandName || '';
+      document.getElementById('cmp-phone').value = c.phone || '';
+      document.getElementById('cmp-whatsapp').value = c.whatsapp || '';
+      document.getElementById('cmp-email').value = c.email || '';
+      document.getElementById('cmp-website').value = c.website || '';
+      document.getElementById('cmp-address').value = c.address || '';
+      document.getElementById('cmp-gstin').value = c.gstin || '';
+      document.getElementById('cmp-bank-name').value = c.bankName || '';
+      document.getElementById('cmp-bank-acc').value = c.accNo || '';
+      document.getElementById('cmp-bank-ifsc').value = c.ifsc || '';
+      document.getElementById('cmp-bank-upi').value = c.upi || '';
+      if (c.logoUrl) document.getElementById('company-logo-preview').innerHTML = `<img src="${c.logoUrl}" class="w-full h-full object-contain p-1">`;
+    }
+
+    function saveCompanyProfile() {
+      const db = getDB();
+      db.company.legalName = document.getElementById('cmp-legal-name').value;
+      db.company.brandName = document.getElementById('cmp-brand-name').value;
+      db.company.phone = document.getElementById('cmp-phone').value;
+      db.company.whatsapp = document.getElementById('cmp-whatsapp').value;
+      db.company.email = document.getElementById('cmp-email').value;
+      db.company.website = document.getElementById('cmp-website').value;
+      db.company.address = document.getElementById('cmp-address').value;
+      db.company.gstin = document.getElementById('cmp-gstin').value;
+      db.company.bankName = document.getElementById('cmp-bank-name').value;
+      db.company.accNo = document.getElementById('cmp-bank-acc').value;
+      db.company.ifsc = document.getElementById('cmp-bank-ifsc').value;
+      db.company.upi = document.getElementById('cmp-bank-upi').value;
+      saveDB(db);
+      showToast('Company profile saved');
+      navigateTo('dashboard');
+    }
+
+    function handleImageUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const db = getDB();
+        db.company.logoUrl = e.target.result;
+        document.getElementById('company-logo-preview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain p-1">`;
+        saveDB(db);
+        showToast('Logo uploaded');
       };
-
-      createNewInvoice(invoicePrefill);
-      showToast(`Proposal ${prop.docNumber} converted to Invoice contract!`);
+      reader.readAsDataURL(file);
     }
 
-    function shareActiveProposalOnWhatsApp() {
-      if (!viewingProposalObject) return;
-      const prop = viewingProposalObject;
+    // ================= PURCHASES & LANDED COST =================
+    let isInlineSupplierMode = false;
+    let isInlineRawMaterialMode = false;
+
+    function renderPurchasesScreen() {
       const db = getDB();
-      const text = `*${db.company.brandName}*\nDear Customer,\nPlease find your *${prop.type === 'WATERPROOFING_PROPOSAL' ? 'Waterproofing Proposal' : 'Epoxy Flooring Proposal'}*:\nProposal No: *${prop.docNumber}*\nArea: *${prop.area} Sq.Ft*\nAmount: *₹${prop.grandTotal.toLocaleString('en-IN')}*\nThank you!`;
-      const url = `https://wa.me/${prop.customerPhone ? prop.customerPhone.replace(/[^0-9]/g, '') : ''}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
+      const c = document.getElementById('purchases-list-container');
+      c.innerHTML = '';
+      if (db.purchases.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No raw material purchases recorded yet. Click <strong>+ New Inward</strong>.</div>';
+        return;
+      }
+      db.purchases.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-teal-700 mono">${p.purchaseNo}</span>
+              <h4 class="font-bold text-slate-900 text-sm">${p.supplierName}</h4>
+              <p class="text-slate-400 text-[11px]">Supplier Inv: ${p.invoiceNo} | Date: ${p.date}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-slate-900 mono">₹${p.invoiceTotal.toLocaleString('en-IN')}</span>
+              <span class="block text-[10px] text-teal-700 font-bold mono">Landed: ₹${(p.totalLandedCost || 0).toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+          <div class="bg-slate-50 p-2 rounded text-[10px] text-slate-600">
+            ${p.items.map(it => `<div>• <strong>${it.materialName}</strong>: ${it.qty} ${it.unit} @ Landed ₹${it.costPerUnit.toFixed(2)}/${it.unit}</div>`).join('')}
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
     }
 
-    // ================= DOCUMENT CREATOR & INVOICE ENGINE =================
-    function populateCustomerDropdown(selectedCustId) {
+    function openNewPurchaseModal() {
+      document.getElementById('purchase-form').reset();
+      document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
+      populateSupplierDropdown();
+      document.getElementById('pur-items-container').innerHTML = '';
+      addPurchaseItemRow();
+      calculatePurchaseTotals();
+      document.getElementById('modal-purchase').classList.remove('hidden');
+    }
+
+    function closePurchaseModal() { document.getElementById('modal-purchase').classList.add('hidden'); }
+
+    function populateSupplierDropdown(selectedId = null) {
       const db = getDB();
-      const select = document.getElementById('doc-customer-select');
-      select.innerHTML = '<option value="">-- Choose Existing or Type Below --</option>';
-      db.customers.forEach(c => {
+      const s = document.getElementById('pur-supplier-select');
+      s.innerHTML = '<option value="">-- Choose Supplier --</option>';
+      db.suppliers.forEach(sup => {
         const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = `${c.company} (${c.name} - ${c.phone})`;
-        if (selectedCustId && c.id === selectedCustId) opt.selected = true;
-        select.appendChild(opt);
+        opt.value = sup.id;
+        opt.textContent = `${sup.name} (${sup.phone})`;
+        if (selectedId && sup.id === selectedId) opt.selected = true;
+        s.appendChild(opt);
       });
     }
 
-    function onDocumentCustomerChange(custId) {
-      if (!custId) return;
+    function refreshPurchaseRawMaterialDropdowns(newSelectedRmId = null) {
       const db = getDB();
-      const customer = db.customers.find(c => c.id === custId);
-      if (!customer) return;
-      document.getElementById('doc-cust-name-input').value = customer.company;
-      document.getElementById('doc-cust-phone-input').value = customer.phone;
-      document.getElementById('doc-bill-to').value = `${customer.company}\n${customer.billingAddress}\nPhone: ${customer.phone}\nGSTIN: ${customer.gstin || 'Unregistered'}`;
-      document.getElementById('doc-ship-to').value = customer.shippingAddress || customer.billingAddress;
-      document.getElementById('doc-pos-state').value = customer.stateCode || '32';
-      calculateDocumentTotals();
+      document.querySelectorAll('.pur-item-row').forEach((row, idx, arr) => {
+        const select = row.querySelector('.pur-item-mat');
+        const currentVal = select.value;
+        let options = '<option value="">-- Select Material --</option>';
+        db.rawMaterials.forEach(rm => {
+          options += `<option value="${rm.id}" data-unit="${rm.unit}">${rm.name} (${rm.unit})</option>`;
+        });
+        select.innerHTML = options;
+        if (newSelectedRmId && idx === arr.length - 1) {
+          select.value = newSelectedRmId;
+        } else if (currentVal) {
+          select.value = currentVal;
+        }
+      });
+      calculatePurchaseTotals();
     }
 
-    function createNewInvoice(prefillData = null) {
+    function addPurchaseItemRow(preselectRmId = null) {
       const db = getDB();
-      activeDocType = 'INVOICE';
-      activeEditingId = null;
-      currentConvertingQuotationId = prefillData ? prefillData.sourceQuotationId : null;
-      document.getElementById('editor-title').innerText = 'New GST Tax Invoice';
-      document.getElementById('lbl-doc-number').innerText = 'Invoice No';
-      document.getElementById('lbl-doc-expiry').innerText = 'Payment Due Date';
-      document.getElementById('btn-submit-doc').innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Save & Preview';
-
-      document.getElementById('doc-number').value = getNextDocNumber('INVOICE');
-      const today = new Date().toISOString().split('T')[0];
-      const dueDays = db.settings.defaultDueDays || 30;
-      const dueDate = new Date(Date.now() + dueDays * 86400000).toISOString().split('T')[0];
-      document.getElementById('doc-date').value = today;
-      document.getElementById('doc-expiry').value = dueDate;
-      document.getElementById('doc-terms').value = db.settings.defaultTerms || '1. Goods once sold will not be taken back.';
-
-      populateCustomerDropdown(prefillData ? prefillData.customerId : null);
-      document.getElementById('doc-items-container').innerHTML = '';
-
-      if (prefillData) {
-        document.getElementById('quotation-ref-wrapper').classList.remove('hidden');
-        document.getElementById('doc-ref-qtn').value = prefillData.refQuotation || '';
-        document.getElementById('doc-cust-name-input').value = prefillData.customerName || '';
-        document.getElementById('doc-cust-phone-input').value = prefillData.customerPhone || '';
-        document.getElementById('doc-bill-to').value = prefillData.billTo || '';
-        document.getElementById('doc-ship-to').value = prefillData.shipTo || '';
-        document.getElementById('doc-pos-state').value = prefillData.posState || '32';
-        prefillData.items.forEach(it => addDocumentItemRow(it));
-      } else {
-        document.getElementById('quotation-ref-wrapper').classList.add('hidden');
-        document.getElementById('doc-ref-qtn').value = '';
-        document.getElementById('doc-cust-name-input').value = '';
-        document.getElementById('doc-cust-phone-input').value = '';
-        addDocumentItemRow();
-      }
-
-      navigateTo('document-editor');
-      calculateDocumentTotals();
-      lucide.createIcons();
-    }
-
-    function addDocumentItemRow(itemData = null) {
-      const db = getDB();
-      const container = document.getElementById('doc-items-container');
+      const container = document.getElementById('pur-items-container');
       const row = document.createElement('div');
-      row.className = 'doc-item-row border border-slate-200 p-2.5 rounded-lg bg-slate-50 space-y-2';
+      row.className = 'pur-item-row bg-white border border-slate-200 p-2.5 rounded-lg space-y-2';
 
-      let optionsHtml = '<option value="">-- Select Product Master (or Type Custom Service Below) --</option>';
-      db.products.forEach(p => {
-        optionsHtml += `<option value="${p.id}" data-name="${p.name}" data-rate="${p.retailPrice}" data-gst="${p.gst}" data-unit="${p.unit}">${p.name} - ₹${p.retailPrice} / ${p.unit} (Stock: ${p.stock || 0})</option>`;
+      let options = '<option value="">-- Select Material --</option>';
+      db.rawMaterials.forEach(rm => {
+        options += `<option value="${rm.id}" data-unit="${rm.unit}">${rm.name} (${rm.unit})</option>`;
       });
 
       row.innerHTML = `
         <div class="flex justify-between items-center gap-2">
-          <select class="item-product-select w-full bg-white border border-slate-200 rounded p-1.5 font-medium text-xs" onchange="onProductSelectInRow(this)">
-            ${optionsHtml}
+          <select class="pur-item-mat w-full bg-slate-50 border border-slate-200 rounded p-1.5 font-medium text-xs" onchange="calculatePurchaseTotals()">
+            ${options}
           </select>
-          <button type="button" onclick="this.closest('.doc-item-row').remove(); calculateDocumentTotals();" class="text-red-500 hover:text-red-700 p-1">✕</button>
+          <button type="button" onclick="this.closest('.pur-item-row').remove(); calculatePurchaseTotals();" class="text-red-500 font-bold p-1">✕</button>
         </div>
-        <input type="text" class="item-description w-full bg-white border border-slate-200 rounded p-1 text-[11px]" placeholder="Item description / project scope..." value="${itemData ? itemData.description : ''}">
-        <div class="grid grid-cols-5 gap-1.5">
-          <div><label class="block text-[10px] text-slate-400">Qty</label><input type="number" class="item-qty w-full bg-white border border-slate-200 rounded p-1 text-center font-bold" value="${itemData ? itemData.qty : 10}" oninput="calculateDocumentTotals()"></div>
-          <div><label class="block text-[10px] text-slate-400">Rate (₹)</label><input type="number" class="item-rate w-full bg-white border border-slate-200 rounded p-1 text-right font-bold mono" value="${itemData ? itemData.rate : 450}" oninput="calculateDocumentTotals()"></div>
-          <div><label class="block text-[10px] text-slate-400">Disc (₹)</label><input type="number" class="item-disc w-full bg-white border border-slate-200 rounded p-1 text-right font-medium mono" value="${itemData ? itemData.discount : 0}" oninput="calculateDocumentTotals()"></div>
-          <div><label class="block text-[10px] text-slate-400">GST %</label><input type="number" class="item-gst-rate w-full bg-white border border-slate-200 rounded p-1 text-center font-bold mono" value="${itemData ? itemData.gst : 18}" oninput="calculateDocumentTotals()"></div>
-          <div><label class="block text-[10px] text-slate-400">Amount (₹)</label><div class="item-line-total bg-slate-100 rounded p-1 text-right font-bold mono text-slate-800">0.00</div></div>
+        <div class="grid grid-cols-7 gap-1 text-[10px]">
+          <div><label class="block text-slate-400">Qty</label><input type="number" class="pur-item-qty w-full bg-slate-50 border p-1 rounded font-bold mono" value="100" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">Rate(₹)</label><input type="number" class="pur-item-rate w-full bg-slate-50 border p-1 rounded font-bold mono" value="10" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">GST %</label><input type="number" class="pur-item-gst w-full bg-slate-50 border p-1 rounded font-bold mono" value="18" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">Freight</label><input type="number" class="pur-item-freight w-full bg-slate-50 border p-1 rounded mono" value="0" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">Local Tr.</label><input type="number" class="pur-item-local w-full bg-slate-50 border p-1 rounded mono" value="0" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">Other</label><input type="number" class="pur-item-other w-full bg-slate-50 border p-1 rounded mono" value="0" oninput="calculatePurchaseTotals()"></div>
+          <div><label class="block text-slate-400">Landed/U</label><div class="pur-item-landed-unit bg-slate-100 p-1 rounded font-bold mono text-teal-800 text-center">0.00</div></div>
         </div>
-        <input type="hidden" class="item-unit-val" value="${itemData ? itemData.unit : 'Bag'}">
-        <input type="hidden" class="item-is-contract" value="${itemData && itemData.isContractService ? 'true' : 'false'}">
       `;
-
       container.appendChild(row);
-      if (itemData && itemData.productId) {
-        row.querySelector('.item-product-select').value = itemData.productId;
+      if (preselectRmId) {
+        row.querySelector('.pur-item-mat').value = preselectRmId;
       }
-      calculateDocumentTotals();
+      calculatePurchaseTotals();
     }
 
-    function onProductSelectInRow(selectEl) {
-      const selectedOption = selectEl.options[selectEl.selectedIndex];
-      if (!selectedOption.value) return;
-      const row = selectEl.closest('.doc-item-row');
-      row.querySelector('.item-rate').value = selectedOption.getAttribute('data-rate');
-      row.querySelector('.item-gst-rate').value = selectedOption.getAttribute('data-gst');
-      row.querySelector('.item-unit-val').value = selectedOption.getAttribute('data-unit');
-      row.querySelector('.item-description').value = selectedOption.getAttribute('data-name');
-      row.querySelector('.item-is-contract').value = 'false';
-      calculateDocumentTotals();
-    }
+    function calculatePurchaseTotals() {
+      let totalBasic = 0, totalGst = 0, totalFreight = 0, totalLocal = 0, totalOther = 0, totalLandedCost = 0;
+      document.querySelectorAll('.pur-item-row').forEach(row => {
+        const qty = parseFloat(row.querySelector('.pur-item-qty').value) || 0;
+        const rate = parseFloat(row.querySelector('.pur-item-rate').value) || 0;
+        const gst = parseFloat(row.querySelector('.pur-item-gst').value) || 0;
+        const freight = parseFloat(row.querySelector('.pur-item-freight').value) || 0;
+        const local = parseFloat(row.querySelector('.pur-item-local').value) || 0;
+        const other = parseFloat(row.querySelector('.pur-item-other').value) || 0;
 
-    function calculateDocumentTotals() {
-      const db = getDB();
-      const sellerState = db.company.stateCode || '32';
-      const buyerState = document.getElementById('doc-pos-state').value;
-      const isInterState = sellerState !== buyerState;
+        const basic = qty * rate;
+        const gstVal = (basic * gst) / 100;
+        const landedTotal = basic + freight + local + other;
+        const costPerUnit = qty > 0 ? (landedTotal / qty) : 0;
 
-      let subtotal = 0, totalDiscount = 0, totalTaxable = 0, totalTax = 0;
-      const slabMap = {};
+        row.querySelector('.pur-item-landed-unit').innerText = costPerUnit.toFixed(2);
 
-      document.querySelectorAll('.doc-item-row').forEach(r => {
-        const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
-        const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
-        const disc = parseFloat(r.querySelector('.item-disc').value) || 0;
-        const gstRate = parseFloat(r.querySelector('.item-gst-rate').value) || 0;
-
-        const lineGross = qty * rate;
-        const lineTaxable = Math.max(0, lineGross - disc);
-        const lineTax = (lineTaxable * gstRate) / 100;
-
-        r.querySelector('.item-line-total').innerText = (lineTaxable + lineTax).toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-        subtotal += lineGross;
-        totalDiscount += disc;
-        totalTaxable += lineTaxable;
-        totalTax += lineTax;
-
-        if (!slabMap[gstRate]) slabMap[gstRate] = { taxable: 0, tax: 0, cgst: 0, sgst: 0, igst: 0 };
-        slabMap[gstRate].taxable += lineTaxable;
-        slabMap[gstRate].tax += lineTax;
-        if (isInterState) slabMap[gstRate].igst += lineTax;
-        else { slabMap[gstRate].cgst += lineTax / 2; slabMap[gstRate].sgst += lineTax / 2; }
+        totalBasic += basic;
+        totalGst += gstVal;
+        totalFreight += freight;
+        totalLocal += local;
+        totalOther += other;
+        totalLandedCost += landedTotal;
       });
 
-      const grossWithTax = totalTaxable + totalTax;
-      const grandTotal = Math.round(grossWithTax);
-      const roundOff = (grandTotal - grossWithTax);
+      const invoiceTotal = totalBasic + totalGst + totalFreight + totalLocal + totalOther;
+      document.getElementById('pur-disp-basic').innerText = '₹' + totalBasic.toFixed(2);
+      document.getElementById('pur-disp-gst').innerText = '₹' + totalGst.toFixed(2);
+      document.getElementById('pur-disp-freight').innerText = '₹' + totalFreight.toFixed(2);
+      document.getElementById('pur-disp-local').innerText = '₹' + totalLocal.toFixed(2);
+      document.getElementById('pur-disp-other').innerText = '₹' + totalOther.toFixed(2);
+      document.getElementById('pur-disp-total').innerText = '₹' + invoiceTotal.toFixed(2);
+      document.getElementById('pur-disp-landed').innerText = '₹' + totalLandedCost.toFixed(2);
 
-      document.getElementById('calc-subtotal').innerText = '₹' + subtotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('calc-discount').innerText = '₹' + totalDiscount.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('calc-taxable').innerText = '₹' + totalTaxable.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('calc-roundoff').innerText = (roundOff >= 0 ? '+₹' : '-₹') + Math.abs(roundOff).toFixed(2);
-      document.getElementById('calc-grandtotal').innerText = '₹' + grandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('calc-words').innerText = numberToWordsIndian(grandTotal);
-
-      const gstContainer = document.getElementById('calc-gst-breakup');
-      gstContainer.innerHTML = '';
-      Object.keys(slabMap).forEach(slab => {
-        const item = slabMap[slab];
-        if (item.taxable > 0) {
-          if (isInterState) {
-            gstContainer.innerHTML += `<div class="flex justify-between text-blue-700 font-medium"><span>IGST (${slab}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.igst.toFixed(2)}</span></div>`;
-          } else {
-            const halfRate = (parseFloat(slab) / 2);
-            gstContainer.innerHTML += `
-              <div class="flex justify-between text-slate-500"><span>CGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.cgst.toFixed(2)}</span></div>
-              <div class="flex justify-between text-slate-500"><span>SGST (${halfRate}% on ₹${item.taxable.toFixed(2)}):</span><span class="mono">₹${item.sgst.toFixed(2)}</span></div>
-            `;
-          }
-        }
-      });
-
-      return { subtotal, totalDiscount, taxableValue: totalTaxable, totalTax, roundOff, grandTotal, isInterState, slabMap };
+      return { totalBasic, totalGst, totalFreight, totalLocal, totalOther, invoiceTotal, totalLandedCost };
     }
 
-    // STRICT INVOICE SAVE (BLOCKS IF PRODUCT COST IS MISSING, ALLOWS CONTRACT SERVICES)
-    function saveCurrentDocument() {
+    function savePurchaseRecord() {
       const db = getDB();
-      const custName = document.getElementById('doc-cust-name-input').value.trim();
-      const custPhone = document.getElementById('doc-cust-phone-input').value.trim();
-      if (!custName) { showToast('Please enter customer name'); return; }
+      const supSelect = document.getElementById('pur-supplier-select');
+      const sup = db.suppliers.find(s => s.id === supSelect.value);
+      if (!sup) { showToast('Select a valid supplier'); return; }
 
-      const docNum = document.getElementById('doc-number').value;
       const items = [];
-      let invoiceTotalCogs = 0;
+      let valid = true;
+      document.querySelectorAll('.pur-item-row').forEach(row => {
+        const matSelect = row.querySelector('.pur-item-mat');
+        const rm = db.rawMaterials.find(r => r.id === matSelect.value);
+        const qty = parseFloat(row.querySelector('.pur-item-qty').value) || 0;
+        const rate = parseFloat(row.querySelector('.pur-item-rate').value) || 0;
+        const gst = parseFloat(row.querySelector('.pur-item-gst').value) || 0;
+        const freight = parseFloat(row.querySelector('.pur-item-freight').value) || 0;
+        const local = parseFloat(row.querySelector('.pur-item-local').value) || 0;
+        const other = parseFloat(row.querySelector('.pur-item-other').value) || 0;
 
-      for (const r of document.querySelectorAll('.doc-item-row')) {
-        const prodSelect = r.querySelector('.item-product-select');
-        const prodId = prodSelect.value;
-        const p = db.products.find(prod => prod.id === prodId);
-        const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
-        const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
-        const discount = parseFloat(r.querySelector('.item-disc').value) || 0;
-        const isContract = r.querySelector('.item-is-contract').value === 'true';
+        if (!rm || qty <= 0 || rate < 0) { valid = false; return; }
 
-        let cogsUnit = 0;
-        let cogsTotal = 0;
-
-        if (!isContract && prodId) {
-          // Finished Physical Goods MUST have recorded mfg cost (RULE 3)
-          if (!p || typeof p.currentMfgCost !== 'number' || p.currentMfgCost <= 0) {
-            showToast(`Invoice Blocked: Product "${p ? p.name : 'Item'}" has no recorded manufacturing cost! Run a production batch first.`);
-            return; // Hard Block
-          }
-          // Validate Finished Goods Stock (RULE 15)
-          if ((p.stock || 0) < qty) {
-            showToast(`Invoice Blocked: Insufficient stock for "${p.name}"! Available: ${p.stock || 0} ${p.unit}, Required: ${qty} ${p.unit}`);
-            return; // Hard Block
-          }
-          cogsUnit = p.currentMfgCost;
-          cogsTotal = qty * cogsUnit;
-          invoiceTotalCogs += cogsTotal;
-        }
+        const landedTotal = (qty * rate) + freight + local + other;
+        const costPerUnit = landedTotal / qty;
 
         items.push({
-          productId: prodId || null,
-          description: r.querySelector('.item-description').value || 'Service Item',
+          materialId: rm.id,
+          materialName: rm.name,
           qty: qty,
-          rate: rate,
-          discount: discount,
-          unit: r.querySelector('.item-unit-val').value || 'Nos',
-          gst: parseFloat(r.querySelector('.item-gst-rate').value) || 18,
-          cogsUnit: cogsUnit,
-          cogsTotal: cogsTotal,
-          isContractService: isContract
+          unit: rm.unit,
+          basicRate: rate,
+          gst: gst,
+          freight: freight,
+          localTransport: local,
+          otherCharges: other,
+          landedCostTotal: landedTotal,
+          costPerUnit: costPerUnit
+        });
+      });
+
+      if (!valid || items.length === 0) { showToast('Check item quantities and rates'); return; }
+
+      const totals = calculatePurchaseTotals();
+      const purNo = getNextDocNumber('PURCHASE');
+      commitDocNumber('PURCHASE', purNo);
+
+      const purchaseObj = {
+        id: 'pur_' + Date.now(),
+        purchaseNo: purNo,
+        supplierId: sup.id,
+        supplierName: sup.name,
+        invoiceNo: document.getElementById('pur-inv-no').value,
+        date: document.getElementById('pur-date').value,
+        items: items,
+        basicTotal: totals.totalBasic,
+        gstTotal: totals.totalGst,
+        freightTotal: totals.totalFreight,
+        localTransportTotal: totals.totalLocal,
+        otherChargesTotal: totals.totalOther,
+        invoiceTotal: totals.invoiceTotal,
+        totalLandedCost: totals.totalLandedCost
+      };
+
+      db.purchases.unshift(purchaseObj);
+
+      items.forEach(it => {
+        recordStockMovement(db, 'RM', it.materialId, it.materialName, it.qty, it.unit, 'IN', 'PURCHASE', purNo, it.costPerUnit);
+      });
+
+      saveDB(db);
+      closePurchaseModal();
+      renderPurchasesScreen();
+      showToast(`Purchase ${purNo} recorded & RM Stock Increased!`);
+    }
+
+    // ================= INLINE MODALS =================
+    function openSupplierModal(fromPurchase = false) {
+      isInlineSupplierMode = fromPurchase;
+      document.getElementById('supplier-form').reset();
+      document.getElementById('modal-supplier').classList.remove('hidden');
+    }
+    function closeSupplierModal() { document.getElementById('modal-supplier').classList.add('hidden'); }
+    function saveSupplierRecord() {
+      const db = getDB();
+      const newSup = {
+        id: 'sup_' + Date.now(),
+        name: document.getElementById('sup-name').value,
+        phone: document.getElementById('sup-phone').value,
+        gstin: document.getElementById('sup-gstin').value.toUpperCase(),
+        address: document.getElementById('sup-address').value
+      };
+      db.suppliers.unshift(newSup);
+      saveDB(db);
+      closeSupplierModal();
+      if (isInlineSupplierMode) {
+        populateSupplierDropdown(newSup.id);
+        showToast('Supplier added & auto-selected in purchase!');
+      } else {
+        renderSuppliersScreen();
+        showToast('Supplier registered');
+      }
+    }
+
+    function openRawMaterialModal(fromPurchase = false) {
+      isInlineRawMaterialMode = fromPurchase;
+      document.getElementById('raw-material-form').reset();
+      document.getElementById('modal-raw-material').classList.remove('hidden');
+    }
+    function closeRawMaterialModal() { document.getElementById('modal-raw-material').classList.add('hidden'); }
+    function saveRawMaterialRecord() {
+      const db = getDB();
+      const newRm = {
+        id: 'rm_' + Date.now(),
+        name: document.getElementById('rm-name').value,
+        category: document.getElementById('rm-category').value,
+        unit: document.getElementById('rm-unit').value,
+        packSize: document.getElementById('rm-pack-size').value || 'Standard',
+        standardRate: parseFloat(document.getElementById('rm-standard-rate').value) || 0,
+        stock: parseFloat(document.getElementById('rm-stock').value) || 0,
+        minStock: parseFloat(document.getElementById('rm-min-stock').value) || 50,
+        lastLandedCost: parseFloat(document.getElementById('rm-standard-rate').value) || 0
+      };
+      db.rawMaterials.unshift(newRm);
+      saveDB(db);
+      closeRawMaterialModal();
+      if (isInlineRawMaterialMode) {
+        refreshPurchaseRawMaterialDropdowns(newRm.id);
+        showToast('Raw Material added & auto-selected in purchase row!');
+      } else {
+        renderRawMaterialsScreen();
+        showToast('Raw Material added to Master');
+      }
+    }
+
+    // ================= PRODUCTION & BOM =================
+    function toggleProdTab(tab) {
+      if (tab === 'batches') {
+        document.getElementById('production-batches-container').classList.remove('hidden');
+        document.getElementById('production-recipes-container').classList.add('hidden');
+        document.getElementById('tab-btn-batches').className = 'py-1.5 border-b-2 border-purple-600 text-purple-700';
+        document.getElementById('tab-btn-recipes').className = 'py-1.5 border-b-2 border-transparent text-slate-500';
+      } else {
+        document.getElementById('production-batches-container').classList.add('hidden');
+        document.getElementById('production-recipes-container').classList.remove('hidden');
+        document.getElementById('tab-btn-batches').className = 'py-1.5 border-b-2 border-transparent text-slate-500';
+        document.getElementById('tab-btn-recipes').className = 'py-1.5 border-b-2 border-purple-600 text-purple-700';
+      }
+    }
+
+    function renderProductionScreen() {
+      const db = getDB();
+      const bContainer = document.getElementById('production-batches-container');
+      const rContainer = document.getElementById('production-recipes-container');
+      bContainer.innerHTML = '';
+      rContainer.innerHTML = '';
+
+      if (db.productions.length === 0) {
+        bContainer.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No batches produced yet. Click <strong>+ Run Batch</strong>.</div>';
+      } else {
+        db.productions.forEach(b => {
+          const card = document.createElement('div');
+          card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+          card.innerHTML = `
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="font-bold text-purple-700 mono">${b.batchNo}</span>
+                <h4 class="font-bold text-slate-900 text-sm">${b.productName}</h4>
+                <p class="text-slate-400 text-[11px]">Yield Output: <strong>${b.yieldQty} ${b.yieldUnit}</strong> | Date: ${b.date}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-base font-bold text-slate-900 mono">₹${b.totalBatchCost.toLocaleString('en-IN')}</span>
+                <span class="block text-[10px] text-purple-700 font-bold mono">Cost/Pack: ₹${b.costPerPack.toFixed(2)}</span>
+              </div>
+            </div>
+            <div class="bg-purple-50/60 p-2 rounded text-[10px] text-slate-600">
+              <strong>Cost Snapshot:</strong> RM ₹${b.totalRmCost.toFixed(2)} | Direct ₹${b.directCost} | Pack ₹${b.packagingCost} | Overhead ₹${b.overheadCost}
+            </div>
+          `;
+          bContainer.appendChild(card);
         });
       }
 
-      if (items.length === 0) { showToast('Please add at least one item row'); return; }
-
-      const calc = calculateDocumentTotals();
-
-      const docObj = {
-        id: activeEditingId || ('inv_' + Date.now()),
-        type: 'INVOICE',
-        docNumber: docNum,
-        date: document.getElementById('doc-date').value,
-        expiryDate: document.getElementById('doc-expiry').value,
-        refQuotation: document.getElementById('doc-ref-qtn').value,
-        customerId: document.getElementById('doc-customer-select').value || 'direct_customer',
-        customerName: custName,
-        customerPhone: custPhone,
-        billTo: document.getElementById('doc-bill-to').value,
-        shipTo: document.getElementById('doc-ship-to').value,
-        posState: document.getElementById('doc-pos-state').value,
-        items: items,
-        subtotal: calc.subtotal,
-        discount: calc.totalDiscount,
-        taxable: calc.taxableValue,
-        tax: calc.totalTax,
-        slabMap: calc.slabMap,
-        roundOff: calc.roundOff,
-        grandTotal: calc.grandTotal,
-        cogsTotal: invoiceTotalCogs,
-        paid: 0,
-        balance: calc.grandTotal,
-        isInterState: calc.isInterState,
-        terms: document.getElementById('doc-terms').value,
-        status: 'DUE'
-      };
-
-      commitDocNumber('INVOICE', docNum);
-      db.invoices.unshift(docObj);
-
-      // Deduct Finished Goods Stock and Record Movement
-      docObj.items.forEach(line => {
-        if (!line.isContractService && line.productId) {
-          recordStockMovement(db, 'FG', line.productId, line.description, line.qty, line.unit, 'OUT', 'INVOICE', docObj.docNumber, line.cogsUnit || 0);
-        }
-      });
-
-      // Update Quotation Conversion Status
-      if (currentConvertingQuotationId) {
-        const sourceQtn = db.quotations.find(q => q.id === currentConvertingQuotationId);
-        if (sourceQtn) {
-          sourceQtn.status = 'CONVERTED';
-          sourceQtn.convertedInvoiceNo = docObj.docNumber;
-        }
-        currentConvertingQuotationId = null;
-      }
-
-      saveDB(db);
-      renderDocumentPrintModal(docObj);
-      showToast('Tax Invoice created & Stock deducted!');
-    }
-
-    function renderDocumentPrintModal(doc) {
-      viewingDocObject = doc;
-      const db = getDB();
-      const comp = db.company;
-      const set = db.settings;
-
-      const printDoc = document.getElementById('printable-document');
-      printDoc.className = 'p-6 leading-relaxed overflow-y-auto bg-white ' + (set.template === 'Classic' ? 'tpl-classic' : (set.template === 'Minimal' ? 'tpl-minimal' : 'tpl-h4pro'));
-
-      const logoHolder = document.getElementById('pdf-logo-holder');
-      if (comp.logoUrl) logoHolder.innerHTML = `<img src="${comp.logoUrl}" class="max-h-full max-w-full object-contain">`;
-      else logoHolder.innerHTML = `<svg class="w-12 h-12 text-amber-500 fill-current" viewBox="0 0 24 24"><path d="M12 2C11.5 4 10 6 8.5 7.5C7 9 5.5 10 4 10.5C5.5 11.5 7.5 12 9 11.5C9.5 13 9.5 15 8 16.5C7.5 17 6.5 17.5 5 17.5C7.5 19 10 18.5 11 16.5C11.5 15.5 11.8 14 12 13C12.2 14 12.5 15.5 13 16.5C14 18.5 16.5 19 19 17.5C17.5 17.5 16.5 17 16 16.5C14.5 15 14.5 13 15 11.5C16.5 12 18.5 11.5 20 10.5C18.5 10 17 9 15.5 7.5C14 6 12.5 4 12 2Z"/></svg>`;
-
-      document.getElementById('pdf-cmp-legal').innerText = comp.legalName;
-      document.getElementById('pdf-cmp-brand').innerText = comp.brandName;
-      document.getElementById('pdf-cmp-addr').innerText = comp.address + ', ' + comp.place;
-      document.getElementById('pdf-cmp-contact').innerText = `Phone: ${comp.phone} | Email: ${comp.email}`;
-      document.getElementById('pdf-cmp-web').innerText = comp.website || 'www.h4solutions.com';
-      document.getElementById('pdf-cmp-gstin').innerText = `GSTIN: ${comp.gstin}`;
-
-      document.getElementById('pdf-doc-num').innerText = doc.docNumber;
-      document.getElementById('pdf-doc-date').innerText = doc.date;
-      document.getElementById('pdf-doc-due').innerText = doc.expiryDate;
-
-      document.getElementById('pdf-cust-name').innerText = doc.customerName;
-      document.getElementById('pdf-cust-phone').innerText = `Phone: ${doc.customerPhone}`;
-      document.getElementById('pdf-cust-bill-addr').innerText = doc.billTo;
-      document.getElementById('pdf-pos').innerText = doc.posState === '32' ? 'Kerala (32)' : `State Code: ${doc.posState}`;
-
-      const tableBody = document.getElementById('pdf-items-body');
-      tableBody.innerHTML = '';
-      doc.items.forEach((it, idx) => {
-        const lineTotal = (it.qty * it.rate) - it.discount;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="py-1.5 px-2">${idx + 1}</td>
-          <td class="py-1.5 px-2 font-medium">${it.description}</td>
-          <td class="py-1.5 px-2 text-center font-bold">${it.qty}</td>
-          <td class="py-1.5 px-2 text-center">${it.unit}</td>
-          <td class="py-1.5 px-2 text-right mono">₹${it.rate.toFixed(2)}</td>
-          <td class="py-1.5 px-2 text-right font-bold mono">₹${lineTotal.toFixed(2)}</td>
+      db.recipes.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1.5 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-purple-700 mono">${r.recipeNo}</span>
+              <h4 class="font-bold text-slate-900 text-sm">${r.productName}</h4>
+              <p class="text-slate-400 text-[11px]">Standard Batch: ${r.batchSize} ${r.batchUnit}</p>
+            </div>
+          </div>
+          <div class="bg-slate-50 p-2 rounded text-[10px] text-slate-600">
+            ${r.items.map(it => `<div>• ${it.materialName}: ${it.qty} ${it.unit}</div>`).join('')}
+          </div>
         `;
-        tableBody.appendChild(row);
+        rContainer.appendChild(card);
       });
-
-      document.getElementById('pdf-subtotal').innerText = '₹' + doc.subtotal.toFixed(2);
-      document.getElementById('pdf-grandtotal').innerText = '₹' + doc.grandTotal.toFixed(2);
-      document.getElementById('pdf-words').innerText = numberToWordsIndian(doc.grandTotal);
-
-      // Switches for Bank & Signature
-      document.getElementById('pdf-bank-section').style.display = set.showBank ? 'grid' : 'none';
-      document.getElementById('pdf-bank-name').innerText = comp.bankName;
-      document.getElementById('pdf-bank-acc').innerText = comp.accNo;
-      document.getElementById('pdf-bank-ifsc').innerText = comp.ifsc;
-      document.getElementById('pdf-bank-upi').innerText = comp.upi;
-
-      const signStampContainer = document.getElementById('pdf-stamp-sign-container');
-      signStampContainer.innerHTML = '';
-      if (set.showSignature) {
-        if (comp.stampUrl) signStampContainer.innerHTML += `<img src="${comp.stampUrl}" class="h-10 object-contain">`;
-        if (comp.signatureUrl) signStampContainer.innerHTML += `<img src="${comp.signatureUrl}" class="h-10 object-contain">`;
-      }
-
-      document.getElementById('document-preview-modal').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function closeDocumentPreviewModal() {
-      document.getElementById('document-preview-modal').classList.add('hidden');
-      navigateTo('invoice-list');
-    }
-
-    function shareActiveDocumentOnWhatsApp() {
-      if (!viewingDocObject) return;
-      const doc = viewingDocObject;
+    function openRunBatchModal() {
       const db = getDB();
-      const text = `*${db.company.brandName}*\nDear Customer,\nPlease find your *Tax Invoice*:\nInvoice No: *${doc.docNumber}*\nDate: ${doc.date}\nAmount: *₹${doc.grandTotal.toLocaleString('en-IN')}*\nThank you!`;
-      const url = `https://wa.me/${doc.customerPhone ? doc.customerPhone.replace(/[^0-9]/g, '') : ''}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-    }
-
-    // ================= PAYMENTS ENGINE =================
-    function openRecordPaymentModal(prefillInvId = null) {
-      const db = getDB();
-      const custSelect = document.getElementById('pay-customer-select');
-      custSelect.innerHTML = '<option value="">-- Select Customer --</option>';
-      db.customers.forEach(c => {
+      const s = document.getElementById('prod-recipe-select');
+      s.innerHTML = '<option value="">-- Choose BOM Recipe --</option>';
+      db.recipes.forEach(r => {
         const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = `${c.company} (Due: ₹${c.due.toLocaleString('en-IN')})`;
-        custSelect.appendChild(opt);
+        opt.value = r.id;
+        opt.textContent = `${r.productName} (${r.batchSize} ${r.batchUnit})`;
+        s.appendChild(opt);
       });
-
-      document.getElementById('pay-date').value = new Date().toISOString().split('T')[0];
-      document.getElementById('modal-payment').classList.remove('hidden');
-
-      if (prefillInvId) {
-        const inv = db.invoices.find(i => i.id === prefillInvId);
-        if (inv) {
-          custSelect.value = inv.customerId;
-          onPaymentCustomerChange(inv.customerId, inv.id);
-        }
-      } else {
-        document.getElementById('pay-invoice-select').innerHTML = '<option value="">-- Choose Customer First --</option>';
-        resetPaymentDisplay();
+      document.getElementById('batch-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('batch-multiplier').value = 1;
+      document.getElementById('modal-production-batch').classList.remove('hidden');
+      if (db.recipes.length > 0) {
+        s.value = db.recipes[0].id;
+        onRecipeSelectForBatch(db.recipes[0].id);
       }
     }
+    function closeRunBatchModal() { document.getElementById('modal-production-batch').classList.add('hidden'); }
 
-    function closeRecordPaymentModal() { document.getElementById('modal-payment').classList.add('hidden'); }
+    function onRecipeSelectForBatch(recipeId) { calculateBatchRequirements(); }
 
-    function onPaymentCustomerChange(custId, preselectedInvId = null) {
+    function calculateBatchRequirements() {
       const db = getDB();
-      const invSelect = document.getElementById('pay-invoice-select');
-      invSelect.innerHTML = '<option value="">-- Select Unpaid Invoice --</option>';
-      
-      const unpaid = db.invoices.filter(i => (i.customerId === custId || i.customerName === custId) && i.balance > 0);
-      unpaid.forEach(inv => {
-        const opt = document.createElement('option');
-        opt.value = inv.id;
-        opt.textContent = `${inv.docNumber} (Balance: ₹${inv.balance.toLocaleString('en-IN')})`;
-        if (preselectedInvId && inv.id === preselectedInvId) opt.selected = true;
-        invSelect.appendChild(opt);
-      });
+      const rId = document.getElementById('prod-recipe-select').value;
+      const recipe = db.recipes.find(r => r.id === rId);
+      const mult = parseFloat(document.getElementById('batch-multiplier').value) || 1;
+      const checkList = document.getElementById('batch-rm-check-list');
+      const errBox = document.getElementById('batch-stock-error');
+      const submitBtn = document.getElementById('btn-submit-batch');
+      checkList.innerHTML = '';
+      errBox.classList.add('hidden');
 
-      if (preselectedInvId) onPaymentInvoiceChange(preselectedInvId);
-      else resetPaymentDisplay();
-    }
+      if (!recipe) return;
 
-    function onPaymentInvoiceChange(invId) {
-      const db = getDB();
-      const inv = db.invoices.find(i => i.id === invId);
-      if (!inv) { resetPaymentDisplay(); return; }
+      const p = db.products.find(prod => prod.id === recipe.productId);
+      const packWeight = (p && p.packWeight) ? p.packWeight : 20;
 
-      document.getElementById('pay-disp-total').innerText = '₹' + inv.grandTotal.toLocaleString('en-IN');
-      document.getElementById('pay-disp-paid').innerText = '₹' + (inv.paid || 0).toLocaleString('en-IN');
-      document.getElementById('pay-disp-balance').innerText = '₹' + inv.balance.toLocaleString('en-IN');
-      document.getElementById('pay-amount').value = inv.balance;
-    }
+      let isStockShort = false;
+      let isCostMissing = false;
+      let totalRmCost = 0;
 
-    function resetPaymentDisplay() {
-      document.getElementById('pay-disp-total').innerText = '₹0';
-      document.getElementById('pay-disp-paid').innerText = '₹0';
-      document.getElementById('pay-disp-balance').innerText = '₹0';
-      document.getElementById('pay-amount').value = '';
-    }
+      recipe.items.forEach(it => {
+        const rm = db.rawMaterials.find(r => r.id === it.materialId);
+        const reqQty = it.qty * mult;
+        const available = rm ? rm.stock : 0;
+        
+        const landedCost = (rm && (rm.lastLandedCost > 0 ? rm.lastLandedCost : rm.standardRate)) || 0;
+        if (landedCost <= 0) isCostMissing = true;
 
-    function savePaymentRecord() {
-      const db = getDB();
-      const invId = document.getElementById('pay-invoice-select').value;
-      const inv = db.invoices.find(i => i.id === invId);
-      const cust = db.customers.find(c => c.id === inv?.customerId);
-      const payAmount = parseFloat(document.getElementById('pay-amount').value) || 0;
+        const lineCost = reqQty * landedCost;
+        totalRmCost += lineCost;
 
-      if (!inv) { showToast('Select a valid invoice'); return; }
-      if (payAmount <= 0) { showToast('Payment amount must be greater than zero'); return; }
-      if (payAmount > inv.balance) {
-        showToast(`Payment (₹${payAmount}) cannot exceed invoice balance (₹${inv.balance})!`);
-        return;
-      }
+        const hasEnough = available >= reqQty;
+        if (!hasEnough) isStockShort = true;
 
-      const receiptNum = getNextDocNumber('PAYMENT');
-      commitDocNumber('PAYMENT', receiptNum);
-
-      const paymentObj = {
-        id: 'pay_' + Date.now(),
-        receiptNo: receiptNum,
-        date: document.getElementById('pay-date').value,
-        invoiceId: inv.id,
-        invoiceNo: inv.docNumber,
-        customerId: inv.customerId,
-        customerName: inv.customerName,
-        amount: payAmount,
-        method: document.getElementById('pay-method').value,
-        ref: document.getElementById('pay-ref').value
-      };
-
-      db.payments.unshift(paymentObj);
-      inv.paid = (inv.paid || 0) + payAmount;
-      inv.balance = Math.max(0, inv.grandTotal - inv.paid);
-      inv.status = computeInvoiceStatus(inv);
-
-      if (cust) cust.due = Math.max(0, (cust.due || 0) - payAmount);
-
-      saveDB(db);
-      closeRecordPaymentModal();
-      renderPaymentsScreen();
-      showToast(`Payment ${receiptNum} recorded. Invoice updated!`);
-    }
-
-    // ================= FULL REPORTS SUITE (PRODUCT & CUSTOMER P&L) =================
-    function toggleCustomDateInputs(filterVal) {
-      const box = document.getElementById('report-custom-date-container');
-      if (filterVal === 'custom') {
-        box.classList.remove('hidden');
-        const today = new Date().toISOString().split('T')[0];
-        if (!document.getElementById('rep-from-date').value) document.getElementById('rep-from-date').value = today;
-        if (!document.getElementById('rep-to-date').value) document.getElementById('rep-to-date').value = today;
-      } else box.classList.add('hidden');
-    }
-
-    function isDateInFilter(dateStr, filter) {
-      if (!dateStr) return false;
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
-
-      if (filter === 'all') return true;
-      if (filter === 'today') return dateStr === todayStr;
-
-      if (filter === 'week') {
-        const d = new Date(today);
-        const day = d.getDay();
-        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-        const monday = new Date(d.setDate(diff)).toISOString().split('T')[0];
-        return dateStr >= monday && dateStr <= todayStr;
-      }
-
-      if (filter === 'month') {
-        const curMonth = todayStr.substring(0, 7);
-        return dateStr.startsWith(curMonth);
-      }
-
-      if (filter === 'custom') {
-        const fromDate = document.getElementById('rep-from-date').value;
-        const toDate = document.getElementById('rep-to-date').value;
-        if (fromDate && dateStr < fromDate) return false;
-        if (toDate && dateStr > toDate) return false;
-        return true;
-      }
-      return true;
-    }
-
-    function renderReportsScreen() {
-      const db = getDB();
-      const filter = document.getElementById('report-date-filter').value;
-
-      const filteredInvoices = db.invoices.filter(i => isDateInFilter(i.date, filter));
-      const filteredExpenses = db.expenses.filter(e => isDateInFilter(e.date, filter));
-      const filteredPurchases = db.purchases.filter(p => isDateInFilter(p.date, filter));
-
-      let grossSales = 0, totalCogs = 0, cgst = 0, sgst = 0, igst = 0;
-      const productStats = {};
-      const customerStats = {};
-
-      filteredInvoices.forEach(inv => {
-        grossSales += inv.taxable || 0;
-        totalCogs += (inv.cogsTotal || 0);
-
-        if (inv.items) {
-          inv.items.forEach(it => {
-            if (!productStats[it.description]) {
-              productStats[it.description] = { name: it.description, qty: 0, revenue: 0, cogs: 0, unit: it.unit };
-            }
-            productStats[it.description].qty += it.qty;
-            productStats[it.description].revenue += ((it.qty * it.rate) - it.discount);
-            productStats[it.description].cogs += (it.cogsTotal || 0);
-
-            if (!customerStats[inv.customerName]) {
-              customerStats[inv.customerName] = { name: inv.customerName, billed: 0, cogs: 0 };
-            }
-            customerStats[inv.customerName].billed += ((it.qty * it.rate) - it.discount);
-            customerStats[inv.customerName].cogs += (it.cogsTotal || 0);
-          });
-        }
-
-        if (inv.slabMap) {
-          Object.values(inv.slabMap).forEach(s => {
-            cgst += s.cgst || 0;
-            sgst += s.sgst || 0;
-            igst += s.igst || 0;
-          });
-        }
-      });
-
-      const totalExpenses = filteredExpenses.reduce((acc, e) => acc + (e.amount || 0), 0);
-      const grossProfit = grossSales - totalCogs;
-      const netProfit = grossProfit - totalExpenses;
-      const inputGst = filteredPurchases.reduce((acc, p) => acc + (p.gstTotal || 0), 0);
-
-      document.getElementById('rep-gross-sales').innerText = '₹' + grossSales.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('rep-cogs-total').innerText = (totalCogs > 0 ? '-₹' : '₹') + totalCogs.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('rep-gross-profit').innerText = '₹' + grossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('rep-expenses-total').innerText = '-₹' + totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2});
-      document.getElementById('rep-net-profit').innerText = (netProfit >= 0 ? '₹' : '-₹') + Math.abs(netProfit).toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-      document.getElementById('rep-cgst-total').innerText = '₹' + cgst.toFixed(2);
-      document.getElementById('rep-sgst-total').innerText = '₹' + sgst.toFixed(2);
-      document.getElementById('rep-igst-total').innerText = '₹' + igst.toFixed(2);
-      document.getElementById('rep-input-gst').innerText = '₹' + inputGst.toFixed(2);
-
-      // Render Product-wise Profit
-      const prodContainer = document.getElementById('rep-product-profit-container');
-      prodContainer.innerHTML = '';
-      if (Object.keys(productStats).length === 0) {
-        prodContainer.innerHTML = '<div class="text-slate-400 italic">No invoiced sales in this period.</div>';
-      } else {
-        Object.values(productStats).forEach(ps => {
-          const profit = ps.revenue - ps.cogs;
-          const profitPerUnit = ps.qty > 0 ? (profit / ps.qty) : 0;
-          prodContainer.innerHTML += `
-            <div class="p-2 rounded bg-slate-50 border border-slate-100 flex justify-between items-center text-[11px]">
-              <div><strong>${ps.name}</strong> (${ps.qty} ${ps.unit} sold)<div class="text-slate-500">Rev: ₹${ps.revenue.toFixed(0)} | COGS: ₹${ps.cogs.toFixed(0)}</div></div>
-              <div class="text-right"><span class="font-bold text-emerald-700 block mono">₹${profit.toFixed(2)}</span><span class="text-[9px] text-slate-400 font-mono">₹${profitPerUnit.toFixed(1)}/${ps.unit}</span></div>
-            </div>
-          `;
-        });
-      }
-
-      // Render Customer-wise Profit
-      const custContainer = document.getElementById('rep-customer-profit-container');
-      custContainer.innerHTML = '';
-      if (Object.keys(customerStats).length === 0) {
-        custContainer.innerHTML = '<div class="text-slate-400 italic">No customer transactions in this period.</div>';
-      } else {
-        Object.values(customerStats).forEach(cs => {
-          const profit = cs.billed - cs.cogs;
-          custContainer.innerHTML += `
-            <div class="p-2 rounded bg-slate-50 border border-slate-100 flex justify-between items-center text-[11px]">
-              <div><strong>${cs.name}</strong><div class="text-slate-500">Billed: ₹${cs.billed.toFixed(0)} | COGS: ₹${cs.cogs.toFixed(0)}</div></div>
-              <span class="font-bold text-emerald-700 mono">₹${profit.toFixed(2)}</span>
-            </div>
-          `;
-        });
-      }
-
-      // Render Stock Ledger
-      const smBox = document.getElementById('rep-stock-movements');
-      smBox.innerHTML = '';
-      if (db.stockMovements.length === 0) smBox.innerHTML = '<div class="text-slate-400 italic">No movements logged yet.</div>';
-      db.stockMovements.slice(0, 15).forEach(m => {
-        const isIn = m.direction === 'IN';
-        smBox.innerHTML += `
-          <div class="flex justify-between items-center p-1.5 rounded bg-slate-50 border border-slate-100 text-[10px]">
-            <div><strong>${m.itemName}</strong> <span class="text-slate-400">(${m.refType}: ${m.refNo})</span></div>
-            <div class="${isIn ? 'text-emerald-700' : 'text-red-600'} font-bold mono">${isIn ? '+' : '-'}${m.qty} ${m.unit} (Bal: ${m.balanceAfter})</div>
+        checkList.innerHTML += `
+          <div class="flex justify-between items-center ${hasEnough ? 'text-slate-700' : 'text-red-600 font-bold'}">
+            <span>• ${it.materialName} (Req: ${reqQty} ${it.unit}) ${landedCost <= 0 ? '<span class="text-amber-600 font-normal">[No Rate]</span>' : ''}</span>
+            <span>Stock: ${available} ${it.unit} ${hasEnough ? '✓' : '✗ SHORT'}</span>
           </div>
         `;
       });
+
+      const totalBatchCost = totalRmCost + (recipe.directCost * mult) + (recipe.packagingCost * mult) + (recipe.overheadCost * mult);
+      const yieldQty = recipe.batchSize * mult;
+      const costPerKg = yieldQty > 0 ? (totalBatchCost / yieldQty) : 0;
+      const costPerPack = costPerKg * packWeight;
+
+      document.getElementById('batch-disp-rm-cost').innerText = '₹' + totalRmCost.toFixed(2);
+      document.getElementById('batch-disp-direct-cost').innerText = '₹' + (recipe.directCost * mult).toFixed(2);
+      document.getElementById('batch-disp-pack-cost').innerText = '₹' + (recipe.packagingCost * mult).toFixed(2);
+      document.getElementById('batch-disp-total-cost').innerText = '₹' + totalBatchCost.toFixed(2);
+      document.getElementById('batch-disp-kg-cost').innerText = '₹' + costPerKg.toFixed(2) + ' / ' + recipe.batchUnit;
+      document.getElementById('batch-disp-unit-cost').innerText = '₹' + costPerPack.toFixed(2) + ' / ' + (p ? p.unit : 'Pack');
+
+      if (isStockShort) {
+        errBox.innerText = 'Cannot produce! Raw material stock is insufficient.';
+        errBox.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.className = 'w-full bg-slate-300 text-slate-500 font-bold py-2.5 rounded-xl cursor-not-allowed';
+      } else if (isCostMissing) {
+        errBox.innerText = 'Warning: One or more raw materials have no recorded cost in RM Master/Purchases!';
+        errBox.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.className = 'w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.className = 'w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow transition';
+      }
+      return { totalRmCost, totalBatchCost, costPerKg, costPerPack, yieldQty };
+    }
+
+    function executeProductionBatch() {
+      const db = getDB();
+      const rId = document.getElementById('prod-recipe-select').value;
+      const recipe = db.recipes.find(r => r.id === rId);
+      const mult = parseFloat(document.getElementById('batch-multiplier').value) || 1;
+
+      if (!recipe || mult <= 0) {
+        showToast('Invalid recipe or multiplier');
+        return;
+      }
+
+      for (const it of recipe.items) {
+        const rm = db.rawMaterials.find(r => r.id === it.materialId);
+        const reqQty = it.qty * mult;
+        const available = rm ? rm.stock : 0;
+        if (available < reqQty) {
+          showToast(`Execution Aborted: Insufficient stock for ${it.materialName}! Required: ${reqQty} ${it.unit}, Available: ${available} ${it.unit}`);
+          calculateBatchRequirements();
+          return;
+        }
+      }
+
+      const calc = calculateBatchRequirements();
+      const batchNo = getNextDocNumber('PRODUCTION');
+      commitDocNumber('PRODUCTION', batchNo);
+
+      recipe.items.forEach(it => {
+        const reqQty = it.qty * mult;
+        recordStockMovement(db, 'RM', it.materialId, it.materialName, reqQty, it.unit, 'OUT', 'PRODUCTION', batchNo);
+      });
+
+      const p = db.products.find(prod => prod.id === recipe.productId);
+      const packWeight = (p && p.packWeight) ? p.packWeight : 20;
+      const finishedUnitsProduced = calc.yieldQty / packWeight;
+
+      if (p) {
+        p.currentMfgCost = calc.costPerPack;
+        recordStockMovement(db, 'FG', p.id, p.name, finishedUnitsProduced, p.unit, 'IN', 'PRODUCTION', batchNo, calc.costPerPack);
+      }
+
+      const batchObj = {
+        id: 'bat_' + Date.now(),
+        batchNo: batchNo,
+        date: document.getElementById('batch-date').value,
+        recipeId: recipe.id,
+        productId: recipe.productId,
+        productName: recipe.productName,
+        yieldQty: calc.yieldQty,
+        yieldUnit: recipe.batchUnit,
+        finishedUnits: finishedUnitsProduced,
+        totalRmCost: calc.totalRmCost,
+        directCost: recipe.directCost * mult,
+        packagingCost: recipe.packagingCost * mult,
+        overheadCost: recipe.overheadCost * mult,
+        totalBatchCost: calc.totalBatchCost,
+        costPerKg: calc.costPerKg,
+        costPerPack: calc.costPerPack,
+        timestamp: new Date().toISOString()
+      };
+
+      db.productions.unshift(batchObj);
+      saveDB(db);
+      closeRunBatchModal();
+      renderProductionScreen();
+      showToast(`Batch ${batchNo} completed! FG Stock increased & RM Deducted.`);
+    }
+
+    function openRecipeModal() {
+      const db = getDB();
+      const s = document.getElementById('rcp-product-select');
+      s.innerHTML = '';
+      db.products.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.name;
+        s.appendChild(opt);
+      });
+      document.getElementById('rcp-ingredients-container').innerHTML = '';
+      addRecipeIngredientRow();
+      document.getElementById('modal-recipe').classList.remove('hidden');
+    }
+    function closeRecipeModal() { document.getElementById('modal-recipe').classList.add('hidden'); }
+
+    function addRecipeIngredientRow() {
+      const db = getDB();
+      const c = document.getElementById('rcp-ingredients-container');
+      const row = document.createElement('div');
+      row.className = 'rcp-ing-row flex gap-2 items-center';
+      let options = '';
+      db.rawMaterials.forEach(rm => options += `<option value="${rm.id}">${rm.name} (${rm.unit})</option>`);
+      row.innerHTML = `
+        <select class="rcp-ing-mat w-2/3 bg-white border p-1 rounded font-medium">${options}</select>
+        <input type="number" class="rcp-ing-qty w-1/3 bg-white border p-1 rounded font-bold mono text-center" value="10" placeholder="Qty">
+        <button type="button" onclick="this.closest('.rcp-ing-row').remove()" class="text-red-500 font-bold p-1">✕</button>
+      `;
+      c.appendChild(row);
+    }
+
+    function saveRecipeRecord() {
+      const db = getDB();
+      const pId = document.getElementById('rcp-product-select').value;
+      const prod = db.products.find(p => p.id === pId);
+      const items = [];
+
+      document.querySelectorAll('.rcp-ing-row').forEach(r => {
+        const matId = r.querySelector('.rcp-ing-mat').value;
+        const rm = db.rawMaterials.find(m => m.id === matId);
+        const qty = parseFloat(r.querySelector('.rcp-ing-qty').value) || 0;
+        if (rm && qty > 0) {
+          items.push({ materialId: rm.id, materialName: rm.name, qty: qty, unit: rm.unit });
+        }
+      });
+
+      const rcpObj = {
+        id: 'rcp_' + Date.now(),
+        recipeNo: 'RCP-' + String(db.recipes.length + 1).padStart(4, '0'),
+        productId: prod.id,
+        productName: prod.name,
+        batchSize: parseFloat(document.getElementById('rcp-batch-size').value) || 100,
+        batchUnit: document.getElementById('rcp-unit').value,
+        items: items,
+        directCost: parseFloat(document.getElementById('rcp-cost-direct').value) || 0,
+        packagingCost: parseFloat(document.getElementById('rcp-cost-pack').value) || 0,
+        overheadCost: parseFloat(document.getElementById('rcp-cost-overhead').value) || 0
+      };
+
+      db.recipes.unshift(rcpObj);
+      saveDB(db);
+      closeRecipeModal();
+      renderProductionScreen();
+      showToast('BOM Recipe saved successfully');
+    }
+
+    // ================= EXPENSES & EXPENSE CATEGORY MASTER =================
+    function populateExpenseCategoriesDropdown() {
+      const db = getDB();
+      const s = document.getElementById('exp-category');
+      s.innerHTML = '';
+      db.expenseCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        s.appendChild(opt);
+      });
+    }
+
+    function openExpenseCategoryModal() {
+      document.getElementById('exp-cat-name').value = '';
+      document.getElementById('modal-expense-category').classList.remove('hidden');
+    }
+    function closeExpenseCategoryModal() { document.getElementById('modal-expense-category').classList.add('hidden'); }
+
+    function saveExpenseCategory() {
+      const name = document.getElementById('exp-cat-name').value.trim();
+      if (!name) return;
+      const db = getDB();
+      if (!db.expenseCategories.includes(name)) {
+        db.expenseCategories.push(name);
+        saveDB(db);
+        populateExpenseCategoriesDropdown();
+        document.getElementById('exp-category').value = name;
+        showToast(`Category "${name}" added!`);
+      }
+      closeExpenseCategoryModal();
+    }
+
+    function renderExpensesScreen() {
+      const db = getDB();
+      const c = document.getElementById('expenses-list-container');
+      c.innerHTML = '';
+
+      const total = db.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
+      const power = db.expenses.filter(e => e.category.includes('Power') || e.category.includes('Electricity')).reduce((acc, e) => acc + e.amount, 0);
+
+      document.getElementById('exp-kpi-total').innerText = '₹' + total.toLocaleString('en-IN', {minimumFractionDigits: 2});
+      document.getElementById('exp-kpi-power').innerText = '₹' + power.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+      if (db.expenses.length === 0) {
+        c.innerHTML = '<div class="bg-white p-6 rounded-xl border border-slate-200 text-center text-slate-400 text-xs">No expenses recorded.</div>';
+        return;
+      }
+      db.expenses.forEach(e => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs';
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-bold text-rose-700 mono">${e.expenseNo}</span>
+              <h4 class="font-bold text-slate-900">${e.category}</h4>
+              <p class="text-slate-400 text-[11px]">${e.notes || 'Operating charge'}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-sm font-bold text-rose-600 mono">₹${e.amount.toLocaleString('en-IN')}</span>
+              <span class="block text-[10px] text-slate-400 mono">${e.date}</span>
+            </div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function openAddExpenseModal() {
+      document.getElementById('expense-form').reset();
+      populateExpenseCategoriesDropdown();
+      document.getElementById('exp-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-expense').classList.remove('hidden');
+    }
+    function closeAddExpenseModal() { document.getElementById('modal-expense').classList.add('hidden'); }
+
+    function saveExpenseRecord() {
+      const db = getDB();
+      const amt = parseFloat(document.getElementById('exp-amount').value) || 0;
+      if (amt <= 0) { showToast('Enter valid expense amount'); return; }
+
+      const expNo = getNextDocNumber('EXPENSE');
+      commitDocNumber('EXPENSE', expNo);
+
+      db.expenses.unshift({
+        id: 'exp_' + Date.now(),
+        expenseNo: expNo,
+        category: document.getElementById('exp-category').value,
+        amount: amt,
+        date: document.getElementById('exp-date').value,
+        notes: document.getElementById('exp-notes').value
+      });
+
+      saveDB(db);
+      closeAddExpenseModal();
+      renderExpensesScreen();
+      showToast('Operating expense recorded');
     }
 
     // ================= FULL BACKUP SCHEMA & TYPE VALIDATION =================
@@ -2342,7 +2724,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
       const dl = document.createElement('a');
       dl.setAttribute("href", dataStr);
-      dl.setAttribute("download", `H4_ERP_Complete_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+      dl.setAttribute("download", `H4_ERP_Phase4_Complete_Backup_${new Date().toISOString().slice(0, 10)}.json`);
       document.body.appendChild(dl);
       dl.click();
       dl.remove();
@@ -2415,6 +2797,49 @@
       if (db.rawMaterials.some(r => r.name.toLowerCase().includes(lower))) { navigateTo('raw-materials'); return; }
     }
 
+    function openCustomerModal() { document.getElementById('modal-customer').classList.remove('hidden'); }
+    function closeCustomerModal() { document.getElementById('modal-customer').classList.add('hidden'); }
+    function saveNewCustomer() {
+      const db = getDB();
+      const newCust = {
+        id: 'cust_' + Date.now(),
+        name: document.getElementById('cust-name').value,
+        company: document.getElementById('cust-company').value,
+        phone: document.getElementById('cust-phone').value,
+        billingAddress: document.getElementById('cust-billing-address').value,
+        due: 0,
+        invoicesCount: 0
+      };
+      db.customers.unshift(newCust);
+      saveDB(db);
+      closeCustomerModal();
+      renderCustomerList();
+      showToast('Customer saved');
+    }
+
+    function openProductModal() { document.getElementById('modal-product').classList.remove('hidden'); }
+    function closeProductModal() { document.getElementById('modal-product').classList.add('hidden'); }
+    function saveNewProduct() {
+      const db = getDB();
+      const newP = {
+        id: 'prod_' + Date.now(),
+        name: document.getElementById('prod-name').value,
+        category: 'Construction Solution',
+        unit: document.getElementById('prod-unit').value || 'Bag',
+        packWeight: parseFloat(document.getElementById('prod-pack-weight').value) || 20,
+        retailPrice: parseFloat(document.getElementById('prod-price-retail').value) || 0,
+        contractorPrice: parseFloat(document.getElementById('prod-price-contractor').value) || 0,
+        currentMfgCost: null,
+        gst: parseFloat(document.getElementById('prod-gst').value) || 18,
+        stock: parseFloat(document.getElementById('prod-stock').value) || 0
+      };
+      db.products.unshift(newP);
+      saveDB(db);
+      closeProductModal();
+      renderProductList();
+      showToast('Finished product registered');
+    }
+
     // App Initialization
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -2425,6 +2850,7 @@
         if (db.settings.textColor) document.documentElement.style.setProperty('--theme-text-color', db.settings.textColor);
       }
       applyCustomFonts();
+      history.replaceState({ view: 'dashboard' }, '', '#dashboard');
     });
   </script>
 </body>
