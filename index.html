@@ -2,6 +2,8 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>H4 ERP</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1b0b4d"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="H4 ERP"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#f8fafc;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--hd:#1b0b4d;--gold:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -1342,7 +1344,18 @@ const TILES=[['SALES & CRM',[['quo','Quotation','Estimates & Quotes','Sales','�
 ['MANUFACTURING & INVENTORY',[['prd','Product + Formula','Products & Mixing Formulas','Master','📦','#ea580c,#fb923c'],['pur','Purchase','Suppliers & Material Inward','Inward','🛒','#0d9488,#2dd4bf'],['prod','Production','Batch Runs & Actual Cost','Batch','🏭','#7c3aed,#a78bfa'],['cost','Landed Cost','Raw Materials & Approved Cost','Cost','🧪','#d97706,#f59e0b']]],
 ['REPORTS & ADMINISTRATION',[['rep','Reports','Analyse · Search · Export','Analyse','📊','#4338ca,#6366f1'],['co','Company','Logo, Bank & Stamp','Profile','🏢','#4f46e5,#3b82f6']]],
 ['MORE',[['dd','Designer','Document Templates','Design','🎨','#a21caf,#e879f9'],['sec','Security','Users, Roles & Locks','Access','🔐','#1e293b,#475569'],['bk','Backup','Backup & Restore','Safe','💾','#0f766e,#14b8a6']]]];
-function home(){const co=D.company.brand||D.company.legal;return (co?`<div class="card"><b>${esc(co)}</b><br><small class="mut">${esc(D.company.state||'')} ${D.company.gstin?'· '+esc(D.company.gstin):''}</small></div>`:`<div class="card" onclick="go('co')" style="cursor:pointer"><b>Set up your company</b><br><small class="mut">Add your company details first. Every document uses them.</small></div>`)
+
+// ---- install as an app (PWA) ----
+let PWA_EV=null;const pwaLS=()=>{try{return localStorage.getItem('h4pwa')}catch(e){return''}},pwaStd=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}},pwaIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA_EV=e});
+window.addEventListener('appinstalled',()=>{PWA_EV=null;try{localStorage.setItem('h4pwa','1')}catch(e){}const c=document.getElementById('pwac');if(c)c.remove();toast('App installed – open it from your home screen')});
+function pwaCard(){let top_=true;try{top_=window.top===window}catch(e){top_=false}if(!top_||!/^https?:$/.test(location.protocol)||pwaStd()||pwaLS())return'';
+ return `<div class="card" id="pwac" style="display:flex;gap:10px;align-items:center"><img src="icons/icon-192.png" width="44" height="44" style="border-radius:10px" alt="" onerror="this.style.display='none'"><div style="flex:1"><b>Install H4 ERP on this phone</b><br><small class="mut">${pwaIOS()?'Tap Share, then “Add to Home Screen”':'Gets its own icon and opens full-screen like an app'}</small></div><button class="btn sm" onclick="pwaInstall()">📲 Install</button><button class="hb" style="color:var(--mut);border-color:var(--line)" aria-label="Hide install card" onclick="pwaHide()">✕</button></div>`}
+async function pwaInstall(){if(PWA_EV){const e=PWA_EV;PWA_EV=null;e.prompt();try{const r=await e.userChoice;if(r&&r.outcome==='accepted')pwaHide()}catch(x){}return}
+ alert(pwaIOS()?'On iPhone / iPad: tap the Share button in Safari, then choose “Add to Home Screen”.':'Tap the ⋮ menu at the top-right of Chrome, then choose “Install app” (or “Add to Home screen”).\\n\\nIf you do not see it, open this page in Chrome and wait a few seconds.')}
+function pwaHide(){try{localStorage.setItem('h4pwa','1')}catch(e){}const c=document.getElementById('pwac');if(c)c.remove()}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){try{if(window.top===window)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}catch(e){}}
+function home(){const co=D.company.brand||D.company.legal;return pwaCard()+(co?`<div class="card"><b>${esc(co)}</b><br><small class="mut">${esc(D.company.state||'')} ${D.company.gstin?'· '+esc(D.company.gstin):''}</small></div>`:`<div class="card" onclick="go('co')" style="cursor:pointer"><b>Set up your company</b><br><small class="mut">Add your company details first. Every document uses them.</small></div>`)
  +`<input class="srch" id="gsi" placeholder="🔍 Invoice / Quotation / Customer / Mobile / GSTIN / Purchase / Payment ref / Product / Batch" oninput="$('gs').innerHTML=gsrch(this.value)"><div id="gs"></div>`
  +TILES.map(([h,t])=>{const T=t.filter(x=>{const m=RMAP[x[0]];return !m||can(m,'view')});return T.length?`<h2>${h}</h2><div class="grid">${T.map(([r,n,s,tag,ic,c])=>`<button class="tile" style="background:linear-gradient(135deg,${c})" onclick="go('${r}')"><i>${tag}</i><span class="ic">${ic}</span><b>${n}</b><small>${s}</small></button>`).join('')}</div>`:''}).join('')+`<p class="mut" style="text-align:center;font-size:12px;margin-top:20px">H4 ERP v${ERPV} · data is saved in this browser — use Backup regularly.</p>`}
 function notifs(){const t=today(),L=[];
