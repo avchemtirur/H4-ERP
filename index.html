@@ -106,11 +106,11 @@ function list(m,q=''){const c=M[m],a=[...D[c.k]].reverse().filter(r=>JSON.string
  <div class="acts"><button class="btn s" onclick="back()">← Back</button><button class="btn" onclick="go('${m}/new')">＋ Add</button></div>`}
 function rows(m,q){const c=M[m],a=[...D[c.k]].reverse().filter(r=>(m!=='pay'||!PT||r.dir===PT)&&JSON.stringify(r).toLowerCase().includes((q||'').toLowerCase()));
  return a.map(r=>`<div class="card li" onclick="go('${m}/${r.id}')"><div><b>${esc(r[c.ti])}</b><small>${esc(r.id)} · ${esc(c.su(r))}</small></div><div class="r">${c.am?`<b>${c.am(r)}</b>`:''}${r.status==='Cancelled'?'<span class="chip bad">Cancelled</span>':r.archived?'<span class="chip">Archived</span>':''}</div></div>`).join('')||empty(m+'/new')}
-function form(m,id){const c=M[m],r=c.single?D.company:(D[c.k].find(x=>x.id===id)||{date:today(),...(m==='pay'&&PRE?(()=>{const x=PRE;PRE=null;return x})():{})});
+function form(m,id){if(m==='pay'&&!id)return payNew();const c=M[m],r=c.single?D.company:(D[c.k].find(x=>x.id===id)||{date:today(),...(m==='pay'&&PRE?(()=>{const x=PRE;PRE=null;return x})():{})});
  return `<h2>${c.t.toUpperCase()}</h2><div class="card">${(()=>{const L=m==='pay'&&r.id,fl=f=>fld(f,r[f[0]]??(f[0]==='date'?today():''));return L?`<p class="mut" style="font-size:12px;margin:0">🔒 A saved payment cannot be changed. If something is wrong, cancel it with a reason and enter a new payment. Only the note can be edited.</p><fieldset disabled style="border:0;padding:0;margin:0">${c.f.filter(f=>f[0]!=='notes').map(fl).join('')}</fieldset>${fl(c.f.find(f=>f[0]==='notes'))}`:c.f.map(fl).join('')})()}<div class="acts"><button class="btn s" onclick="back()">← Back</button><button class="btn g" onclick="sv('${m}','${id||''}')">💾 Save</button>${m==='pay'&&r.id?`<button class="btn s" onclick="go('rdoc/${r.id}')">🧾 Receipt</button>`:''}
  ${r.id&&!c.single?(c.cancel?(r.status==='Cancelled'?'':`<button class="btn d" onclick="cn('${m}','${r.id}')">Cancel entry</button>`):`<button class="btn d" onclick="ar('${m}','${r.id}')">Archive</button>`):''}</div></div>
  `}
-function sv(m,id){if(m==='pay'&&id){const rc=D.payments.find(x=>x.id===id);if(rc){if(rc.status==='Cancelled')return toast('A cancelled payment cannot be changed');const nt=($('f_notes')||{value:''}).value.trim();if(nt!==(rc.notes||'')){(rc.hist=rc.hist||[]).push({at:new Date().toLocaleString(),u:(typeof CU!=='undefined'&&CU&&CU.name)||'System',was:{notes:rc.notes||''}});rc.notes=nt;saud('Payment note edited',id)}save();toast('Note saved');QD=0;back();return}}const c=M[m],o={};for(const f of c.f)o[f[0]]=$('f_'+f[0]).value.trim();
+function sv(m,id){if(m==='pay'&&!id&&PY)return paySv();if(m==='pay'&&id){const rc=D.payments.find(x=>x.id===id);if(rc){if(rc.status==='Cancelled')return toast('A cancelled payment cannot be changed');const nt=($('f_notes')||{value:''}).value.trim();if(nt!==(rc.notes||'')){(rc.hist=rc.hist||[]).push({at:new Date().toLocaleString(),u:(typeof CU!=='undefined'&&CU&&CU.name)||'System',was:{notes:rc.notes||''}});rc.notes=nt;saud('Payment note edited',id)}save();toast('Note saved');QD=0;back();return}}const c=M[m],o={};for(const f of c.f)o[f[0]]=$('f_'+f[0]).value.trim();
  const req=c.f.find(f=>f[1].includes('*')&&!o[f[0]]);if(req)return toast('Fill: '+req[1].replace('*',''));for(const f of c.f)if(f[2]==='num'&&o[f[0]]!=='')o[f[0]]=+o[f[0]]||0;
  if(o.amount!==undefined&&!(+o.amount>0))return toast('Enter valid amount');
  if(m==='sup'){if(o.ifsc){o.ifsc=o.ifsc.toUpperCase().replace(/\s/g,'');if(!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(o.ifsc))return toast('IFSC code format is invalid')}if(o.acct&&!/^\d{6,20}$/.test(o.acct.replace(/\s/g,'')))return toast('Account number must be 6–20 digits');if(o.upi&&!/^[\w.\-]{2,}@[A-Za-z]{2,}$/.test(o.upi))return toast('UPI ID format is invalid')}
@@ -119,6 +119,61 @@ function sv(m,id){if(m==='pay'&&id){const rc=D.payments.find(x=>x.id===id);if(rc
  if(c.single){Object.assign(D.company,o);o.state&&(D.company.stateCode=ST[o.state])}
  else if(id){const rc=D[c.k].find(x=>x.id===id);if(m==='pay'){(rc.hist=rc.hist||[]).push({at:new Date().toLocaleString(),u:(typeof CU!=='undefined'&&CU&&CU.name)||'System',was:{date:rc.date,name:rc.name,amount:rc.amount,mode:rc.mode,link:rc.link||''}})}Object.assign(rc,o)}else{const nr=Object.assign({id:nxt(c.p,m),status:'Active'},o);if(m==='pay'){nr.cs={...D.company};nr.tpl=cl(curTpl('receipt'))}D[c.k].push(nr);if(m==='sup'&&SRET&&PV){PV.sup=nr.name}}
  save();toast('Saved');QD=0;c.single?render():back()}
+
+// ---------- Payment entry (logic form): Paid / Received ----------
+let PY=null;
+const PMODES=['Cash','UPI','Bank','Card','Cheque','Other'];
+function payInit(){const x=PRE||{};PRE=null;const dir=x.dir||'Paid';return PY={dir,date:today(),pm:x.name&&D.suppliers.some(s=>s.name===x.name)?x.name:(x.name?'__o':''),name:x.name||'',against:x.against==='Purchase'?'Purchase':x.against==='Invoice'?'Invoice':x.against==='Advance'?'Advance':x.against==='None'?'None':(dir==='Paid'?'Purchase':'Invoice'),link:x.link||'',item:x.link?'':(x.item||''),mode:'Cash',amount:x.amount||'',ref:'',bk:'',hd:'',acct:'',ifsc:'',mobile:'',addr:'',loc:'',notes:'',src:dir==='Received'?'hist':'',cid:'',file:null}}
+function payBills(){if(PY.dir==='Paid')return D.purchases.filter(v=>v.status==='Confirmed'&&v.sup===PY.name).map(v=>({id:v.id,bal:purT(v).gt-purPaid(v),lab:v.ref?'Bill '+v.ref:''})).filter(v=>v.bal>.5);const c=D.customers.find(x=>x.id===PY.cid);return D.invoices.filter(v=>v.status&&!['Draft','Cancelled'].includes(v.status)).filter(v=>c?v.cid===c.id:(PY.name&&cnm(v.cid,v)===PY.name)).map(v=>({id:v.id,bal:invS(v).bal,lab:''})).filter(v=>v.bal>.5)}
+const pI=(k,l,o)=>`<label>${l}</label><input id="f_${k}" ${o||''} value="${esc(PY[k]??'')}" oninput="PY.${k}=this.value">`;
+function payH(){const d=PY.dir,pd=d==='Paid',bills=payBills(),M=PY.mode;
+ const sel=(id,opts,cur,fn)=>`<select id="${id}" onchange="${fn}">${opts.map(o=>`<option value="${esc(o[0])}" ${o[0]==cur?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+ let h=`<label>Direction</label>${sel('f_dir',[['Paid','Paid (money out)'],['Received','Received (money in)']],d,'payDir(this.value)')}<label>Date</label><input id="f_date" type="date" value="${esc(PY.date)}" oninput="PY.date=this.value">`;
+ if(pd){h+=`<label>Supplier / payee</label>${sel('f_pm',[['','Select supplier'],...D.suppliers.map(x=>[x.name,x.name]),['__o','Other payee (type name)'],['__n','＋ Add new supplier…']],PY.pm,'paySup(this.value)')}${PY.pm==='__o'?pI('name','Payee name *'):''}`;
+  h+=`<label>Against</label>${sel('f_against',[['Purchase','Purchase invoice (raw material)'],['Advance','Advance'],['None','Other payment (repair, company use…)'],['__n','＋ Add new purchase bill…']],PY.against,'payAg(this.value)')}`}
+ else{h+=`<label>Received from</label>${sel('f_src',[['hist','From customer history'],['man','Manual entry'],['up','Upload invoice / proof']],PY.src,'paySrc(this.value)')}`;
+  if(PY.src==='hist')h+=`<label>Customer</label>${sel('f_cid',[['','Select customer'],...D.customers.filter(c=>!c.archived).map(c=>[c.id,c.name+(c.mobile?' · '+c.mobile:'')])],PY.cid,'payCus(this.value)')}`;
+  if(PY.src==='up')h+=`<label>Invoice / proof file (image or PDF)</label><input id="f_file" type="file" accept="image/*,.pdf,application/pdf" onchange="payFile(this)">${PY.file?`<div class="mut" style="font-size:12px;margin-top:4px">📎 ${esc(PY.file.name)} (${Math.round(PY.file.size/1024)} KB) – kept as a file copy only; nothing is posted automatically.</div>`:''}`;
+  h+=`<label>Against</label>${sel('f_against',[['Invoice','Invoice'],['Advance','Advance'],['None','Other receipt']],PY.against,'payAg(this.value)')}`}
+ if(PY.against==='Purchase'||PY.against==='Invoice')h+=`<label>${pd?'Purchase invoice':'Invoice'}</label>${bills.length?sel('f_link',[['','Select'],...bills.map(b=>[b.id,b.id+(b.lab?' · '+b.lab:'')+' · balance '+fmt(b.bal)])],PY.link,'payLink(this.value)'):`<div class="mut" style="font-size:13px">${PY.name||PY.cid?'No unpaid '+(pd?'confirmed purchase bill':'invoice')+' found for this '+(pd?'supplier':'customer')+'.':'Select '+(pd?'supplier':'customer')+' first.'}</div>`}`;
+ h+=`<label>Payment mode</label><div style="display:flex;flex-wrap:wrap;gap:6px">${PMODES.map(m=>`<button type="button" class="btn ${m==M?'':'s'} sm" onclick="payMode('${m}')">${m}</button>`).join('')}</div><input type="hidden" id="f_mode" value="${M}">`;
+ if(M==='UPI')h+=pI('ref','UPI transaction / sent code');
+ else if(M==='Bank')h+=pI('bk','Bank name')+pI('hd','Account holder')+pI('acct','Account number','inputmode="numeric"')+pI('ifsc','IFSC code')+pI('ref','Reference / UTR no.');
+ else if(M==='Cheque')h+=pI('ref','Cheque number')+pI('bk','Bank name');
+ else if(M==='Card')h+=pI('ref','Card slip / reference no.');
+ else if(M==='Other')h+=pI('ref','Details');
+ h+=`<label>Amount ₹ *</label><input id="f_amount" type="number" step="any" inputmode="decimal" value="${esc(PY.amount)}" oninput="PY.amount=this.value">`;
+ h+=pI('item',PY.against==='Purchase'||PY.against==='Invoice'?'Note (optional)':(pd?'Paid for / description * (anything: machine complaint, company expense, wages…)':'Received for / description (optional)'));
+ if(!(pd&&PY.pm==='__o'))h+=pI('name',pd?'Payee name':'Name *',pd?'':'');
+ h+=pI('mobile','Mobile number','type="tel" inputmode="tel"')+ctB('payCt()');
+ h+=pd?pI('loc','Location / place'):`<label>Address</label><textarea id="f_addr" rows="2" oninput="PY.addr=this.value">${esc(PY.addr)}</textarea>`;
+ h+=`<label>Notes</label><input id="f_notes" value="${esc(PY.notes)}" oninput="PY.notes=this.value">`;return h}
+function payNew(){if(!PY)payInit();return `<h2>PAYMENTS</h2><div class="card"><div id="pf">${payH()}</div><div class="acts"><button class="btn s" onclick="PY=null;back()">← Back</button><button class="btn g" onclick="sv('pay','')">💾 Save</button></div></div>`}
+const payDraw=()=>{const e=$('pf');if(e)e.innerHTML=payH()};
+function payDir(v){const o=PY;payInit();PY.dir=v;PY.date=o.date;PY.src=v==='Received'?'hist':'';PY.against=v==='Received'?'Invoice':'None';PY.against=v==='Paid'?'Purchase':'Invoice';payDraw()}
+function paySup(v){if(v==='__n'){const o=supAdd(prompt('New supplier name:'));if(o){PY.pm=o.name;paySupFill(o)}else PY.pm='';PY.link='';payDraw();return}PY.pm=v;PY.link='';if(v==='__o'){PY.name=''}else if(v){PY.name=v;paySupFill(D.suppliers.find(x=>x.name===v))}else PY.name='';payDraw()}
+function paySupFill(s){if(!s)return;PY.name=s.name;if(s.mobile)PY.mobile=s.mobile;if(s.location)PY.loc=s.location;if(s.bank&&!PY.bk)PY.bk=s.bank;if(s.benef&&!PY.hd)PY.hd=s.benef;if(s.acct&&!PY.acct)PY.acct=s.acct;if(s.ifsc&&!PY.ifsc)PY.ifsc=s.ifsc}
+function payAg(v){if(v==='__n'){if(confirm('Open a new purchase bill? Save the bill, then pay it from the purchase page (Pay button).')){PY=null;PV=null;go('pur/new')}else payDraw();return}PY.against=v;PY.link='';payDraw()}
+function payLink(v){PY.link=v;const b=payBills().find(x=>x.id===v);if(b){PY.amount=+b.bal.toFixed(2)}payDraw()}
+function payMode(m){PY.mode=m;payDraw()}
+function paySrc(v){PY.src=v;if(v!=='hist')PY.cid='';payDraw()}
+function payCus(v){PY.cid=v;PY.link='';const c=D.customers.find(x=>x.id===v);if(c){PY.name=c.name;PY.mobile=c.mobile||'';PY.addr=[c.address,c.place,c.district,c.state].filter(Boolean).join(', ')}payDraw()}
+function payCt(){pickContact(c=>{PY.mobile=c.tel.replace(/\D/g,'').slice(-10);if(!(PY.name||'').trim()&&c.name)PY.name=c.name;payDraw();toast('Number added – you can edit it')})}
+async function payFile(i){const f=i.files&&i.files[0];if(!f)return;if(f.size>10485760){i.value='';return toast('File is larger than 10 MB')}PY.file={name:f.name,type:f.type,size:f.size};PY.fbuf=await f.arrayBuffer();payDraw()}
+async function paySv(){const d=PY,pd=d.dir==='Paid',o={dir:d.dir,date:d.date,name:(d.name||'').trim(),mode:d.mode,amount:+d.amount,ref:(d.ref||'').trim(),against:d.against,link:d.link||'',item:(d.item||'').trim(),notes:(d.notes||'').trim(),acct:'',party:pd?'Supplier':'Customer',mobile:(d.mobile||'').replace(/[\s-]/g,'')};
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(o.date))return toast('Enter a valid date');
+ if(pd&&d.pm==='__o')o.party='Other';
+ if(!o.name)return toast(pd?'Select the supplier or enter the payee name':'Enter the name');
+ if(!(o.amount>0))return toast('Enter valid amount');
+ if(o.mobile&&!/^\+?\d{8,15}$/.test(o.mobile))return toast('Mobile number is invalid');
+ if(['Purchase','Invoice'].includes(o.against)){const b=payBills().find(x=>x.id===o.link);if(!b)return toast('Select the '+(pd?'purchase invoice':'invoice')+' to link');if(o.amount>b.bal+.5&&!confirm('Amount is more than the balance '+fmt(b.bal)+'. Save anyway?'))return;if(!o.item)o.item=o.link}
+ else{o.link='';if(o.against==='None'&&!o.item)return toast(pd?'Write what this payment is for':'Write what this receipt is for');if(o.against==='Advance'&&!o.item)o.item='Advance'}
+ if(d.mode==='Bank'){o.bank={name:d.bk||'',holder:d.hd||'',acct:d.acct||'',ifsc:(d.ifsc||'').toUpperCase().replace(/\s/g,'')};if(o.bank.ifsc&&!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(o.bank.ifsc))return toast('IFSC code format is invalid');if(o.bank.acct&&!/^\d{6,20}$/.test(String(o.bank.acct).replace(/\s/g,'')))return toast('Account number must be 6–20 digits');o.acct=o.bank.acct}
+ if(d.mode==='Cheque'&&d.bk)o.bank={name:d.bk};
+ if(pd&&d.loc)o.loc=d.loc;if(!pd&&d.addr)o.addr=d.addr;if(!pd&&d.cid)o.cid=d.cid;
+ const nr=Object.assign({id:nxt('PAY','pay'),status:'Active'},o);nr.cs={...D.company};nr.tpl=cl(curTpl('receipt'));
+ if(d.file&&d.fbuf){try{await FDB.put('payfile:'+nr.id,d.fbuf);nr.file={name:d.file.name,type:d.file.type,size:d.file.size}}catch(e){return toast('Could not store the file on this device – payment not saved')}}
+ D.payments.push(nr);saud('Payment recorded',nr.id+' · '+nr.dir+' · '+fmt(nr.amount));save();toast('Saved');QD=0;PY=null;back()}
 function ar(m,id){if(!confirm('Archive this record? History is kept.'))return;D[M[m].k].find(x=>x.id===id).archived=1;save();back()}
 function cn(m,id){const r=prompt('Cancel reason (e.g. Wrong amount, Duplicate):');if(!r)return;const x=D[M[m].k].find(x=>x.id===id);x.status='Cancelled';x.reason=r;save();back()}
 // ---------- Purchases = Raw Material Landed Cost ----------
@@ -966,7 +1021,7 @@ setInterval(()=>{if(D.sec.app&&D.sec.pin&&!LK&&D.sec.auto>0&&Date.now()-LAST>D.s
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&D.sec.app&&D.sec.pin&&D.sec.auto===0&&!LK){LK=1;MU={};render()}});
 function G(n,mod,act){const f=window[n];if(!f)return;window[n]=function(...a){const m=typeof mod=='function'?mod(...a):mod,c=typeof act=='function'?act(...a):act;if(!can(m,c)){toast('No permission: '+c);return}return f.apply(this,a)}}
 function guards(){G('ar',m=>m,'delete');G('cn',m=>m,'delete');G('sv',m=>m,(m,id)=>m==='co'||id?'edit':'add');G('isv','inv',s=>s==='Confirmed'?'confirm':'edit');G('icn','inv','delete');G('qsv','quo',s=>s==='Confirmed'?'confirm':'edit');G('qcan','quo','delete');G('qconv','inv','add');G('costApprove','cost','approve');G('custSv','cus',()=>CF&&CF._id?'edit':'add');G('custArch','cus','delete');G('dupT','dd','duplicate');G('rnT','dd','edit');G('edRest','dd','restore');G('sdef','dd','publish');G('asAdd','dd','assets');G('asDel','dd','assets');G('asEdit','dd','assets');G('edSave','dd','save');G('pubVer','dd','publish');G('qinvDo','inv','add');G('ivDup','inv','add');G('coSave','co','edit');G('purSv','pur',s=>s==='Confirmed'?'confirm':'edit');G('purCancel','pur','delete');G('purDocAdd','pur','edit');G('fdup','prod','add');G('frSv','prd',id=>id?'edit':'add');G('frDup','prd','add');G('frDel','prd','delete');G('purDocDel','pur','edit');
- G('cs','cost',(id,s)=>s==='Approved'?'approve':'edit');G('bs','prod',(id,s)=>s==='Completed'?'complete':s==='Adjust'?'adjust':'edit');G('fcf','prod','confirm');G('fconv','prod','approve');G('ntf','prod','add');G('fdel','prod','delete');G('bdel','prod','delete');G('fs','prod','edit');G('delT','dd','delete');G('ntpl','dd','add');G('edOk','dd','confirm');G('bkNow','bk','export');G('rsApply','bk','edit')}
+ G('paySv','pay','add');G('cs','cost',(id,s)=>s==='Approved'?'approve':'edit');G('bs','prod',(id,s)=>s==='Completed'?'complete':s==='Adjust'?'adjust':'edit');G('fcf','prod','confirm');G('fconv','prod','approve');G('ntf','prod','add');G('fdel','prod','delete');G('bdel','prod','delete');G('fs','prod','edit');G('delT','dd','delete');G('ntpl','dd','add');G('edOk','dd','confirm');G('bkNow','bk','export');G('rsApply','bk','edit')}
 guards();
 
 // ---------- Reports ----------
@@ -1449,7 +1504,7 @@ function bkView(){const c=bkCounts(D),last=D.bklog.filter(b=>b.type!=='Restored'
  <div class="card"><b>Records in this ERP</b>${Object.entries(CL).map(([k,l])=>`<div class="li" style="margin-top:4px"><small>${l}</small><b>${c[k]}</b></div>`).join('')}</div>
  <h2>BACKUP HISTORY</h2>${[...D.bklog].reverse().slice(0,12).map(b=>`<div class="card" style="padding:10px"><b>${esc(b.type)}</b> · backup v${b.v}<br><small class="mut">${esc(b.d||'')} ${esc(b.t||'')} · ${b.total} records · ERP ${esc(b.erp||'')}</small></div>`).join('')||'<div class="card mut">No backups recorded yet.</div>'}<div class="acts"><button class="btn s" onclick="back()">← Back</button></div>`}
 
-function render(){const[r,a,b]=(location.hash.slice(2)||'home').split('/'),app=$('app');let h='';if(!(r==='dd'&&b))ED=null;try{const hn=$('hn');if(hn){const n=notifs().length;hn.textContent='🔔'+(n?' '+n:'')}}catch(e){}if(gate(r))return;
+function render(){const[r,a,b]=(location.hash.slice(2)||'home').split('/'),app=$('app');if(!(r==='pay'&&a==='new'))PY=null;let h='';if(!(r==='dd'&&b))ED=null;try{const hn=$('hn');if(hn){const n=notifs().length;hn.textContent='🔔'+(n?' '+n:'')}}catch(e){}if(gate(r))return;
  if(r==='home')h=home();else if(r==='notif')h=notifView();else if(r==='bk')h=bkView();else if(r==='prd')h=!a?prdHome():a==='new'?prdForm(''):b==='edit'?prdForm(a):prdView(a);else if(r==='co')h=coView();else if(r==='qinv')h=a?qinvView(a):qinvList();else if(r==='cus')h=!a?custList():a==='new'?custForm(''):b==='edit'?custForm(a):custView(a);else if(M[r])h=a?form(r,a==='new'?'':a):M[r].single?form(r):list(r);
  else if(r==='cost')h=a?costView(a==='new'?'':a):costList();else if(r==='prod')h=prodHome();else if(r==='fm')h=fmView(a==='new'?'':a);else if(r==='bt')h=btView(a==='new'?'':a);
  else if(r==='inv')h=a?ivView(a==='new'?'':a):ivList();else if(r==='rep')h=a?repView(a):repHome();else if(r==='quo')h=!a?qList():b!=null?qaView(a,b):qEdit(a);else if(r==='qdoc')h=qdocView(a);else if(r==='pur')h=a==='ledger'?purLedger(b):a?purView(a==='new'?'':a):purList();else if(r==='pdoc')h=purDocView(a);else if(r==='fr')h=!a?frList():a==='new'?frForm(''):b==='edit'?frForm(a):frView(a);else if(r==='sec')h=secRoute(a,b);
