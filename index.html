@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>H4 ERP</title>
@@ -1244,7 +1243,7 @@ function irow(line){let s=line.replace(/[₹|]/g,' ').replace(/\bRs\.?/gi,' ').r
  function fin(c,after,rate,amt,guess){const pre=body.slice(0,c.at).trim(),hs=pre.match(/(?:^|\s)(\d{4}(?:\d{2}(?:\d{2})?)?)$/),name=(hs?pre.slice(0,hs.index):pre).replace(/[\-:,]+$/,'').trim(),pcs=[...after.matchAll(/(\d{1,2}(?:\.\d+)?)\s*%/g)].map(x=>+x[1]);
   let g=null;if(pcs.length>=2&&pcs[0]===pcs[1])g=pcs[0]+pcs[1];else if(pcs.length)g=pcs[0];
   return{ser:ser?+ser[1]:0,name,hsn:hs?hs[1]:'',q:c.q,u:c.u,rate,amt,gst:g,guess:!!guess}}}
-function iparse(lines){const L=lines.map(x=>String(x).replace(/\u00a0/g,' ').trim()).filter(Boolean),T=L.join('\n'),R={ref:'',date:'',sup:{name:'',gstin:'',mobile:'',email:'',loc:'',bank:'',acct:'',ifsc:'',upi:'',state:''},items:[],charges:[],tot:{},warn:[]};
+function iparse(lines){const L=lines.map(x=>String(x).replace(/\u00a0/g,' ').replace(/\bM\.?\s*(?:tons?|tonnes?|ts?)\b\.?/gi,'MT').replace(/\bmetric\s+tonn?es?\b/gi,'MT').trim()).filter(Boolean),T=L.join('\n'),R={ref:'',date:'',sup:{name:'',gstin:'',mobile:'',email:'',loc:'',bank:'',acct:'',ifsc:'',upi:'',state:''},items:[],charges:[],tot:{},warn:[]};
  // GSTIN (supplier = first one that is not our own)
  const own=((D.company&&D.company.gstin)||'').toUpperCase().replace(/\s/g,''),gs=[...new Set((T.toUpperCase().match(IGSTIN)||[]))],sg=gs.find(x=>x!==own)||'';R.sup.gstin=sg;if(sg)R.sup.state=ISTC[sg.slice(0,2)]||'';
  const ex=(D.suppliers||[]).find(x=>sg&&String(x.gstin||'').toUpperCase()===sg)||null;
@@ -1253,7 +1252,7 @@ function iparse(lines){const L=lines.map(x=>String(x).replace(/\u00a0/g,' ').tri
  const dl=L.find(x=>/(invoice\s*date|bill\s*date|dated|\bdate\b)/i.test(x)&&idate(x.slice(x.search(/(invoice\s*date|bill\s*date|dated|\bdate\b)/i))));R.date=dl?idate(dl.slice(dl.search(/(invoice\s*date|bill\s*date|dated|\bdate\b)/i))):'';if(!R.date){for(const x of L.slice(0,30)){const d=idate(x);if(d){R.date=d;break}}}
  // supplier name / contact
  const head=L.slice(0,18);let nm='';if(ex)nm=ex.name;else{const byName=(D.suppliers||[]).find(s=>inorm(s.name).length>=4&&inorm(T).replace(/ /g,'').includes(inorm(s.name).replace(/ /g,'')));
-  if(byName)nm=byName.name;else{const bad=/(tax\s*invoice|invoice|original|duplicate|triplicate|gstin|gst\s*no|phone|ph[:.]|tel|mob|e-?mail|cin|pan|bill\s*of|bill\s*to|ship\s*to|buyer|consignee|page|irn|ack|date|state|www\.|@)/i;nm=(head.find(x=>!bad.test(x)&&/[A-Za-z]{3}/.test(x)&&x.length<=70&&!/^\d/.test(x))||'').replace(/^m\/s\.?\s*/i,'').trim()}}
+  if(byName)nm=byName.name;else{nm=isupName(L,T)}}
  R.sup.name=nm;R.sup.known=!!(D.suppliers||[]).find(s=>s.name===nm);
  const hdr=head.join('\n'),ph=hdr.replace(/(\d)[ \-](?=\d)/g,'$1').match(/(?:^|\D)(?:\+?91)?([6-9]\d{9})(?!\d)/),em=hdr.match(/[\w.+\-]+@[\w\-]+\.[\w.\-]+/);if(ph)R.sup.mobile=ph[1];if(em)R.sup.email=em[0];
  const pin=head.find(x=>/\b\d{6}\b/.test(x)&&!/gstin/i.test(x));if(pin)R.sup.loc=pin.replace(/\s+/g,' ').slice(0,90);
@@ -1277,11 +1276,39 @@ function iparse(lines){const L=lines.map(x=>String(x).replace(/\u00a0/g,' ').tri
   else if(last&&/^[A-Za-z][A-Za-z0-9 ,.\-\/()&]{2,60}$/.test(x)&&!stop.test(x)){last.desc=((last.desc||'')+' '+x).trim()}
   }
  L.forEach(x=>{if(cre.test(x)&&!/gst|tax|total|%/i.test(x)&&!irow(x)){const v=lastNum(x);if(v>0&&!R.charges.some(c=>c.amt===v))R.charges.push({n:x.replace(/[\d,.\s₹:]+$/,'').trim().slice(0,60),amt:v})}});
+ if(!R.items.length)iloose(L,T0,R);
  // invoice-level GST rate when the rows do not carry one
  let rate=null;const tx=T0.taxable||R.items.reduce((a,i)=>a+i.amt,0),tg=(T0.cgst||0)+(T0.sgst||0)+(T0.igst||0);if(tx>0&&tg>0){const r=Math.round(tg/tx*1000)/10;rate=[0,5,12,18,28].find(g=>Math.abs(g-r)<.6)??null}
  R.items.forEach(i=>{if(i.gst==null&&rate!=null){i.gst=rate;i.gstFromTotal=1}});R.rate=rate;
  if(!R.items.length)R.warn.push('No item rows could be recognised in this file.');
  return R}
+
+function isupName(L,T){const oc=inorm((D.company&&D.company.name)||'').replace(/ /g,''),own=((D.company&&D.company.gstin)||'').toUpperCase();
+ const bad=/(tax\s*invoice|proforma|pro-?forma|invoice|original|duplicate|triplicate|gstin|gst\s*no|uin|phone|ph[:.]|tel\b|mob|e-?mail|cin\b|pan\b|bill\s*of|bill\s*to|ship\s*to|buyer|consignee|page|irn|ack\b|date|state\s*name|www\.|@|delivery\s*note|mode\s*\/?\s*terms|terms\s*of|payment|dispatch|despatch|reference|supplier'?s?\s*ref|other\s*ref|vehicle|destination|e-?way|hsn|description|particulars|quantity|amount|bank|a\/c|ifsc|branch)/i,addr=/(\b\d{6}\b|road|street|\bst\.|nagar|salem|taluk|district|dist\b|pin\s*code|industrial\s*(?:area|estate)|phase|plot|door\s*no|no\.\s*\d|floor|village|post\b)/i,suf=/\b(chemicals?|chemical|traders?|trading|industries|industry|enterprises?|enterprise|agencies|agency|corporation|corp|pvt|private|ltd|limited|llp|co\.?|company|minerals?|polymers?|associates|suppliers?|distributors?|marketing|products|exports?|impex|sales|infra|builders|materials?|laboratories|lab|works)\b/i;
+ const head=L.slice(0,30),isOwn=x=>oc.length>=4&&inorm(x).replace(/ /g,'').includes(oc),cl=x=>x.replace(/^m\/s\.?\s*/i,'').replace(/^(?:from|sold\s*by|seller|supplier)\s*[:\-]?\s*/i,'').trim(),ok=x=>x.length>=3&&x.length<=70&&/[A-Za-z]{3}/.test(x)&&!/^\d/.test(x)&&!isOwn(x)&&!bad.test(x);
+ let c=head.filter(x=>ok(x)&&!addr.test(x)&&suf.test(x))[0];if(c)return cl(c);
+ c=head.filter(x=>ok(x)&&!addr.test(x))[0];if(c)return cl(c);
+ c=head.filter(ok)[0];if(c)return cl(c.split(/[,\-]\s*(?=\d|[A-Z][a-z]+\s*-\s*\d)/)[0]);return''}
+function iloose(L,T0,R){const unitRe=new RegExp('(^|\\s)('+IRN+')\\s*('+IUR+')\\.?(?=\\s|$|/|\\d)','i'),stopRe=/^(sub\s*-?\s*total|total\b|taxable|grand|amount\s*(?:chargeable|in\s*words)|bank|cgst|sgst|igst|tax\s*amount|rupees|declaration|e\.?\s*&\s*o\.?e)/i,hdrRe=/(description|particulars|goods|hsn|sac|quantity|qty|item)/i;
+ let a=L.findIndex(x=>hdrRe.test(x)&&/(qty|quantity|rate|amount|hsn|description|particulars)/i.test(x));if(a<0)a=0;let z=L.findIndex((x,k)=>k>a&&stopRe.test(x.replace(/^\d+\s+/,'')));if(z<0)z=L.length;
+ const numOnly=x=>/^[\d,.\s%₹]+(?:per\s*\w+|\/\w+|[A-Za-z]{1,5}\.?)?$/i.test(x)||!/[A-Za-z]{4}/.test(x);
+ for(let k=a;k<z;k++){const x=L[k];if(/(gstin|phone|date|a\/c|ifsc|vehicle|dispatch|invoice\s*no|ref)/i.test(x)&&!/qty|quantity/i.test(x))continue;
+  const m=x.replace(/(\d)(kgs?|mt|ltrs?|nos|pcs|bags?)\b/gi,'$1 $2').match(unitRe);if(!m)continue;const q=inum(m[2]),u=irUnit(m[3]);if(!(q>0))continue;
+  let pool=x.slice(x.indexOf(m[0])+m[0].length);for(let j=k+1;j<Math.min(z,k+4)&&numOnly(L[j]);j++)pool+=' '+L[j];
+  const pcs=[...pool.matchAll(/(\d{1,2}(?:\.\d+)?)\s*%/g)].map(y=>+y[1]),N=inums(pool.replace(/\/\s*(?:kg|kgs|mt|ltr|nos|pcs|bag|l)\b/gi,' ')).filter(y=>!y.pc).map(y=>y.v);let rate=0,amt=0;
+  for(let i=0;i<N.length&&!amt;i++)for(let j=i+1;j<N.length;j++)if(N[i]>0&&Math.abs(q*N[i]-N[j])<=Math.max(1,N[j]*.006)){rate=N[i];amt=N[j];break}
+  if(!amt){const big=Math.max(0,...N.filter(v=>v!==q));if(T0.taxable&&N.includes(T0.taxable))amt=T0.taxable;else if(big>0)amt=big;rate=amt?amt/q:0}
+  if(!(amt>0))continue;
+  let nm=x.slice(0,x.indexOf(m[0])).replace(/^\d{1,2}[.)]?\s+/,'').replace(/\s\d{4,8}\s*$/,'').replace(/[\-:,|]+$/,'').trim();
+  if(!/[A-Za-z]{3}/.test(nm)){const prev=[];for(let j=k-1;j>=a&&prev.length<2;j--){const y=L[j];if(/[A-Za-z]{3}/.test(y)&&!hdrRe.test(y)&&!numOnly(y)&&!/(gstin|state|phone|bank)/i.test(y))prev.unshift(y.replace(/^\d{1,2}[.)]?\s+/,'').trim());else if(prev.length)break}nm=prev.join(' ')}
+  if(!nm&&(R.hint))nm=R.hint;
+  const g=pcs.length>=2&&pcs[0]===pcs[1]?pcs[0]+pcs[1]:(pcs[0]??null);R.items.push({ser:0,name:nm||'Item',hsn:'',q,u,rate,amt,gst:g,guess:1,loose:1})}
+ if(!R.items.length){// last resort: one line from totals
+  const gt=(T0.cgst||0)+(T0.sgst||0)+(T0.igst||0),tx=T0.taxable||(T0.grand&&gt?T0.grand-gt-(T0.round||0):0);
+  if(tx>0){const mm=L.join(' ').replace(/(\d)(kgs?|mt|ltrs?|nos|pcs|bags?)\b/gi,'$1 $2').match(unitRe);const q=mm?inum(mm[2]):1,u=mm?irUnit(mm[3]):'kg';
+   const dl=L.find((x,k)=>k>a&&k<z&&/[A-Za-z]{4}/.test(x)&&!hdrRe.test(x)&&!/(gstin|state|phone|bank|date|invoice)/i.test(x))||'';
+   R.items.push({ser:0,name:dl.replace(/^\d{1,2}[.)]?\s+/,'').replace(/\s\d[\d.,\s%]*$/,'').trim()||'Item',hsn:'',q:q>0?q:1,u,rate:tx/(q>0?q:1),amt:tx,gst:null,guess:1,loose:1});R.warn.push('Item rows were not clearly readable – one line was built from the invoice totals. Please check.')}}
+ R.items.forEach(i=>{const m=imatch(i.name,D.rms||[]);if(!m){const t=L.join(' ').toLowerCase();const f=(D.rms||[]).find(r=>r.name.length>=4&&t.includes(r.name.toLowerCase()));if(f&&R.items.length===1)i.name=f.name}})}
 async function iJs(src,as){const r=await fetch(src,{mode:'cors'});if(!r.ok)throw new Error('download '+r.status);const t=await r.text();return URL.createObjectURL(new Blob([t],{type:as}))}
 async function iPdfLib(){if(window.pdfjsLib)return window.pdfjsLib;const v='4.4.168',b='https://cdn.jsdelivr.net/npm/pdfjs-dist@'+v+'/build/';const m=await import(b+'pdf.min.mjs');const lib=m&&m.getDocument?m:(m&&m.default)||window.pdfjsLib;lib.GlobalWorkerOptions.workerSrc=await iJs(b+'pdf.worker.min.mjs','text/javascript');window.pdfjsLib=lib;return lib}
 function iTess(){return window.Tesseract?Promise.resolve(window.Tesseract):new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=()=>window.Tesseract?ok(window.Tesseract):no(new Error('reader not available'));s.onerror=()=>no(new Error('could not download the reader (internet needed once)'));document.head.appendChild(s)})}
@@ -1299,9 +1326,12 @@ async function purRead(fid,auto){const d=(PV.docs||[]).find(x=>x.fid===fid);if(!
  try{const b=await FDB.get(fid);if(!b)throw new Error('The stored file was not found on this device');const x=await iExtract(b,d.mime,say);const R=iparse(x.lines);R.how=x.how;R.raw=x.lines.join('\n');R.fid=fid;IRES=R;
   const has=PV.sup||PV.ref||PV.items.some(i=>i.n||i.q||i.pn||i.rv);if(auto&&has){iShow(R,0);return}
   if(has&&!confirm('Replace the supplier / bill / items currently in this form with the details read from the invoice?\n(Nothing is saved until you press Save or Confirm.)')){iShow(R,0);return}
-  iFill(R);iShow(R,1)}
+  iFill(R);iShow(R,1);iOffer(R)}
  catch(e){const m=String((e&&e.message)||e);if($('pir')){$('pir').style.display='';$('pir').innerHTML='<div style="color:#e11d48;font-size:13px">✖ Could not read this invoice automatically: '+esc(m)+'.<br>Enter the details above by hand — your file is still attached.</div>'}}finally{IRB=0}}
 let IRB=0;
+function iOffer(R){setTimeout(()=>{const s=R.sup;if(s.name&&!s.known&&!(D.suppliers||[]).some(x=>x.name.toLowerCase()===s.name.toLowerCase())&&confirm('Supplier "'+s.name+'" is not in your supplier list.\nAdd it now from this invoice (GSTIN, phone, bank details)?'))iCreateSup();
+ const miss=R.items.map((r,k)=>({r,k})).filter(x=>!x.r.mat&&x.r.name&&x.r.name!=='Item'&&!D.rms.some(m=>m.name.toLowerCase()===x.r.name.replace(/\s+/g,' ').trim().slice(0,60).toLowerCase()));
+ if(miss.length&&confirm('Add '+miss.length+' material(s) from this invoice to Raw materials?\n'+miss.map(x=>x.r.name).join(', '))){miss.forEach(x=>iCreateMat(x.k,x.r.name.replace(/\s+/g,' ').trim().slice(0,60)))}},60)}
 function iFill(R){const s=R.sup,ex=(D.suppliers||[]).find(x=>x.name===s.name);
  if(ex){PV.sup=ex.name;PV.supState=''}else{PV.sup='';PV.supState=''}
  const sel=$('psel');if(sel)sel.value=PV.sup||'';
@@ -1320,10 +1350,10 @@ function iCreateSup(){const R=IRES;if(!R)return;const s=R.sup;if(!s.name)return 
  const st=Object.keys(ST).includes(s.state)?s.state:'';const o={id:nxt('SUP','sup'),status:'Active',name:s.name,mobile:s.mobile||'',email:s.email||'',location:s.loc||'',state:st,gstreg:s.gstin?'Yes':'No',gstin:s.gstin||'',bank:s.bank||'',acct:s.acct||'',ifsc:s.ifsc||'',upi:s.upi||''};
  D.suppliers.push(o);saud('Supplier created from invoice reading',o.id+' · '+o.name);save();const sel=$('psel');if(sel)sel.innerHTML='<option value="">Select supplier</option>'+D.suppliers.map(x=>`<option value="${esc(x.name)}">${esc(x.name)}</option>`).join('');
  PV.items.forEach(i=>{i.gt_=1});purSup(o.name);if(sel)sel.value=o.name;if(IRES){R.sup.known=1}iShow(R,1);toast('Supplier added: '+o.name+(st?'':' – please set its state'))}
-function iCreateMat(k){const R=IRES;if(!R)return;const r=R.items[k];if(!r)return;const nm=prompt('Create this raw material in the master list?',r.name.replace(/\s+/g,' ').trim().slice(0,60));if(!nm||!nm.trim())return;
+function iCreateMat(k,nm0){const R=IRES;if(!R)return;const r=R.items[k];if(!r)return;const nm=nm0||prompt('Create this raw material in the master list?',r.name.replace(/\s+/g,' ').trim().slice(0,60));if(!nm||!nm.trim())return;
  if(D.rms.some(x=>x.name.toLowerCase()===nm.trim().toLowerCase()))return toast('A material with this name already exists – pick it in the item');
  const u=(r.u==='bag'||r.u==='drum'||r.u==='barrel'||r.u==='tonne')?'kg':(r.u||'kg');const o={id:nxt('RM','rm'),status:'Active',name:nm.trim(),unit:UN.includes(u)?u:'kg'};D.rms.push(o);saud('Raw material created from invoice reading',o.id+' · '+o.name);save();
- const it=PV.items[k];if(it){it.n=o.name;if(it.mode==='qty')it.u=o.unit;iSync(it)}r.mat=o.name;purRows();iShow(R,1);toast('Raw material added: '+o.name)}
+ const it=PV.items[k];if(it){it.n=o.name;if(it.mode==='qty'){if(it.u==='tonne'&&o.unit==='kg'){it.q=+(it.q*1000).toFixed(6);it.rv=+(it.rv/1000).toFixed(6)}else if(it.u==='g'&&o.unit==='kg'){it.q=+(it.q/1000).toFixed(6);it.rv=+(it.rv*1000).toFixed(6)}it.u=o.unit}iSync(it)}r.mat=o.name;purRows();iShow(R,1);toast('Raw material added: '+o.name)}
 function iShow(R,filled){const e=$('pir');if(!e)return;e.style.display='';const t=R.tot,pt=purT(PV),f=v=>Number.isFinite(v)?fmt(v):'–',s=R.sup;
  const diff=Number.isFinite(t.grand)?Math.round((pt.gt-t.grand)*100)/100:null,rows=R.items.map((r,k)=>{const ok=r.mat&&!r.guess&&r.score>=.9;return`<div class="li" style="cursor:default;align-items:flex-start;margin-top:6px"><span>${ok?'✔':'⚠'} ${esc(r.name)}<br><small class="mut">${r.mat?'→ '+esc(r.mat):'not in Raw Materials master'} · ${+r.q.toFixed(3)} ${esc(r.u)} × ₹${+r.rate.toFixed(4)} · GST ${r.gst==null?'?':r.gst+'%'}${r.gstFromTotal?' (from totals)':''}${r.guess?' · amount ≠ qty × rate (tax included?) – please check':''}${r.unitWarn?' · unit differs from master ('+esc(r.unitWarn)+')':''}</small></span>${r.mat?'':`<button class="btn s sm" onclick="iCreateMat(${k})">＋ Create</button>`}</div>`}).join('');
  e.innerHTML=`<div style="font-weight:700">🔍 Invoice reading <span class="chip">${esc(R.how)}</span></div><p class="mut" style="font-size:12px;margin:4px 0">${filled?'The form above was filled from the file.':'The form was left as it is.'} <b>Check every value before Save / Confirm.</b> Nothing is saved, posted or paid automatically.</p>
@@ -1523,5 +1553,3 @@ addEventListener('hashchange',()=>{const nh=location.hash||'#/home';if(RESTORING
  if(nh!==CUR&&QD&&!CRET&&fgrp(CUR)&&fgrp(CUR)!==fgrp(nh)){if(!confirm('Unsaved changes detected.\n\nLeave without saving?')){RESTORING=1;location.hash=CUR;return}QD=0}
  if(fgrp(CUR)!==fgrp(nh))QD=0;CUR=nh;render()});if(LOADERR)corruptBanner();render();
 </script></body></html>
-
-</body></html>
