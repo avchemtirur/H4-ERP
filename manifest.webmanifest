@@ -1,31 +1,23 @@
-
 {
-  "id": "./",
-  "name": "H4 ERP - AV Chem",
+  "name": "H4 ERP – H4 Construction Solutions",
   "short_name": "H4 ERP",
-  "description": "H4 Enterprise Resource Planning",
+  "description": "ERP for AV Chem / H4 Construction Solutions: purchase, formula, quotation, invoice and more.",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f8fafc",
+  "background_color": "#0068bd",
   "theme_color": "#1b0b4d",
+  "lang": "en",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "New Invoice", "short_name": "Invoice", "url": "./#/inv/new", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "New Quotation", "short_name": "Quotation", "url": "./#/quo/new", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]}
   ]
 }
