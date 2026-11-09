@@ -1,7 +1,7 @@
 {
  "name": "H4 ERP",
  "short_name": "H4 ERP",
- "description": "ERP for AV Chem / H4 Construction Solutions: purchase, formula, quotation, invoice and more.",
+ "description": "ERP for H4 Construction Solutions: purchase, formula, quotation, invoice and more.",
  "id": "./?app=h4erp2",
  "start_url": "./?app=h4erp2",
  "scope": "./",
